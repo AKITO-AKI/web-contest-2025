@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>両義：真実と虚構の二面性 - SNSが現代社会に与えた影響</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #8B7355;
+            --primary-light: #F5F0E8;
+            --primary-dark: #6B5745;
+            --accent-color: #C9A961;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ナビゲーション */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            padding: 20px;
+        }
+
+        .nav-container.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 16px 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 15px;
+            padding: 14px 24px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            letter-spacing: -0.2px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 115, 85, 0.4);
+        }
+
+        /* サイドバー目次 */
+        .table-of-contents {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 240px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 6px;
+        }
+
+        .toc-link {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toc-link:hover,
+        .toc-link.active {
+            background: var(--primary-light);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateX(4px);
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 140px 40px 100px;
+            margin-left: 320px;
+        }
+
+        .page-header {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .page-subtitle {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .page-subtitle::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .page-title {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.1;
+            letter-spacing: -3px;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        /* セクション */
+        .content-section {
+            margin-bottom: 100px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+            letter-spacing: -1.5px;
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        .subsection-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 48px 0 24px;
+            letter-spacing: -0.8px;
+        }
+
+        .content-paragraph {
+            margin-bottom: 28px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        /* 二面性カード */
+        .duality-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin: 60px 0;
+        }
+
+        .duality-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .duality-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            opacity: 0.05;
+            transform: rotate(45deg);
+        }
+
+        .duality-card.light {
+            border-color: #3B82F6;
+        }
+
+        .duality-card.light::before {
+            background: linear-gradient(45deg, #3B82F6, #60A5FA);
+        }
+
+        .duality-card.shadow {
+            border-color: #EF4444;
+        }
+
+        .duality-card.shadow::before {
+            background: linear-gradient(45deg, #EF4444, #F87171);
+        }
+
+        .duality-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        .duality-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .duality-card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .duality-card.light .duality-card-title {
+            color: #3B82F6;
+        }
+
+        .duality-card.shadow .duality-card-title {
+            color: #EF4444;
+        }
+
+        .duality-card-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        /* インタラクティブ要素 */
+        .interactive-element {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 50px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .interactive-element:hover {
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 32px 0;
+        }
+
+        .chart-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-source {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* ハイライトボックス */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-light), rgba(139, 115, 85, 0.08));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--primary-color);
+        }
+
+        .highlight-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* 警告ボックス */
+        .warning-box {
+            background: linear-gradient(135deg, #FEF3C7, rgba(245, 158, 11, 0.1));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--warning);
+        }
+
+        .warning-box .highlight-title {
+            color: var(--warning);
+        }
+
+        /* 問題リスト */
+        .problem-list {
+            display: grid;
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .problem-item {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border-left: 4px solid var(--danger);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .problem-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .problem-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--danger);
+            margin-bottom: 12px;
+        }
+
+        .problem-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* 次ページボタン */
+        .next-page-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 18px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(139, 115, 85, 0.3);
+        }
+
+        .next-page-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(139, 115, 85, 0.4);
+        }
+
+        .next-page-button::after {
+            content: '→';
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .next-page-button:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* 参考文献 */
+        .references {
+            background: var(--surface);
+            padding: 32px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            border: 1px solid var(--border);
+        }
+
+        .references p {
+            margin-bottom: 16px;
+        }
+
+        /* 画像プレースホルダー */
+        .image-placeholder {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #ced4da;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 32px 0;
+            color: var(--text-light);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 1200px) {
+            .table-of-contents {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 140px 60px 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-link {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+            .main-content {
+                padding: 120px 32px 80px;
+            }
+            .page-title {
+                font-size: 2.8rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .duality-cards {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ナビゲーション -->
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="page2.html" class="nav-link">序論</a></li>
+                <li><a href="page3.html" class="nav-link">系譜</a></li>
+                <li><a href="page4.html" class="nav-link active">両義</a></li>
+                <li><a href="page5.html" class="nav-link">自己</a></li>
+                <li><a href="page6.html" class="nav-link">資本</a></li>
+                <li><a href="page7.html" class="nav-link">記憶</a></li>
+                <li><a href="page8.html" class="nav-link">未来</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 目次サイドバー -->
+    <nav class="table-of-contents">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#section1" class="toc-link">SNSの両義の顔</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">フェイクニュース</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">認知バイアスと拡散</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">AIが加速させる危機</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">企業の構造的矛盾</a></li>
+            <li class="toc-item"><a href="#section6" class="toc-link">私たちの対応</a></li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- ページヘッダー -->
+        <header class="page-header">
+            <div class="page-subtitle">Page 4</div>
+            <h1 class="page-title">両義</h1>
+            <p class="page-description">
+                SNSは、私たちの社会に計り知れない変革をもたらしました。
+                しかし、その「魔法」には、光と影、二つの側面が深く織り交ぜられています。
+                真実を広める力と、虚偽を拡散する危険性を同時に内包する、まさに「両義的」な存在なのです。
+            </p>
+        </header>
+
+        <!-- セクション1: SNSの両義の顔 -->
+        <section id="section1" class="content-section">
+            <h2 class="section-title">1. SNSの両義の顔</h2>
+            
+            <div class="duality-cards">
+                <div class="duality-card light">
+                    <div class="duality-card-title">光の側面：民主化された情報空間</div>
+                    <div class="duality-card-content">
+                        <p>SNSがもたらした最大の恩恵は、情報発信の民主化です。誰もが自分の意見や体験を発信できるようになり、マスメディアが独占していた情報流通の主導権が個人へと移りました。</p>
+                        <p>災害時の安否情報共有、社会的不正の告発、国境を越えた連帯―SNSは、声を上げられなかった人々にプラットフォームを提供し、新たな可能性を開きました。</p>
+                    </div>
+                </div>
+
+                <div class="duality-card shadow">
+                    <div class="duality-card-title">影の側面：虚構の蔓延と分断</div>
+                    <div class="duality-card-content">
+                        <p>この自由な情報空間は、同時に大きな危険もはらんでいます。誰もが発信者になれるということは、情報の真偽を誰も担保しないということです。</p>
+                        <p>フェイクニュースが瞬く間に拡散し、アルゴリズムによって同じ意見ばかりが表示されることで、社会の分断が加速しています。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="image-placeholder">
+                💡 SNSの二面性を表現する天秤のイラストを挿入推奨<br>
+                （一方に光（真実・連帯）、もう一方に影（虚偽・分断））
+            </div>
+
+            <p class="content-paragraph">
+                重要なのは、受け取った情報を鵜呑みにせず、自ら真偽を見極めるリテラシーを身につけることです。そして、異なる意見を持つ人々との対話を避けず、多様性を尊重する姿勢を持つことが、健全な情報社会を築く鍵となります。
+            </p>
+        </section>
+
+        <!-- セクション2: Fake SNS -->
+        <section id="section2" class="content-section">
+            <h2 class="section-title">2. Fake SNS：なぜフェイクニュースは広まるのか？</h2>
+            
+            <p class="content-paragraph">
+                フェイクニュースの拡散は、単に情報リテラシーの低い人が騙されるという単純な話ではありません。そこには、人間の認知バイアスという、誰もが無意識に持っている思考の癖と、SNSという情報環境の構造が深く関わっています。
+            </p>
+
+            <!-- フェイクニュース拡散速度グラフ -->
+            <div class="interactive-element">
+                <div class="chart-title">真実とフェイクニュースの拡散速度比較</div>
+                <div class="chart-container">
+                    <canvas id="fakeNewsChart"></canvas>
+                </div>
+                <div class="chart-source">出典: MIT Technology Review "The spread of true and false news online" (2018)</div>
+            </div>
+        </section>
+
+        <!-- セクション3: 認知バイアス -->
+        <section id="section3" class="content-section">
+            <h2 class="section-title">3. 認知バイアスが真偽の判断を歪める</h2>
+            
+            <p class="content-paragraph">
+                行動経済学者のダニエル・カーネマンが著書『ファスト＆スロー』で提唱した「システム1（速い思考）」と「システム2（遅い思考）」の概念が、このメカニズムを理解する上で非常に役立ちます。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">カーネマンの二つの思考システム</div>
+                <p><strong>システム1（速い思考）：</strong>直感的で感情的な、自動的な思考。多くの日常的な判断はこのシステムで行われます。</p>
+                <p><strong>システム2（遅い思考）：</strong>論理的で熟慮を要する、意識的な思考。</p>
+            </div>
+
+            <p class="content-paragraph">
+                フェイクニュースは、このシステム1に強く訴えかけます。特に、以下のような認知バイアスが悪影響を及ぼします。
+            </p>
+
+            <div class="problem-list">
+                <div class="problem-item">
+                    <div class="problem-title">確証バイアス</div>
+                    <div class="problem-description">
+                        自分自身の意見や信念に合う情報を無意識に探し、それに反する情報を無視したり軽視したりする傾向。SNSでは、自分と似た意見を持つアカウントをフォローしやすいため、このバイアスが加速されます。
+                    </div>
+                </div>
+
+                <div class="problem-item">
+                    <div class="problem-title">利用可能性ヒューリスティック</div>
+                    <div class="problem-description">
+                        繰り返し見聞きした情報を「正しい」と認識してしまう傾向。フェイクニュースは、SNS上で繰り返し拡散されることで、その内容が正しいかのように脳にインプットされてしまいます。
+                    </div>
+                </div>
+
+                <div class="problem-item">
+                    <div class="problem-title">バックファイアー効果</div>
+                    <div class="problem-description">
+                        自分の信念と矛盾する情報に直面した際、かえって自分の信念を強めてしまう現象。たとえフェイクニュースが訂正されても、逆にその情報を信じる気持ちが強くなってしまうことがあります。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション4: SNSの構造が拡散を加速 -->
+        <section id="section4" class="content-section">
+            <h2 class="section-title">4. SNSの構造が拡散を加速する</h2>
+            
+            <h3 class="subsection-title">フィルターバブル</h3>
+            <p class="content-paragraph">
+                イーライ・パリサー氏が著書『フィルターバブル：インターネットが隠していること』で指摘した概念です。SNSのアルゴリズムは、ユーザーの過去の行動履歴に基づいて、その人が好みそうな情報だけを表示するよう最適化します。これにより、ユーザーは自分と似た意見や価値観の情報にばかり囲まれることになり、まるで泡の中にいるかのように、異なる意見から隔離されてしまいます。
+            </p>
+
+            <h3 class="subsection-title">エコーチェンバー現象</h3>
+            <p class="content-paragraph">
+                同じ意見を持つ人々がSNS上で集まり、互いの意見を増幅させ合う現象です。フィルターバブルの中で形成されたコミュニティでこの現象が起きると、特定の意見がどんどん過激化し、フェイクニュースのような不確かな情報も「自分たちの常識」として受け入れられてしまいます。
+            </p>
+
+            <!-- エコーチェンバー可視化 -->
+            <div class="interactive-element">
+                <div class="chart-title">エコーチェンバーにおける意見の極端化</div>
+                <div class="chart-container">
+                    <canvas id="echoChamberChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 著者による概念図</div>
+            </div>
+
+            <h3 class="subsection-title">感情的な情報ほど広まる</h3>
+            <p class="content-paragraph">
+                追手門学院大学の増井啓太准教授らの研究（2022年）によると、未来に対する不安や恐怖を強く感じる人は、デマを拡散しやすい傾向があることが示唆されています。また、SNSにおける虚偽の情報は、真実の情報よりも感情的な要素が強く、結果として6倍も速く拡散されるという研究結果も報告されています。
+            </p>
+        </section>
+
+        <!-- セクション5: AIと企業の構造 -->
+        <section id="section5" class="content-section">
+            <h2 class="section-title">5. AIが加速させる「真実の危機」と企業の構造的矛盾</h2>
+            
+            <h3 class="subsection-title">ディープフェイクの脅威</h3>
+            <p class="content-paragraph">
+                ディープフェイクと呼ばれる、AIによって生成された偽の画像や動画は、すでに現実と見分けがつかないほどの精度に達しています。これにより、政治家や著名人が実際には言っていないこと、やっていないことをあたかも事実のように見せる虚偽の動画が、簡単に作られ拡散されるようになります。
+            </p>
+
+            <div class="warning-box">
+                <div class="highlight-title">偽情報の「民主化」</div>
+                <p>かつては専門的な技術や知識が必要だった偽情報工作が、生成AIの普及によって誰でも簡単に行えるようになります。これにより、個人が特定の目的を持って、特定の人物や組織に対する悪意のある情報を大量に生成し、拡散するリスクが高まります。</p>
+            </div>
+
+            <h3 class="subsection-title">なぜSNS事業者は問題を知りながら現状を維持するのか？</h3>
+            <p class="content-paragraph">
+                これらの問題を理解した上で、なぜSNS事業者は根本的な構造変革に踏み切らないのでしょうか。その背景には、複雑なビジネス構造と企業の論理があります。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">ビジネスモデルの構造的矛盾</div>
+                <p>SNS事業者の収益の大部分は広告収入に依存しています。この広告モデルは、ユーザーの「エンゲージメント」（いいね、コメント、シェアなどの反応）を最大化することで成り立っています。</p>
+                <p>しかし、人間が最も強く反応するのは、感情を激しく揺さぶるコンテンツです。怒り、恐怖、驚き―これらの強い感情を引き起こす情報は、冷静で理性的な情報よりもはるかに高いエンゲージメントを生み出します。つまり、フィルターバブルやエコーチェンバー現象、さらにはフェイクニュースの拡散は、SNS企業にとって「望ましい現象」なのです。</p>
+            </div>
+
+            <div class="image-placeholder">
+                ⚖️ SNS企業の利益構造と社会的責任のジレンマを表現する図を挿入推奨<br>
+                （広告収益モデル vs ユーザーの幸福）
+            </div>
+
+            <p class="content-paragraph">
+                元Facebook社員フランシス・ホーゲン氏によって2021年に暴露された「Facebookファイル」によると、Facebook（現Meta）は自社のアルゴリズムが分裂や憎悪を増幅させることを十分に認識していながら、エンゲージメントによる収益を優先し、対策を怠っていたことが明らかになりました。
+            </p>
+        </section>
+
+        <!-- セクション6: 私たちの対応 -->
+        <section id="section6" class="content-section">
+            <h2 class="section-title">6. 私たちがSNSとどう向き合うべきか</h2>
+            
+            <p class="content-paragraph">
+                この巨大な搾取構造に対して、私たち個人レベルでできる対抗策を考えてみましょう。
+            </p>
+
+            <h3 class="subsection-title">情報の受け手として：実践的な情報リテラシー</h3>
+            
+            <div class="problem-list">
+                <div class="problem-item">
+                    <div class="problem-title">発信元を確認する</div>
+                    <div class="problem-description">
+                        その情報が誰によって、どのような意図で発信されたのかを常に意識しましょう。信頼できるメディアや公的機関からの情報なのか、それとも匿名の個人アカウントなのかを見極めることが重要です。
+                    </div>
+                </div>
+
+                <div class="problem-item">
+                    <div class="problem-title">複数の情報源を比較する</div>
+                    <div class="problem-description">
+                        一つの情報源を鵜呑みにせず、異なるメディアやプラットフォームで同じ情報がどう扱われているかを確認しましょう。複数の視点から情報を検証する癖をつけることで、情報の偏りや誤りを見抜くことができます。
+                    </div>
+                </div>
+
+                <div class="problem-item">
+                    <div class="problem-title">感情に流されない</div>
+                    <div class="problem-description">
+                        特に感情を強く揺さぶるような情報（怒り、不安、恐怖など）に触れた際は、一度立ち止まって冷静になることが大切です。「これは本当に事実か？」と自問する「健全な懐疑心」を持つことが、フェイクニュースに騙されないための第一歩です。
+                    </div>
+                </div>
+
+                <div class="problem-item">
+                    <div class="problem-title">一次情報にアクセスする</div>
+                    <div class="problem-description">
+                        引用や伝聞ではなく、元の情報源（論文、公式発表、元の映像など）を探して確認する習慣をつけましょう。
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">情報の発信者として：無責任な拡散に加担しない</h3>
+            <p class="content-paragraph">
+                私たちは誰もが、気づかないうちにフェイクニュースの拡散に加担してしまう可能性があります。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">責任ある情報発信の原則</div>
+                <p><strong>「確信が持てない情報は拡散しない」：</strong>少しでも疑わしいと感じた情報、真偽の判断がつかない情報は、安易にシェアしたりリツイートしたりしないようにしましょう。</p>
+                <p><strong>修正・訂正の責任を持つ：</strong>もし自分が拡散した情報がフェイクニュースだと気づいたら、速やかに訂正し、その旨をフォロワーに伝える責任があります。</p>
+            </div>
+
+            <!-- 情報リテラシーチェックリスト -->
+            <div class="interactive-element">
+                <div class="chart-title">情報リテラシー実践度チェック</div>
+                <div class="chart-container">
+                    <canvas id="literacyChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 総務省「情報リテラシー向上のための指針」を基に作成</div>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="content-section">
+            <h2 class="section-title">まとめ：見えない搾取からの解放に向けて</h2>
+            
+            <p class="content-paragraph">
+                SNSは私たちに多くの恩恵をもたらしましたが、同時に前例のない規模の情報操作システムをも生み出しました。私たちの注意力、感情、判断力そのものが商品化され、巨大な利益の源泉となっています。
+            </p>
+
+            <p class="content-paragraph">
+                重要なのは、SNSそのものを否定することではありません。問題は、現在の資本主義的な設計が、ユーザーの利益よりも株主の利益を優先していることです。私たちには、より公正で持続可能なデジタル社会を要求する権利があります。
+            </p>
+
+            <div class="warning-box">
+                <div class="highlight-title">私たち一人ひとりの選択が未来を作る</div>
+                <p>企業の論理だけに委ねるのではなく、社会全体で健全な情報流通のあり方を考え、実践していく必要があります。この見えない搾取構造を理解し、意識的に対抗していくことが、これからのデジタル社会を生き抜く上で最も重要な心構えとなるでしょう。</p>
+            </div>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <a href="#" class="next-page-button">
+                    次ページ「自己」
+                </a>
+            </div>
+        </section>
+
+        <!-- 参考文献 -->
+        <section class="content-section">
+            <h3 class="subsection-title">参考文献</h3>
+            <div class="references">
+                <p>ダニエル・カーネマン『ファスト＆スロー：あなたの意思はどのように決まるか？』早川書房、2012年</p>
+                <p>イーライ・パリサー『フィルターバブル：インターネットが隠していること』早川書房、2016年</p>
+                <p>増井啓太ほか「SNSにおけるデマ拡散に関する研究」追手門学院大学、2022年</p>
+                <p>Vosoughi, S., Roy, D., & Aral, S. (2018). The spread of true and false news online. Science, 359(6380), 1146-1151.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ナビゲーション制御
+        let navTimer;
+        const navContainer = document.querySelector('.nav-container');
+        
+        function showNav() {
+            navContainer.classList.remove('hidden');
+            clearTimeout(navTimer);
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 7000);
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientY < 120) {
+                showNav();
+            }
+        });
+        
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(navTimer);
+        });
+        
+        navContainer.addEventListener('mouseleave', () => {
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 3000);
+        });
+        
+        showNav();
+
+        // スクロールアニメーション
+        function handleScroll() {
+            const sections = document.querySelectorAll('.content-section');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+
+            updateTOC();
+        }
+
+        function updateTOC() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 250) {
+                    currentSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            setTimeout(handleScroll, 100);
+            initializeCharts();
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Chart.js初期化
+        function initializeCharts() {
+            // フェイクニュース拡散速度
+            const fakeNewsCtx = document.getElementById('fakeNewsChart');
+            if (fakeNewsCtx) {
+                new Chart(fakeNewsCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['真実の情報', 'フェイクニュース'],
+                        datasets: [{
+                            label: '24時間後の拡散到達人数（相対値）',
+                            data: [100, 600],
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.7)',
+                                'rgba(239, 68, 68, 0.7)'
+                            ],
+                            borderColor: [
+                                '#3B82F6',
+                                '#EF4444'
+                            ],
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                padding: 16,
+                                cornerRadius: 8
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // エコーチェンバー
+            const echoChamberCtx = document.getElementById('echoChamberChart');
+            if (echoChamberCtx) {
+                new Chart(echoChamberCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['初期', '1週間後', '1ヶ月後', '3ヶ月後', '6ヶ月後'],
+                        datasets: [
+                            {
+                                label: '多様な情報環境',
+                                data: [50, 52, 53, 54, 55],
+                                borderColor: '#3B82F6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                tension: 0.4,
+                                fill: false
+                            },
+                            {
+                                label: 'エコーチェンバー内',
+                                data: [50, 60, 75, 85, 95],
+                                borderColor: '#EF4444',
+                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                tension: 0.4,
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: { size: 14, weight: '600' },
+                                    color: '#1a202c',
+                                    padding: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: '意見の極端化度（%）',
+                                    font: { size: 12 }
+                                },
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 情報リテラシー
+            const literacyCtx = document.getElementById('literacyChart');
+            if (literacyCtx) {
+                new Chart(literacyCtx.getContext('2d'), {
+                    type: 'radar',
+                    data: {
+                        labels: ['発信元確認', '複数情報源比較', '感情制御', '一次情報確認', '批判的思考'],
+                        datasets: [
+                            {
+                                label: '一般的なSNSユーザー',
+                                data: [40, 35, 30, 25, 35],
+                                borderColor: '#EF4444',
+                                backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                                pointBackgroundColor: '#EF4444'
+                            },
+                            {
+                                label: '高リテラシーユーザー',
+                                data: [85, 80, 75, 80, 85],
+                                borderColor: '#3B82F6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                                pointBackgroundColor: '#3B82F6'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: { size: 13, weight: '500' },
+                                    padding: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            r: {
+                                suggestedMin: 0,
+                                suggestedMax: 100,
+                                ticks: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(handleScroll, 250);
+        });
+    </script>
+</body>
+</html>

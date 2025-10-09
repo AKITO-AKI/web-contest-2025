@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNSが現代社会に与えた影響 - 全国中高生WEBコンテスト2025</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* p5.js背景 */
+        #p5-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* メインコンテンツ */
+        .main-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ヒーローセクション */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .hero-content {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1.5s ease 1s forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -6px;
+            color: rgba(255, 255, 255, 0.98);
+            text-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.6),
+                0 4px 16px rgba(0, 0, 0, 0.4),
+                0 0 80px rgba(102, 126, 234, 0.3);
+            margin-bottom: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            text-transform: uppercase;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+            position: relative;
+        }
+
+        .hero-title.chaos-mode {
+            color: rgba(255, 100, 100, 0.98);
+            text-shadow: 
+                0 8px 32px rgba(255, 0, 0, 0.6),
+                0 4px 16px rgba(255, 0, 0, 0.4),
+                0 0 100px rgba(255, 68, 68, 0.5);
+            letter-spacing: -4px;
+            transform: scale(1.05);
+        }
+
+        .hero-title::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.3), transparent 70%);
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .hero-title.chaos-mode::before {
+            background: radial-gradient(circle, rgba(255, 68, 68, 0.4), transparent 70%);
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.6;
+            }
+        }
+
+        .hero-title-main {
+            display: block;
+            font-size: 1em;
+            margin-bottom: 0.1em;
+        }
+
+        .hero-title-sub {
+            display: block;
+            font-size: 0.35em;
+            letter-spacing: 0.15em;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards, bounce 2s ease-in-out 2s infinite;
+        }
+
+        .scroll-arrow {
+            width: 24px;
+            height: 24px;
+            border-left: 2px solid var(--text-light);
+            border-bottom: 2px solid var(--text-light);
+            transform: rotate(-45deg);
+        }
+
+        /* ページカードセクション */
+        .pages-section {
+            min-height: 100vh;
+            padding: 120px 40px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .section-header.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ページカードグリッド */
+        .pages-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            padding: 0 20px;
+        }
+
+        .page-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 48px 40px;
+            border: 2px solid transparent;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .page-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--card-color-1), transparent);
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .page-card:hover::after {
+            width: 600px;
+            height: 600px;
+            opacity: 0.15;
+        }
+
+        /* 粒子エフェクト */
+        .page-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--card-color-1), var(--card-color-2), var(--card-color-1));
+            background-size: 300% 300%;
+            border-radius: 24px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.5s ease;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .page-card:hover::before {
+            opacity: 1;
+        }
+
+        /* グリッチエフェクト */
+        .page-card:hover .page-card-title {
+            animation: glitch 0.3s ease;
+        }
+
+        @keyframes glitch {
+            0%, 100% {
+                transform: translate(0);
+            }
+            25% {
+                transform: translate(-2px, 2px);
+            }
+            50% {
+                transform: translate(2px, -2px);
+            }
+            75% {
+                transform: translate(-2px, -2px);
+            }
+        }
+
+        /* ナンバー */
+        .page-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--card-color-1);
+            line-height: 1;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        /* リンクアニメーション */
+        .page-card-link {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-card-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--card-color-1);
+            transition: width 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .page-card:hover .page-card-link::before {
+            width: 100%;
+        }
+
+        .page-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .page-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--card-color-1), var(--card-color-2));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .page-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .page-card:hover {
+            transform: translateY(-16px) scale(1.02);
+            box-shadow: 
+                0 32px 80px rgba(0, 0, 0, 0.2),
+                0 16px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--card-color-1);
+        }
+
+        /* カード個別カラー設定 */
+        .page-card[data-theme="normal"][data-page="intro"] {
+            --card-color-1: #667eea;
+            --card-color-2: #764ba2;
+        }
+
+        .page-card[data-theme="normal"][data-page="genealogy"] {
+            --card-color-1: #D4A574;
+            --card-color-2: #F4C430;
+        }
+
+        .page-card[data-theme="chaos"][data-page="duality"] {
+            --card-color-1: #8B7355;
+            --card-color-2: #C9A961;
+        }
+
+        .page-card[data-theme="chaos"][data-page="self"] {
+            --card-color-1: #48cae4;
+            --card-color-2: #0096c7;
+        }
+
+        .page-card[data-theme="chaos"][data-page="capital"] {
+            --card-color-1: #EF4444;
+            --card-color-2: #DC2626;
+        }
+
+        .page-card[data-theme="chaos"][data-page="memory"] {
+            --card-color-1: #6B7280;
+            --card-color-2: #4B5563;
+        }
+
+        .page-card[data-theme="normal"][data-page="future"] {
+            --card-color-1: #10B981;
+            --card-color-2: #059669;
+        }
+
+        .page-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--card-color-1);
+            line-height: 1;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .page-card-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            line-height: 1;
+            font-family: 'Noto Sans JP', sans-serif;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .page-card-theme {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--card-color-1);
+            margin-top: 12px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .page-card:hover .page-card-theme {
+            letter-spacing: 0.2em;
+            transform: translateX(4px);
+        }
+
+        .page-card-statement {
+            font-size: 1.3rem;
+            font-weight: 700;
+            line-height: 1.4;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            border-left: 4px solid var(--card-color-1);
+            padding-left: 16px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .page-card:hover .page-card-statement {
+            border-left-width: 8px;
+            padding-left: 24px;
+            transform: translateX(4px);
+        }
+
+        .page-card-description {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .page-card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--card-color-1);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: gap 0.3s ease;
+        }
+
+        .page-card:hover .page-card-link {
+            gap: 16px;
+        }
+
+        .page-card-link::after {
+            content: '→';
+            font-size: 1.2rem;
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .hero-title-sub {
+                font-size: 0.3em;
+            }
+
+            .pages-section {
+                padding: 80px 20px;
+            }
+
+            .page-card {
+                padding: 40px 32px;
+            }
+
+            .page-card-title {
+                font-size: 2.8rem;
+            }
+
+            .page-card-statement {
+                font-size: 1.1rem;
+            }
+        }
+
+            .pages-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .page-card {
+                padding: 32px 24px;
+            }
+
+            .page-card-title {
+                font-size: 1.6rem;
+            }
+        
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.5rem;
+                letter-spacing: -2px;
+            }
+
+            .page-number {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- p5.js Canvas -->
+    <div id="p5-canvas"></div>
+
+    <!-- メインコンテンツ -->
+    <div class="main-container">
+        <!-- ヒーローセクション -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="hero-title-main">AWAKENING</span>
+                    <span class="hero-title-sub">デジタル社会の覚醒</span>
+                </h1>
+            </div>
+            <div class="scroll-indicator">
+                <div class="scroll-arrow"></div>
+            </div>
+        </section>
+
+        <!-- ページカードセクション -->
+        <section class="pages-section">
+            <div class="section-header">
+                <h2 class="section-title">探求の旅路</h2>
+                <p class="section-description">
+                    8つの視点から、SNSという現象を多角的に解き明かす
+                </p>
+            </div>
+
+            <div class="pages-grid">
+                <!-- Page 2: 序論 -->
+                <div class="page-card" data-theme="normal" data-page="intro">
+                    <div class="page-number">01</div>
+                    <h3 class="page-card-title">
+                        序論
+                        <span class="page-card-theme">Foundation</span>
+                    </h3>
+                    
+                    <p class="page-card-description">
+                        もはや単なるツールではない。ミーム文化、サードプレイスとしての機能。現代社会の文化形成を根底から変えた存在の正体。
+                    </p>
+                    <a href="page2.html" class="page-card-link">詳しく見る</a>
+                </div>
+
+                <!-- Page 3: 系譜 -->
+                <div class="page-card" data-theme="normal" data-page="genealogy">
+                    <div class="page-number">02</div>
+                    <h3 class="page-card-title">
+                        系譜
+                        <span class="page-card-theme">Evolution</span>
+                    </h3>
+                    
+                    <p class="page-card-description">
+                        口承から文字、印刷、電信、そしてSNSへ。人類が数千年かけて築いた情報ネットワークの系譜。現代の問題は、実は古くからある。
+                    </p>
+                    <a href="page3.html" class="page-card-link">詳しく見る</a>
+                </div>
+
+                <!-- Page 4: 両義 -->
+                <div class="page-card" data-theme="chaos" data-page="duality">
+                    <div class="page-number">03</div>
+                    <h3 class="page-card-title">
+                        両義
+                        <span class="page-card-theme">Duality</span>
+                    </h3>
+                    
+                    <p class="page-card-description">
+                        フェイクニュースは真実より6倍速く拡散する。認知バイアス、エコーチェンバー、アルゴリズムが編む情報の罠。あなたは騙されている。
+                    </p>
+                    <a href="page4.html" class="page-card-link">詳しく見る</a>
+                </div>
+
+                <!-- Page 5: 自己 -->
+                <div class="page-card" data-theme="chaos" data-page="self">
+                    <div class="page-number">04</div>
+                    <h3 class="page-card-title">
+                        自己
+                        <span class="page-card-theme">Identity</span>
+                    </h3>
+                    
+                    <p class="page-card-description">
+                        承認欲求、依存症、うつ病リスク26%増加。SNSは脳内ドーパミンを操り、あなたの精神を支配する。データが示す残酷な真実。
+                    </p>
+                    <a href="page5.html" class="page-card-link">詳しく見る</a>
+                </div>
+
+                <!-- Page 6: 資本 -->
+                <div class="page-card" data-theme="chaos" data-page="capital">
+                    <div class="page-number">05</div>
+                    <h3 class="page-card-title">
+                        資本
+                        <span class="page-card-theme">Capitalism</span>
+                    </h3>
+                    
+                    <p class="page-card-description">
+                        年間収益25兆円。あなたの注意力、感情、行動データが商品化される監視資本主義。「無料」の正体は、あなた自身だった。
+                    </p>
+                    <a href="page6.html" class="page-card-link">詳しく見る</a>
+                </div>
+
+                <!-- Page 7: 記憶 -->
+                <div class="page-card" data-theme="chaos" data-page="memory">
+                    <div class="page-number">06</div>
+                    <h3 class="page-card-title">
+                        記憶
+                        <span class="page-card-theme">Memory</span>
+                    </h3>
+                    <p class="page-card-description">
+                        削除したはずの投稿が9000億ページのアーカイブに永久保存。Wayback Machineが変えた情報社会。忘却する権利は失われた。
+                    </p>
+                    <a href="page7.html" class="page-card-link">詳しく見る</a>
+                </div>
+
+                <!-- Page 8: 未来 -->
+                <div class="page-card" data-theme="normal" data-page="future">
+                    <div class="page-number">07</div>
+                    <h3 class="page-card-title">
+                        未来
+                        <span class="page-card-theme">Future</span>
+                    </h3>
+                    <p class="page-card-description">
+                        分散型SNS、デジタルサービス法、若い世代の意識変化。絶望の先にある希望。より良いデジタル社会への道筋を、今ここから。
+                    </p>
+                    <a href="page8.html" class="page-card-link">詳しく見る</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // p5.jsスケッチ
+        let particles = [];
+        const numParticles = 400;
+        let cameraAngle = 0;
+        const cameraRadius = 900;
+        let systemMode = 'NORMAL';
+        let modeTimer = 0;
+        let currentModeDuration;
+        let postChaosBoost = 0;
+        let p5Instance;
+
+        // p5インスタンスモード
+        const sketch = (p) => {
+            p.setup = function() {
+                let canvas = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+                canvas.parent('p5-canvas');
+                p.colorMode(p.HSB, 360, 100, 100, 100);
+
+                for (let i = 0; i < numParticles; i++) {
+                    particles.push(new Particle(p));
+                }
+                
+                currentModeDuration = p.random(5 * 60, 10 * 60);
+            };
+
+            p.draw = function() {
+                // 自動モード切替を有効化
+                modeTimer++;
+                if (modeTimer > currentModeDuration) {
+                    modeTimer = 0;
+                    
+                    let newMode;
+                    if (systemMode === 'NORMAL') {
+                        newMode = 'CHAOS';
+                        currentModeDuration = p.random(2 * 60, 4 * 60);
+                    } else {
+                        newMode = 'NORMAL';
+                        currentModeDuration = p.random(5 * 60, 10 * 60);
+                        postChaosBoost = 5.0;
+                    }
+                    systemMode = newMode; // p5.jsのモードを更新
+                    window.updateHeroTitle(newMode); // HTMLのタイトルも更新
+                }
+
+                p.background(230, 90, 5);
+
+                // パースペクティブ設定を明示的に
+                p.perspective(p.PI / 3.0, p.width / p.height, 10, 10000);
+
+                let camX = cameraRadius * p.cos(cameraAngle);
+                let camY = 250;
+                let camZ = cameraRadius * p.sin(cameraAngle);
+                p.camera(camX, camY, camZ, 0, 0, 0, 0, 1, 0);
+
+                p.blendMode(p.ADD);
+                p.ambientLight(50, 50, 50);
+                p.pointLight(255, 255, 255, 0, 0, 0);
+
+                let mainAttractorPower = (systemMode === 'NORMAL') ? 0.5 : -1.5;
+
+                if (postChaosBoost > 0) {
+                    mainAttractorPower += postChaosBoost;
+                    postChaosBoost *= 0.99;
+                    if (postChaosBoost < 0.01) postChaosBoost = 0;
+                }
+
+                for (let particle of particles) {
+                    let force = p5.Vector.sub(p.createVector(0,0,0), particle.pos);
+                    let distSq = force.magSq();
+                    distSq = p.constrain(distSq, 100, 10000);
+                    let strength = (mainAttractorPower * 100) / distSq;
+                    force.setMag(strength);
+                    particle.applyForce(force);
+                }
+
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        let force = particles[i].interact(particles[j], systemMode, p);
+                        particles[i].applyForce(force);
+                        particles[j].applyForce(p5.Vector.mult(force, -1));
+                    }
+                }
+
+                for (let particle of particles) {
+                    particle.update(systemMode, p);
+                    particle.display(systemMode, p);
+                }
+
+                p.blendMode(p.BLEND);
+                cameraAngle += 0.002;
+            };
+
+            p.windowResized = function() {
+                p.resizeCanvas(p.windowWidth, p.windowHeight);
+            };
+        };
+
+        class Particle {
+            constructor(p) {
+                this.pos = p5.Vector.random3D().mult(p.random(300, 500));
+                this.vel = p.createVector();
+                this.acc = p.createVector();
+                this.mass = p.random(1.5, 4);
+                this.lifespan = p.random(300, 600);
+                this.maxLife = this.lifespan;
+                this.normalHue = p.random(170, 280);
+                this.chaosHue = (p.random(-30, 30) + 360) % 360;
+            }
+            
+            applyForce(force) {
+                let f = p5.Vector.div(force, this.mass);
+                this.acc.add(f);
+            }
+
+            update(mode, p) {
+                if (mode === 'CHAOS') {
+                    let chaosKick = p5.Vector.random3D().mult(0.7);
+                    this.acc.add(chaosKick);
+                }
+                
+                this.vel.add(this.acc);
+                
+                if (mode === 'NORMAL') {
+                    this.vel.mult(0.995);
+                }
+                
+                let maxSpeed = (mode === 'NORMAL') ? 4 : 10;
+                this.vel.limit(maxSpeed);
+                this.pos.add(this.vel);
+                this.acc.mult(0);
+
+                this.lifespan--;
+                if (this.lifespan < 0) {
+                    this.rebirth(p);
+                }
+            }
+
+            rebirth(p) {
+                this.pos = p5.Vector.random3D().mult(p.random(300, 500));
+                this.vel.mult(0);
+                this.acc.mult(0);
+                this.lifespan = this.maxLife;
+            }
+
+            display(mode, p) {
+                p.push();
+                p.translate(this.pos.x, this.pos.y, this.pos.z);
+                p.noStroke();
+                
+                let finalHue;
+                let saturation = 90;
+                let brightness = 100;
+                let alpha = 100;
+                let sphereSize = this.mass * 2;
+                
+                if (mode === 'CHAOS') {
+                    finalHue = this.chaosHue;
+                    brightness = p.random(60, 100);
+                    alpha = p.random(70, 100);
+                } else {
+                    finalHue = this.normalHue;
+                    brightness = p.map(this.vel.mag(), 0, 10, 80, 100);
+                    
+                    if (this.lifespan < this.maxLife * 0.2) {
+                        alpha = p.map(this.lifespan, 0, this.maxLife * 0.2, 0, 100) * p.random(0.5, 1.2);
+                        saturation = 100;
+                        brightness = 100;
+                    } else {
+                        alpha = p.map(this.lifespan, this.maxLife * 0.2, this.maxLife, 100, 50);
+                    }
+                    
+                    if (this.lifespan < this.maxLife * 0.1) {
+                        sphereSize *= 1.5;
+                    }
+                }
+                
+                const age = this.maxLife - this.lifespan;
+                const fadeinDuration = 50;
+                if (age < fadeinDuration) {
+                    let scale = p.map(age, 0, fadeinDuration, 0, 1);
+                    sphereSize *= scale;
+                    alpha *= scale;
+                }
+
+                p.fill(finalHue, saturation, brightness, alpha);
+                p.sphere(sphereSize);
+                p.pop();
+            }
+            
+            interact(other, mode, p) {
+                let force = p5.Vector.sub(other.pos, this.pos);
+                let distance = force.mag();
+                
+                if (distance === 0 || distance > 120) return p.createVector(0, 0, 0);
+                
+                if (mode === 'NORMAL') {
+                    if (distance < 50) {
+                        let strength = 0.8 / (distance * distance);
+                        force.setMag(strength);
+                        force.mult(-1);
+                        return force;
+                    } else {
+                        let strength = 0.02;
+                        force.setMag(strength);
+                        return force;
+                    }
+                } else {
+                    let strength = 1.5 / (distance * distance);
+                    force.setMag(strength);
+                    force.mult(-1);
+                    return force;
+                }
+            }
+        }
+
+        // p5インスタンス作成
+        p5Instance = new p5(sketch);
+
+        // グローバル関数でモード変更
+        window.updateP5Mode = function(mode) {
+            systemMode = mode;
+            modeTimer = 0;
+            // カードホバー時は自動モード切替を一時的に抑制
+            currentModeDuration = (mode === 'CHAOS') ? 180 : 300;
+        };
+
+        const heroTitle = document.querySelector('.hero-title');
+        let currentMode = 'NORMAL';
+
+        // グローバル関数でヒーロータイトルのクラスを更新
+        window.updateHeroTitle = function(newMode) {
+            if (newMode !== currentMode) {
+                currentMode = newMode;
+                if (newMode === 'CHAOS') {
+                    heroTitle.classList.add('chaos-mode');
+                } else {
+                    heroTitle.classList.remove('chaos-mode');
+                }
+            }
+        }
+
+        // カードホバーでモード切替
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.page-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    const theme = card.dataset.theme;
+                    const newMode = theme === 'chaos' ? 'CHAOS' : 'NORMAL';
+                    
+                    // モード切替とタイトルアニメーションの連動
+                    window.updateP5Mode(newMode);
+                    window.updateHeroTitle(newMode);
+                });
+            });
+
+            // スクロールアニメーション (変更なし)
+            const observerOptions = {
+                threshold: 0.2,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 100);
+                    }
+                });
+            }, observerOptions);
+
+            cards.forEach(card => observer.observe(card));
+            
+            const sectionHeader = document.querySelector('.section-header');
+            if (sectionHeader) observer.observe(sectionHeader);
+        });
+    </script>
+</body>
+</html>

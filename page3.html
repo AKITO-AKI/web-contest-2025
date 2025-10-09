@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系譜：SNSの歴史的変遷 - SNSが現代社会に与えた影響</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #D4A574;
+            --primary-light: #FDF6E3;
+            --primary-dark: #B8956A;
+            --accent-color: #F4C430;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ナビゲーション */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            padding: 20px;
+        }
+
+        .nav-container.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 16px 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 15px;
+            padding: 14px 24px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            letter-spacing: -0.2px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4);
+        }
+
+        /* サイドバー目次 */
+        .table-of-contents {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 240px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 6px;
+        }
+
+        .toc-link {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toc-link:hover,
+        .toc-link.active {
+            background: var(--primary-light);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateX(4px);
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 140px 40px 100px;
+            margin-left: 320px;
+        }
+
+        .page-header {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .page-subtitle {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .page-subtitle::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .page-title {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.1;
+            letter-spacing: -3px;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        /* セクション */
+        .content-section {
+            margin-bottom: 100px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+            letter-spacing: -1.5px;
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        .subsection-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 48px 0 24px;
+            letter-spacing: -0.8px;
+        }
+
+        .content-paragraph {
+            margin-bottom: 28px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        /* タイムライン */
+        .timeline {
+            position: relative;
+            padding: 40px 0;
+            margin: 60px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary-color), var(--accent-color));
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            text-align: right;
+            margin-left: auto;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: auto;
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: var(--surface);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-year {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--primary-color);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            border: 6px solid white;
+            box-shadow: 0 4px 16px rgba(212, 165, 116, 0.3);
+        }
+
+        .timeline-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .timeline-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* インタラクティブ要素 */
+        .interactive-element {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 50px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .interactive-element:hover {
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 32px 0;
+        }
+
+        .chart-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-source {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* ハイライトボックス */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-light), rgba(212, 165, 116, 0.08));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--primary-color);
+        }
+
+        .highlight-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* 次ページボタン */
+        .next-page-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 18px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(212, 165, 116, 0.3);
+        }
+
+        .next-page-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(212, 165, 116, 0.4);
+        }
+
+        .next-page-button::after {
+            content: '→';
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .next-page-button:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* 参考文献 */
+        .references {
+            background: var(--surface);
+            padding: 32px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            border: 1px solid var(--border);
+        }
+
+        .references p {
+            margin-bottom: 16px;
+        }
+
+        /* 画像プレースホルダー */
+        .image-placeholder {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #ced4da;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 32px 0;
+            color: var(--text-light);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 1200px) {
+            .table-of-contents {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 140px 60px 100px;
+            }
+            .timeline::before {
+                left: 20px;
+            }
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+                text-align: left !important;
+            }
+            .timeline-year {
+                left: 20px;
+                transform: translateY(-50%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-link {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+            .main-content {
+                padding: 120px 32px 80px;
+            }
+            .page-title {
+                font-size: 2.8rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .timeline-year {
+                width: 60px;
+                height: 60px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ナビゲーション -->
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="page2.html" class="nav-link">序論</a></li>
+                <li><a href="page3.html" class="nav-link active">系譜</a></li>
+                <li><a href="page4.html" class="nav-link">両義</a></li>
+                <li><a href="page5.html" class="nav-link">自己</a></li>
+                <li><a href="page6.html" class="nav-link">資本</a></li>
+                <li><a href="page7.html" class="nav-link">記憶</a></li>
+                <li><a href="page8.html" class="nav-link">未来</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 目次サイドバー -->
+    <nav class="table-of-contents">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#section1" class="toc-link">インターネットの誕生</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">SNSの誕生</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">SNSの確立と成長</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">スマホ時代の多様化</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">現代SNSの特徴変遷</a></li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- ページヘッダー -->
+        <header class="page-header">
+            <div class="page-subtitle">Page 3</div>
+            <h1 class="page-title">系譜</h1>
+            <p class="page-description">
+                SNSの本質を覗くため、どのようにしてSNSが生まれ、進化していったのかを見ていきましょう。
+                インターネットの誕生から現代までの変遷を辿ります。
+            </p>
+        </header>
+
+        <!-- セクション1: インターネットの誕生 -->
+        <section id="section1" class="content-section">
+            <h2 class="section-title">1. インターネットの誕生：軍事技術から学術ネットワークへ</h2>
+            
+            <p class="content-paragraph">
+                まず、SNSの土台であるインターネットは、1960年代のアメリカで、冷戦下の軍事技術開発から生まれました。
+            </p>
+
+            <h3 class="subsection-title">ARPANETの誕生（1969年）</h3>
+            <p class="content-paragraph">
+                ソビエト連邦との競争の中、アメリカ国防総省の高等研究計画局（ARPA）は、核攻撃を受けても通信網が機能し続けるような、分散型のコンピュータネットワークの構想を立てました。これにより、1969年に「ARPANET（アーパネット）」と呼ばれる、世界初のパケット通信ネットワークが稼働します。
+            </p>
+
+            <div class="image-placeholder">
+                ARPANETの初期ネットワーク図を挿入推奨<br>
+                （4つの大学を結ぶネットワークマップ）
+            </div>
+
+            <p class="content-paragraph">
+                これは、データを小さな「パケット」に分割して送り、目的地で再構築する仕組みで、一部の通信経路が破壊されても迂回できるという画期的なものでした。当初は軍事目的で開発されましたが、すぐに大学や研究機関が利用するようになり、研究者同士の情報交換や共同研究に不可欠なツールとなっていきます。
+            </p>
+
+            <h3 class="subsection-title">WWW（World Wide Web）の発明（1989年）</h3>
+            <p class="content-paragraph">
+                イギリスのティム・バーナーズ＝リーが、スイスの欧州原子核研究機構（CERN）で、文書と文書をリンクで結びつけるシステム、WWWを考案しました。これは、今日私たちが使っているウェブサイトの基礎となる技術です。これにより、画像や動画を含む情報を視覚的に分かりやすく表示できるようになり、インターネットの利用が一気に広がりました。
+            </p>
+
+            <h3 class="subsection-title">商用化の始まり（1990年代初頭）</h3>
+            <p class="content-paragraph">
+                1990年代に入ると、インターネットへの接続を一般向けに提供する企業（プロバイダ）が登場し、誰もがインターネットを利用できるようになりました。これにより、電子メールやウェブサイトの閲覧が一般の人々にも身近なものとなっていきます。
+            </p>
+        </section>
+
+        <!-- セクション2: SNSの誕生 -->
+        <section id="section2" class="content-section">
+            <h2 class="section-title">2. SNSの誕生：初期のネットワークサービス</h2>
+            
+            <p class="content-paragraph">
+                インターネットが広く普及するにつれ、人々は単なる情報収集だけでなく、「人とのつながり」を求めるようになります。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">世界初のSNS「Six Degrees.com」（1997年）</div>
+                <p>インターネットの商用化が進んだこの時期に、世界初のSNSと言われる「Six Degrees.com」が誕生します。これは、プロフィール作成、友人リストの作成、友人間のメッセージ送信といった、現在のSNSに通じる基本的な機能を備えています。しかし、当時はまだ回線速度が遅く、利用できる人も限られていたため、一般に浸透することはありませんでした。</p>
+            </div>
+
+            <h3 class="subsection-title">ブログの登場（1990年代後半）</h3>
+            <p class="content-paragraph">
+                個人が手軽に情報発信できる「ブログ」が登場し、誰もが記者や編集者になれる時代が始まりました。これにより、インターネットは単なる情報受信の場から、双方向の情報発信・共有の場へと変化していきます。
+            </p>
+
+            <h3 class="subsection-title">初期のウェブコミュニティの形成</h3>
+            <p class="content-paragraph">
+                匿名掲示板「2ちゃんねる」（現：5ちゃんねる）や、日記サービス「mixi」の原型となるような、特定の趣味や関心を持つ人々が集まるウェブサイトが数多く登場しました。これらはまだSNSという明確な枠組みはありませんでしたが、オンラインでのコミュニティ形成の基盤を築きました。
+            </p>
+        </section>
+
+        <!-- タイムライン：SNSの歴史 -->
+        <section id="section3" class="content-section">
+            <h2 class="section-title">3. SNSの確立と成長（2000年代）</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">2003</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">MySpaceの隆盛</div>
+                        <div class="timeline-description">
+                            アメリカでサービスを開始した「MySpace」は、ミュージシャンやアーティストが自身の作品を公開する場として人気を博しました。プロフィールページのカスタマイズ性が高く、若者文化の中心的な存在となりました。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">2004</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">mixiとFacebookの誕生</div>
+                        <div class="timeline-description">
+                            「mixi」が日本でサービス開始。招待制というクローズドな仕組みが安心感を与え、日本独自のコミュニティ文化を形成。同年、マーク・ザッカーバーグ氏がハーバード大学で「Facebook」を立ち上げ。実名制を基本とし、現実の人間関係をオンラインに持ち込む新しいスタイルを確立。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">2006</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Twitterの登場</div>
+                        <div class="timeline-description">
+                            「つぶやき」という短文投稿に特化し、いつでもどこでも気軽に情報を発信・共有できるスタイルを確立。災害時の情報伝達や社会運動のプラットフォームとしても活用され、情報のリアルタイム性を重視する文化を生み出しました。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="image-placeholder">
+                2000年代のSNSプラットフォームのスクリーンショット集を挿入推奨<br>
+                （MySpace, mixi, Facebook, Twitterの初期画面）
+            </div>
+        </section>
+
+        <!-- セクション4: スマートフォン時代 -->
+        <section id="section4" class="content-section">
+            <h2 class="section-title">4. スマートフォンの普及とSNSの多様化（2010年代〜）</h2>
+            
+            <p class="content-paragraph">
+                2007年のiPhone発売を皮切りに、スマートフォンの普及が本格化すると、SNSのあり方は再び大きく変化します。
+            </p>
+
+            <!-- SNS利用者推移グラフ -->
+            <div class="interactive-element">
+                <div class="chart-title">主要SNSプラットフォーム利用者数推移</div>
+                <div class="chart-container">
+                    <canvas id="platformChart"></canvas>
+                </div>
+                <div class="chart-source">出典: Statista, 各社IR資料を基に作成</div>
+            </div>
+
+            <h3 class="subsection-title">Instagram（2010年）- 視覚的コミュニケーション</h3>
+            <p class="content-paragraph">
+                写真や動画の共有に特化し、視覚的なコミュニケーションを重視する層に広く受け入れられました。加工フィルター機能や「ストーリーズ」機能の追加により、若者を中心に絶大な人気を誇るサービスへと成長しました。
+            </p>
+
+            <h3 class="subsection-title">LINE（2011年）- 日本のモバイル革命</h3>
+            <p class="content-paragraph">
+                東日本大震災をきっかけに、日本で急速に普及した「LINE」は、無料通話やメッセージ機能を備え、家族や友人といった身近な人間関係でのコミュニケーションの中心となりました。
+            </p>
+
+            <h3 class="subsection-title">TikTok（2016年）- 短尺動画とアルゴリズム</h3>
+            <p class="content-paragraph">
+                短尺動画の投稿と、ユーザーの好みに合わせて動画を次々と表示する独自のアルゴリズムによって、若者を中心に爆発的な人気を獲得しました。これにより、SNSは「つながり」よりも「コンテンツとの偶然の出会い」を重視する側面を強めました。
+            </p>
+        </section>
+
+        <!-- セクション5: SNSの特徴変遷 -->
+        <section id="section5" class="content-section">
+            <h2 class="section-title">5. 別の角度からの視点：SNSの特徴変遷</h2>
+            
+            <p class="content-paragraph">
+                SNSの遍歴を振り返ることで、単なるサービスの歴史だけでなく、社会や人間の本質に関するいくつかの「別の角度からの視点」が見えてきます。
+            </p>
+
+            <h3 class="subsection-title">「匿名」から「実名」、そして「ペルソナ」へ</h3>
+            
+            <p class="content-paragraph">
+                黎明期（2ちゃんねる、初期のmixi）では、匿名性が重視されていました。匿名の仮面をかぶることで、現実の人間関係から解放され、本音で語り合える場として機能しました。
+            </p>
+
+            <p class="content-paragraph">
+                次に登場したFacebookは実名制を基本としました。現実の人間関係をオンラインに持ち込むことで、社会的な信頼性を担保し、ビジネスやキャリアにも影響を与える存在となりました。
+            </p>
+
+            <p class="content-paragraph">
+                そして現在は、SNSごとに異なる「ペルソナ」を使い分けるのが一般的です。Instagramでは「おしゃれな自分」、X（旧Twitter）では「本音を語る自分」、TikTokでは「おもしろい自分」というように、複数の自己を演じ分けます。これは、人間が本来持っている多面的な側面を、デジタル空間で再構築しているとも言えます。
+            </p>
+
+            <!-- 自己表現の変遷グラフ -->
+            <div class="interactive-element">
+                <div class="chart-title">SNSにおける自己表現スタイルの変遷</div>
+                <div class="chart-container">
+                    <canvas id="identityChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 著者による分析</div>
+            </div>
+
+            <h3 class="subsection-title">「つながりの量」から「つながりの質」、そして「偶然の出会い」へ</h3>
+            
+            <p class="content-paragraph">
+                SNS黎明期から成長期にかけては、いかに多くの友人やフォロワーと「つながるか」が重視されていました。いわゆる「SNS映え」は、フォロワー数を増やすための手段でもあります。
+            </p>
+
+            <p class="content-paragraph">
+                しかし、大量のつながりがもたらす「SNS疲れ」が問題になると、より身近な友人との「つながりの質」を重視する動きが強まります。クローズドなグループチャットや、特定のコミュニティでの交流が活発になりました。
+            </p>
+
+            <p class="content-paragraph">
+                最近のTikTokに代表されるSNSは、もはや「誰とつながるか」よりも、優れたコンテンツとの「偶然の出会い」に重きを置いています。フォローしているかどうかにかかわらず、アルゴリズムが興味を持つであろう動画を次々と表示します。これは、人間が本来持っている「新しい刺激や面白いものを発見したい」という欲求に応えるものです。
+            </p>
+
+            <h3 class="subsection-title">「記録」から「消費」、そして「即時消滅」へ</h3>
+            
+            <p class="content-paragraph">
+                初期の日記サービスやブログは、自分の考えや日常を「記録」することが主な目的でした。そこには、将来読み返すための「アーカイブ」としての意味合いがありました。
+            </p>
+
+            <p class="content-paragraph">
+                スマートフォンが普及し、Instagramが台頭すると、投稿は「記録」というより、他者に「消費」してもらうためのコンテンツへと変化しました。「いいね」やコメントは、そのコンテンツが他者からどのように受け止められたかを示す重要な指標となりました。
+            </p>
+
+            <p class="content-paragraph">
+                そして、ストーリーズ機能に代表されるように、投稿が24時間で消えるという「即時消滅」の概念が一般的になります。これは、完璧な「記録」を残すことよりも、その瞬間の出来事を気軽に共有したいという欲求の表れです。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">SNSの未来への示唆</div>
+                <p>このようにSNSの遍歴は、人々のコミュニケーションのあり方だけでなく、自己のあり方、情報との向き合い方、そして時間に対する感覚そのものが、時代とともに変化していることを示唆しています。</p>
+            </div>
+
+            <p class="content-paragraph">
+                しかし、社会と密接に関わりすぎたSNSは、人間社会に肯定的な側面と否定的な側面の両方をもたらしました。ではそんなSNS、真実と虚構が織りなす情報社会の二面性を見ていきましょう。
+            </p>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <a href="#" class="next-page-button">
+                    次ページ「両義」
+                </a>
+            </div>
+        </section>
+
+        <!-- 参考文献 -->
+        <section class="content-section">
+            <h3 class="subsection-title">参考文献</h3>
+            <div class="references">
+                <p>ジャネット・アベイト『インターネットの発明』NTT出版、2002年</p>
+                <p>ティム・バーナーズ＝リー『ウェブの創成』日本経済新聞社、2001年</p>
+                <p>高橋徹『インターネットの歴史』NTT出版、2000年</p>
+                <p>植田康孝『ネットコミュニティの文化史』岩波書店、2013年</p>
+                <p>ダナ・ボイド／ニコール・エリソン「ソーシャルネットワークサイト：定義・歴史・研究」</p>
+                <p>アンドレアス・カプラン／ミヒャエル・ハインライン「ソーシャルメディアの挑戦と機会」</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ナビゲーション制御
+        let navTimer;
+        const navContainer = document.querySelector('.nav-container');
+        
+        function showNav() {
+            navContainer.classList.remove('hidden');
+            clearTimeout(navTimer);
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 7000);
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientY < 120) {
+                showNav();
+            }
+        });
+        
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(navTimer);
+        });
+        
+        navContainer.addEventListener('mouseleave', () => {
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 3000);
+        });
+        
+        showNav();
+
+        // スクロールアニメーション
+        function handleScroll() {
+            const sections = document.querySelectorAll('.content-section');
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+
+            timelineItems.forEach((item, index) => {
+                const itemTop = item.getBoundingClientRect().top;
+                if (itemTop < windowHeight * 0.8 && !item.classList.contains('visible')) {
+                    setTimeout(() => {
+                        item.classList.add('visible');
+                    }, index * 200);
+                }
+            });
+
+            updateTOC();
+        }
+
+        function updateTOC() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 250) {
+                    currentSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            setTimeout(handleScroll, 100);
+            initializeCharts();
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Chart.js初期化
+        function initializeCharts() {
+            // プラットフォーム利用者数推移
+            const platformCtx = document.getElementById('platformChart');
+            if (platformCtx) {
+                new Chart(platformCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['2004', '2006', '2008', '2010', '2012', '2014', '2016', '2018', '2020', '2022', '2024'],
+                        datasets: [
+                            {
+                                label: 'Facebook',
+                                data: [1, 12, 100, 608, 1056, 1393, 1860, 2320, 2800, 2958, 3030],
+                                borderColor: '#1877F2',
+                                backgroundColor: 'rgba(24, 119, 242, 0.1)',
+                                tension: 0.4,
+                                fill: false,
+                                pointRadius: 5,
+                                pointHoverRadius: 7
+                            },
+                            {
+                                label: 'Twitter/X',
+                                data: [0, 5, 6, 54, 200, 284, 319, 330, 353, 450, 540],
+                                borderColor: '#000000',
+                                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                tension: 0.4,
+                                fill: false,
+                                pointRadius: 5,
+                                pointHoverRadius: 7
+                            },
+                            {
+                                label: 'Instagram',
+                                data: [0, 0, 0, 1, 100, 400, 600, 1000, 1221, 1478, 2000],
+                                borderColor: '#E4405F',
+                                backgroundColor: 'rgba(228, 64, 95, 0.1)',
+                                tension: 0.4,
+                                fill: false,
+                                pointRadius: 5,
+                                pointHoverRadius: 7
+                            },
+                            {
+                                label: 'TikTok',
+                                data: [0, 0, 0, 0, 0, 0, 100, 500, 800, 1000, 1500],
+                                borderColor: '#FF0050',
+                                backgroundColor: 'rgba(255, 0, 80, 0.1)',
+                                tension: 0.4,
+                                fill: false,
+                                pointRadius: 5,
+                                pointHoverRadius: 7
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: { size: 14, family: 'Inter', weight: '600' },
+                                    color: '#1a202c',
+                                    usePointStyle: true,
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                padding: 16,
+                                titleFont: { size: 14, weight: '600' },
+                                bodyFont: { size: 13 },
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.parsed.y + '百万人';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096',
+                                    callback: function(value) {
+                                        return value + '百万';
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 自己表現スタイルの変遷
+            const identityCtx = document.getElementById('identityChart');
+            if (identityCtx) {
+                new Chart(identityCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['匿名時代\n(2000年代前半)', '実名時代\n(2000年代後半)', 'ペルソナ時代\n(2010年代〜)'],
+                        datasets: [{
+                            label: '利用者の割合（%）',
+                            data: [85, 60, 90],
+                            backgroundColor: [
+                                'rgba(139, 69, 19, 0.7)',
+                                'rgba(70, 130, 180, 0.7)',
+                                'rgba(212, 165, 116, 0.7)'
+                            ],
+                            borderColor: [
+                                '#8B4513',
+                                '#4682B4',
+                                '#D4A574'
+                            ],
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                padding: 16,
+                                cornerRadius: 8
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096',
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 11 },
+                                    color: '#718096'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(handleScroll, 250);
+        });
+    </script>
+</body>
+</html>

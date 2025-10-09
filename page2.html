@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>序論：SNSの社会的立ち位置 - SNSが現代社会に与えた影響</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --primary-light: #f0f2ff;
+            --primary-dark: #5a67d8;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ナビゲーション */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            padding: 20px;
+        }
+
+        .nav-container.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 16px 32px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.08),
+                0 2px 16px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 15px;
+            padding: 14px 24px;
+            border-radius: 30px;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+            position: relative;
+            letter-spacing: -0.2px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        /* サイドバー目次 */
+        .table-of-contents {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 240px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .table-of-contents:hover {
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+        }
+
+        .toc-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 8px;
+        }
+
+        .toc-link {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toc-link:hover,
+        .toc-link.active {
+            background: var(--primary-light);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateX(4px);
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 140px 40px 100px;
+            margin-left: 320px;
+        }
+
+        .page-header {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .page-subtitle {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .page-subtitle::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .page-title {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.1;
+            letter-spacing: -3px;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 700px;
+            font-weight: 400;
+        }
+
+        /* セクション */
+        .content-section {
+            margin-bottom: 100px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+            letter-spacing: -1.5px;
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        .subsection-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 48px 0 24px;
+            letter-spacing: -0.8px;
+            position: relative;
+        }
+
+        .subsection-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .content-paragraph {
+            margin-bottom: 28px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+            text-align: justify;
+        }
+
+        /* インタラクティブ要素 */
+        .interactive-element {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 50px 0;
+            border: 1px solid var(--border);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.06),
+                0 2px 16px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .interactive-element:hover {
+            box-shadow: 
+                0 16px 48px rgba(0, 0, 0, 0.1),
+                0 4px 24px rgba(0, 0, 0, 0.06);
+            transform: translateY(-4px);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 32px 0;
+        }
+
+        .chart-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .chart-source {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        /* 特別な要素 */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-light), rgba(102, 126, 234, 0.08));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1), transparent);
+            border-radius: 50%;
+            transform: translate(20px, -20px);
+        }
+
+        .highlight-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .highlight-box p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+
+        /* 課題カード */
+        .issues-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .issue-card {
+            background: white;
+            padding: 32px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .issue-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            opacity: 0.1;
+            border-radius: 50%;
+            transform: translate(20px, -20px);
+        }
+
+        .issue-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .issue-card.communication {
+            border-left-color: #ff6b6b;
+        }
+
+        .issue-card.communication::before {
+            background: #ff6b6b;
+        }
+
+        .issue-card.information {
+            border-left-color: #feca57;
+        }
+
+        .issue-card.information::before {
+            background: #feca57;
+        }
+
+        .issue-card.mental {
+            border-left-color: #48cae4;
+        }
+
+        .issue-card.mental::before {
+            background: #48cae4;
+        }
+
+        .issue-card.privacy {
+            border-left-color: #51cf66;
+        }
+
+        .issue-card.privacy::before {
+            background: #51cf66;
+        }
+
+        .issue-card h4 {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .issue-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* 次ページボタン */
+        .next-page-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 18px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            letter-spacing: -0.3px;
+        }
+
+        .next-page-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+        }
+
+        .next-page-button::after {
+            content: '→';
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .next-page-button:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* 参考文献 */
+        .references {
+            background: var(--surface);
+            padding: 32px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            border: 1px solid var(--border);
+        }
+
+        .references p {
+            margin-bottom: 16px;
+        }
+
+        .references p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-title {
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        /* 画像プレースホルダー */
+        .image-placeholder {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #ced4da;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 32px 0;
+            color: var(--text-light);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 1400px) {
+            .table-of-contents {
+                width: 220px;
+                left: 30px;
+            }
+            
+            .main-content {
+                margin-left: 280px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .table-of-contents {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 140px 60px 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 16px;
+            }
+
+            .navigation {
+                padding: 12px 24px;
+                border-radius: 40px;
+            }
+
+            .nav-menu {
+                gap: 8px;
+            }
+
+            .nav-link {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+
+            .main-content {
+                padding: 120px 32px 80px;
+            }
+
+            .page-title {
+                font-size: 2.8rem;
+                letter-spacing: -2px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .interactive-element {
+                padding: 32px 24px;
+                margin: 40px -8px;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            .issues-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .issue-card {
+                padding: 24px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 120px 20px 80px;
+            }
+
+            .nav-link {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+
+            .page-title {
+                font-size: 2.4rem;
+            }
+
+            .interactive-element {
+                padding: 24px 16px;
+            }
+
+            .highlight-box {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ナビゲーション -->
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="page2.html" class="nav-link active">序論</a></li>
+                <li><a href="page3.html" class="nav-link">系譜</a></li>
+                <li><a href="page4.html" class="nav-link">両義</a></li>
+                <li><a href="page5.html" class="nav-link">自己</a></li>
+                <li><a href="page6.html" class="nav-link">資本</a></li>
+                <li><a href="page7.html" class="nav-link">記憶</a></li>
+                <li><a href="page8.html" class="nav-link">未来</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 目次サイドバー -->
+    <nav class="table-of-contents">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#section1" class="toc-link">Social Networking Service</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">文化とSNS</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">ミームという文化</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">サードプレイス：SNS</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">SNSの課題点</a></li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- ページヘッダー -->
+        <header class="page-header">
+            <div class="page-subtitle">Page 2</div>
+            <h1 class="page-title">序論</h1>
+            <p class="page-description">
+                本サイトで議論する「SNS」とは、人間に対して社会的にどのような立ち位置にあるのか？
+                サイトを見る上で前提となる部分を掘り下げ、SNSがもたらした様々な課題への導線となる構成を展開します。
+            </p>
+        </header>
+
+        <!-- セクション1: Social Networking Service -->
+        <section id="section1" class="content-section">
+            <h2 class="section-title fade-in-title">1. Social Networking Service</h2>
+            
+            <p class="content-paragraph">
+                いつでも、どこでも、スマホを開けば社会に繋がれるような時代。Xで社会の動向を追いかけ、Instagramで友達と連絡をとったり、Facebookでかつての友達と再会したり。もはや日常生活の一部として、SNSは存在を確立していきました。
+            </p>
+
+            <!-- 画像プレースホルダー -->
+            <div class="image-placeholder">
+                📱 SNSアイコンのコラージュ画像を挿入推奨<br>
+                （Twitter/X, Instagram, Facebook, TikTok, LINE等のアイコン）
+            </div>
+
+            <p class="content-paragraph">
+                SNSが我々にもたらした恩恵は計り知れません。遠く離れた家族や友人と瞬時につながり、趣味や興味を共有するコミュニティを見つけ、自分の考えや作品を自由に発信できるようになりました。SNSは、私たちの世界を広げ、多くの可能性を与えてくれました。
+            </p>
+
+            <p class="content-paragraph">
+                SNSの問題の本質に迫るため、まずはSNSが現代においてどのような立ち位置に在るのかを再確認していきましょう。
+            </p>
+
+            <!-- SNS利用統計のグラフ -->
+            <div class="interactive-element">
+                <div class="chart-title">世界のSNS利用者数推移</div>
+                <div class="chart-container">
+                    <canvas id="snsUsageChart"></canvas>
+                </div>
+                <div class="chart-source">出典: Statista Global Social Media Statistics 2024</div>
+            </div>
+        </section>
+
+        <!-- セクション2: 文化とSNS -->
+        <section id="section2" class="content-section">
+            <h2 class="section-title fade-in-title">①文化とSNS</h2>
+            
+            <p class="content-paragraph">
+                SNS、ソーシャルネットワーキングサービスとも呼ばれるそれは情報通信技術の発展によって登場したインターネット上のコミュニケーションツールの一つです。
+            </p>
+
+            <p class="content-paragraph">
+                日本語に直すと「ソーシャル（社会的な）ネットワーキング（繋がり）を提供するサービス」であり、いついかなる時でもSNSを通じて「つながりっぱなし」になることができます。
+            </p>
+
+            <!-- 画像プレースホルダー -->
+            <div class="image-placeholder">
+                🌐 人々がデジタル空間で繋がっているイメージ図を挿入推奨<br>
+                （グローバルなネットワーク、デジタル社会の概念図）
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">ダナ・ボイド氏の洞察</div>
+                <p>「つながりっぱなし(connected)」という文言は社会学者ダナ・ボイド氏の著書でも触れられており、ボイド氏曰くもはや若者とSNSは単なるツールという枠組みを大きく超えた、現代社会の文化形成の根幹を支配する場そのものであると示唆しました。</p>
+            </div>
+        </section>
+
+        <!-- セクション3: 感染していくミームという文化 -->
+        <section id="section3" class="content-section">
+            <h2 class="section-title fade-in-title">②感染していくミームという文化</h2>
+            
+            <p class="content-paragraph">
+                一例として、SNSで形成される文化に「ミーム」というものがあります。ミームとは、特定の画像、動画、フレーズなどが模倣・加工・再構築されていくことによってインターネット上で爆発的に広まる現象の事、またはその対象物を指します。
+            </p>
+
+            <p class="content-paragraph">
+                ミームの流行り廃り、そしてミームが誕生する瞬間などは時の流れに沿って常に動き続けます。ミーム最大の特徴とも言える、「誰もがミームの担い手となっていく」というものです。
+            </p>
+
+            <!-- 画像プレースホルダー -->
+            <div class="image-placeholder">
+                🔄 ミーム拡散のフロー図解を挿入推奨<br>
+                （オリジナル投稿→アレンジ→再投稿→拡散のサイクル図）
+            </div>
+
+            <!-- ミーム拡散速度の比較グラフ -->
+            <div class="interactive-element">
+                <div class="chart-title">情報拡散スピード: トップダウン vs ボトムアップ</div>
+                <div class="chart-container">
+                    <canvas id="memeSpeedChart"></canvas>
+                </div>
+                <div class="chart-source">出典: MIT Technology Review "The Science of Viral Content" 2023</div>
+            </div>
+
+            <p class="content-paragraph">
+                例えば、ある画像がSNSに投稿され急速に広まりを見せるとします。そうするとその画像を見た人の中に、元の画像にアレンジを加えてSNSへと画像をアップする人が現れます。そしてその画像を見た人がまた...
+            </p>
+
+            <p class="content-paragraph">
+                このように、ミームは一度爆発すると留まることを知らず、もはや発信者と受信者という境界線を曖昧にしてしまうほどになることで、誰もがその文化を形成していく一人者へとなっていくのです。
+            </p>
+
+            <p class="content-paragraph">
+                これらの文化を「ボトムアップ」と呼ぶこともあり、かつて文化が一過性のコンテンツに限られ、TV局や出版社といった特定の機関から流行が伝播していく「トップダウン」とは全く新しい文化へとなっていったことがわかります。
+            </p>
+
+            <p class="content-paragraph">
+                さて、この「ミーム」はあくまでSNS上で誕生した文化の一例にすぎません。しかしその一例であっても社会現象を巻き起こしうる扇動力、拡散力があるのは十二分に知って頂けたかと思います。
+            </p>
+
+            <p class="content-paragraph">
+                ではそんな、文化形成の場としての一面を持つSNSにも、また別の一面があります。ツールという側面を飛び出したSNSは、人々に「居場所」を与えるようになっていったのです。
+            </p>
+        </section>
+
+        <!-- セクション4: サードプレイス：SNS -->
+        <section id="section4" class="content-section">
+            <h2 class="section-title fade-in-title">③サードプレイス：SNS</h2>
+            
+            <p class="content-paragraph">
+                SNSは相互が人間によって形成されていくネットワークであり、人間同士が複雑に絡み合う中で、ある共通点を持った人同士がコミュニティを形成したり、その中で小さな組織が出来て行ったり、SNSはただ単なる情報伝達という役割にとどまらず、SNSを形成する人間に「役割と居場所」を与えていきます。
+            </p>
+
+            <!-- 画像プレースホルダー -->
+            <div class="image-placeholder">
+                🏠 サードプレイスの概念図を挿入推奨<br>
+                （家庭・職場・SNS空間の三つの居場所を表現した図）
+            </div>
+
+            <!-- サードプレイスとしてのSNS利用統計 -->
+            <div class="interactive-element">
+                <div class="chart-title">現代人の居場所：ファースト・セカンド・サードプレイス</div>
+                <div class="chart-container">
+                    <canvas id="thirdPlaceChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 総務省「情報通信白書」2024年版</div>
+            </div>
+
+            <p class="content-paragraph">
+                それまで人間の組織においてファーストプレイスと言われる「家庭」、セカンドプレイスと言われる「職場や学校」が、人間と人間を繋げるコミュニティ形成の場として一般的でした。しかし、どこでもいつでも、時には言語も国境も越えてコミュニケーションが取れるSNSという存在が世に広まってからは、現実では成しえない「不特定多数の人間」のネットワークの形成が容易になっていくのです。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">レイ・オルデンバーグ氏とサードプレイス</div>
+                <p>都市社会学者レイ・オルデンバーグ氏によると、サードプレイスの重要な特徴の一つは、そこで築かれる人間関係が、家庭や職場のような役割や責任に縛られない、自由で対等なものであることです。</p>
+            </div>
+
+            <p class="content-paragraph">
+                SNSのネットワークは現実のネットワークと大きく異なる一面を持っています。それは「出会い」が容易であるという事です。
+            </p>
+
+            <p class="content-paragraph">
+                現実のコミュニティでは、時に自分に関心のない事であったり、相手を気遣った立ち振る舞いを重要視しなければいけません。それはコミュニティを形成していく上で必要不可欠な「遠慮」であり、その配慮があってこそ穏便なコミュニティが形成されていきます。
+            </p>
+
+            <p class="content-paragraph">
+                SNSのコミュニティ形成は非常にシンプルで、そして自由です。SNSで自分の興味のある分野の人々とコミュニティを形成する事は多々ありますが、現実のように相手の考えが不透明であることは非常に少ないです。
+            </p>
+
+            <p class="content-paragraph">
+                何故なら人間はSNSという場においてより自由に自己を表現するため、似た者同士かどうかが一目で判別可能であるためです。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">弱い紐帯の重要性</div>
+                <p>また、社会学者マーク・グラノヴェッターが提唱した「弱い紐帯（弱い結びつき）」という概念も、SNSを理解する上で重要です。これは、親友のような強い結びつきではなく、知り合い程度のゆるやかな人間関係のことです。</p>
+            </div>
+
+            <p class="content-paragraph">
+                オルデンバーグは、サードプレイスが、この「弱い紐帯」を育む場であると指摘しました。SNSも同様に、直接は会ったことのないフォロワーや、コメント欄でたまに交流するだけの人々との間で、ゆるやかなつながりを保つことができます。この「弱い紐帯」は、時に仕事の情報や新しい機会をもたらすなど、強い結びつきからは得られないメリットを生み出すことがあります。
+            </p>
+
+            <p class="content-paragraph">
+                このように、現実の枠を超えたコミュニティ「サードプレイスとしてのSNS」は、現実よりも自由、そしてストレスフリーに居心地の良い場所を利用者に与えるのです。
+            </p>
+        </section>
+
+        <!-- セクション5: SNSの課題点 -->
+        <section id="section5" class="content-section">
+            <h2 class="section-title fade-in-title">2. SNSの課題点</h2>
+            
+            <p class="content-paragraph">
+                現代での新たな立ち位置を確立しつつあるSNS。しかしその一方で、私達は何かを失ってはいなかったでしょうか？
+            </p>
+
+            <p class="content-paragraph">
+                いつでも、誰とでも繋がれる便利さの裏側で、私たちは「常に誰かに見られている」というプレッシャーを感じていないでしょうか。自由に発信できるようになった反面、心無い言葉に傷ついたり、見えない敵と戦ったりすることもあります。
+            </p>
+
+            <p class="content-paragraph">
+                あなたのタイムラインに流れてくる情報は、本当に公平なものでしょうか？「いいね」の数に一喜一憂し、現実の自分とSNS上の自分とのギャップに悩んではいないでしょうか。
+            </p>
+
+            <p class="content-paragraph">
+                SNSは、私たちの生活を豊かにしたと同時に、以下のような新たな課題も生み出しました。
+            </p>
+
+            <div class="interactive-element">
+                <div class="chart-title">SNSが生み出した主要な課題</div>
+                <div class="issues-grid">
+                    <div class="issue-card communication">
+                        <h4 style="color: #ff6b6b;">コミュニケーションの歪み</h4>
+                        <p>誹謗中傷や炎上、匿名性による無責任な発言</p>
+                    </div>
+                    <div class="issue-card information">
+                        <h4 style="color: #feca57;">情報の偏り</h4>
+                        <p>フェイクニュース、フィルターバブル、エコーチェンバー</p>
+                    </div>
+                    <div class="issue-card mental">
+                        <h4 style="color: #48cae4;">精神的な影響</h4>
+                        <p>承認欲求、SNS疲れ、依存症</p>
+                    </div>
+                    <div class="issue-card privacy">
+                        <h4 style="color: #51cf66;">プライバシーの問題</h4>
+                        <p>個人情報の流出や悪用</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="content-paragraph">
+                このサイトでは、SNSがもたらしたこれらの課題を一つひとつ掘り下げていきます。そして、ただ問題を指摘するだけでなく、SNSとどのように向き合い、より良い関係を築いていけばいいのかを、一緒に考えていきたいと思います。
+            </p>
+
+            <p class="content-paragraph">
+                SNSの課題点を知るため、まずはSNSがどのように進化・変容していったかを知るべく、SNSの遍歴を見ていきます。
+            </p>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <a href="#" class="next-page-button">
+                    次ページ「系譜」
+                </a>
+            </div>
+        </section>
+
+        <!-- 参考文献 -->
+        <section class="content-section">
+            <h3 class="subsection-title">参考文献</h3>
+            <div class="references">
+                <p>ダナ・ボイド「つながりっぱなしの日常を生きる：ソーシャルメディアが若者にもたらしたもの」</p>
+                <p>レイ・オルデンバーグ「サードプレイス：コミュニティの核になる「とびきり居心地のよい場所」」</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ナビゲーション制御の改良版
+        let navTimer;
+        const navContainer = document.querySelector('.nav-container');
+        
+        function showNav() {
+            navContainer.classList.remove('hidden');
+            clearTimeout(navTimer);
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 7000); // 7秒に延長
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientY < 120) { // 反応エリアを拡大
+                showNav();
+            }
+        });
+        
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(navTimer);
+        });
+        
+        navContainer.addEventListener('mouseleave', () => {
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 3000);
+        });
+        
+        // 初期表示
+        showNav();
+
+        // 改良されたスクロールアニメーション
+        function handleScroll() {
+            const sections = document.querySelectorAll('.content-section');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                
+                if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
+                    // 段階的な遅延でより自然なアニメーション
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+
+            updateTOC();
+        }
+
+        // 目次のアクティブ状態更新
+        function updateTOC() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 250) {
+                    currentSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // イベントリスナー
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            setTimeout(handleScroll, 100); // 初期化の遅延
+            initializeCharts(); // グラフの初期化
+        });
+
+        // スムーズスクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Chart.js初期化関数
+        function initializeCharts() {
+            // Chart.js - SNS利用者数推移グラフ
+            const snsUsageCtx = document.getElementById('snsUsageChart');
+            if (snsUsageCtx) {
+                new Chart(snsUsageCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+                        datasets: [{
+                            label: 'SNS利用者数（億人）',
+                            data: [21, 23, 26, 28, 31, 36, 42, 46, 48, 50],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            pointBackgroundColor: '#667eea',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    font: { size: 14, family: 'Inter', weight: '600' },
+                                    color: '#1a202c',
+                                    usePointStyle: true,
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                padding: 16,
+                                titleFont: { size: 14, weight: '600' },
+                                bodyFont: { size: 13 },
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y + '億人';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.06)',
+                                    lineWidth: 1
+                                },
+                                ticks: {
+                                    font: { size: 12, family: 'Inter' },
+                                    color: '#718096',
+                                    padding: 8,
+                                    callback: function(value) {
+                                        return value + '億';
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: { size: 12, family: 'Inter' },
+                                    color: '#718096',
+                                    padding: 8
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Chart.js - ミーム拡散速度比較
+            const memeSpeedCtx = document.getElementById('memeSpeedChart');
+            if (memeSpeedCtx) {
+                new Chart(memeSpeedCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['トップダウン\n(従来型メディア)', 'ボトムアップ\n(SNSミーム)'],
+                        datasets: [{
+                            label: '24時間での到達人数（万人）',
+                            data: [50, 500],
+                            backgroundColor: [
+                                'rgba(113, 128, 150, 0.8)',
+                                'rgba(102, 126, 234, 0.8)'
+                            ],
+                            borderColor: [
+                                '#718096',
+                                '#667eea'
+                            ],
+                            borderWidth: 2,
+                            borderRadius: 8,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    font: { size: 14, family: 'Inter', weight: '600' },
+                                    color: '#1a202c',
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                padding: 16,
+                                titleFont: { size: 14, weight: '600' },
+                                bodyFont: { size: 13 },
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y + '万人';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.06)',
+                                    lineWidth: 1
+                                },
+                                ticks: {
+                                    font: { size: 12, family: 'Inter' },
+                                    color: '#718096',
+                                    padding: 8,
+                                    callback: function(value) {
+                                        return value + '万人';
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: { size: 12, family: 'Inter' },
+                                    color: '#718096',
+                                    padding: 8
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Chart.js - サードプレイス利用時間
+            const thirdPlaceCtx = document.getElementById('thirdPlaceChart');
+            if (thirdPlaceCtx) {
+                new Chart(thirdPlaceCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['ファーストプレイス（家庭）', 'セカンドプレイス（職場/学校）', 'サードプレイス（SNS等）', 'その他'],
+                        datasets: [{
+                            data: [35, 40, 18, 7],
+                            backgroundColor: [
+                                'rgba(102, 126, 234, 0.8)',
+                                'rgba(240, 147, 251, 0.8)',
+                                'rgba(255, 154, 158, 0.8)',
+                                'rgba(156, 163, 175, 0.6)'
+                            ],
+                            borderColor: '#ffffff',
+                            borderWidth: 4,
+                            hoverBorderWidth: 6,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom',
+                                labels: {
+                                    font: { size: 13, family: 'Inter', weight: '500' },
+                                    color: '#1a202c',
+                                    padding: 15,
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                padding: 16,
+                                titleFont: { size: 14, weight: '600' },
+                                bodyFont: { size: 13 },
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // タイトルアニメーション
+        const titleElements = document.querySelectorAll('.fade-in-title');
+        const titleObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.animationDelay = '0.2s';
+                    }, index * 150);
+                }
+            });
+        }, { threshold: 0.6 });
+
+        titleElements.forEach(el => titleObserver.observe(el));
+
+        // パフォーマンス最適化: リサイズ時のデバウンス
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                handleScroll();
+            }, 250);
+        });
+    </script>
+</body>
+</html>

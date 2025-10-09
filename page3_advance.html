@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>発展論：旧網 - 人類史におけるネットワークの系譜</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #D4A574;
+            --primary-light: #FDF6E3;
+            --primary-dark: #B8956A;
+            --accent-color: #F4C430;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ナビゲーション */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            padding: 20px;
+        }
+
+        .nav-container.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 16px 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 15px;
+            padding: 14px 24px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            letter-spacing: -0.2px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4);
+        }
+
+        /* サイドバー目次 */
+        .table-of-contents {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 240px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 6px;
+        }
+
+        .toc-link {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toc-link:hover,
+        .toc-link.active {
+            background: var(--primary-light);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateX(4px);
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 140px 40px 100px;
+            margin-left: 320px;
+        }
+
+        .page-header {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .page-subtitle {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .page-subtitle::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .page-title {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.1;
+            letter-spacing: -3px;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        /* セクション */
+        .content-section {
+            margin-bottom: 100px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+            letter-spacing: -1.5px;
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        .subsection-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 48px 0 24px;
+            letter-spacing: -0.8px;
+        }
+
+        .content-paragraph {
+            margin-bottom: 28px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        /* 進化ステージカード */
+        .evolution-stages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin: 60px 0;
+        }
+
+        .evolution-stage {
+            background: white;
+            padding: 32px 24px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            border-top: 6px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .evolution-stage::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            opacity: 0.1;
+            border-radius: 50%;
+            transform: translate(20px, -20px);
+        }
+
+        .evolution-stage:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        .evolution-stage.oral {
+            border-top-color: #8B4513;
+        }
+
+        .evolution-stage.oral::before {
+            background: #8B4513;
+        }
+
+        .evolution-stage.written {
+            border-top-color: #4682B4;
+        }
+
+        .evolution-stage.written::before {
+            background: #4682B4;
+        }
+
+        .evolution-stage.print {
+            border-top-color: #228B22;
+        }
+
+        .evolution-stage.print::before {
+            background: #228B22;
+        }
+
+        .evolution-stage.digital {
+            border-top-color: var(--primary-color);
+        }
+
+        .evolution-stage.digital::before {
+            background: var(--primary-color);
+        }
+
+        .stage-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .stage-period {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stage-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* インタラクティブ要素 */
+        .interactive-element {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 50px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .interactive-element:hover {
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 32px 0;
+        }
+
+        .chart-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-source {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* ハイライトボックス */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-light), rgba(212, 165, 116, 0.08));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--primary-color);
+        }
+
+        .highlight-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* 次ページボタン */
+        .next-page-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 18px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(212, 165, 116, 0.3);
+        }
+
+        .next-page-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(212, 165, 116, 0.4);
+        }
+
+        .next-page-button::after {
+            content: '→';
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .next-page-button:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* 参考文献 */
+        .references {
+            background: var(--surface);
+            padding: 32px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            border: 1px solid var(--border);
+        }
+
+        .references p {
+            margin-bottom: 16px;
+        }
+
+        /* 画像プレースホルダー */
+        .image-placeholder {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #ced4da;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 32px 0;
+            color: var(--text-light);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 1200px) {
+            .table-of-contents {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 140px 60px 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-link {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+            .main-content {
+                padding: 120px 32px 80px;
+            }
+            .page-title {
+                font-size: 2.8rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .evolution-stages {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ナビゲーション -->
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="page2.html" class="nav-link">序論</a></li>
+                <li><a href="page3.html" class="nav-link">系譜</a></li>
+                <li><a href="page4.html" class="nav-link">両義</a></li>
+                <li><a href="page5.html" class="nav-link">自己</a></li>
+                <li><a href="page6.html" class="nav-link">資本</a></li>
+                <li><a href="page7.html" class="nav-link">記憶</a></li>
+                <li><a href="page8.html" class="nav-link">未来</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 目次サイドバー -->
+    <nav class="table-of-contents">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#section1" class="toc-link">つながりたい欲求</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">口承文化</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">文字と宗教</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">印刷革命</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">電信と無線</a></li>
+            <li class="toc-item"><a href="#section6" class="toc-link">ネットワークの構造</a></li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- ページヘッダー -->
+        <header class="page-header">
+            <div class="page-subtitle">Page 3 - 発展論</div>
+            <h1 class="page-title">旧網</h1>
+            <p class="page-description">
+                人類史におけるネットワークの系譜。SNSの前史を探ることで、
+                人間はなぜつながりたがるのか、その普遍的な欲求と技術の進化を辿ります。
+            </p>
+        </header>
+
+        <!-- セクション1: つながりたい欲求の普遍性 -->
+        <section id="section1" class="content-section">
+            <h2 class="section-title">イントロダクション：つながりたい欲求の普遍性</h2>
+            
+            <p class="content-paragraph">
+                私たちは現在、SNSを「21世紀の革新的技術」として語ることが多くあります。しかし、人間が情報を共有し、遠く離れた他者とつながろうとする欲求は、決して現代に始まったものではありません。むしろ、SNSは人類が有史以前から築き続けてきた「人工的な情報ネットワーク」の最新形態に過ぎないのです。
+            </p>
+
+            <div class="image-placeholder">
+                人類史におけるコミュニケーション手段の進化を示す図を挿入推奨<br>
+                （洞窟壁画→文字→印刷→電話→インターネット→SNS）
+            </div>
+
+            <p class="content-paragraph">
+                人間は本質的に社会的動物です。私たちは一人では生きていけず、常に他者との関係性の中で自分の存在を確認し、情報を交換し、協力して生活してきました。
+            </p>
+
+            <p class="content-paragraph">
+                しかし、人間の社会は動物の群れとは決定的に異なる特徴があります。それは、直接的な接触がない相手とも、人工的な手段を使ってネットワークを築くことができるということです。この能力こそが、文明を発展させ、巨大な社会を形成することを可能にしてきたのです。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">SNSの歴史的位置づけ</div>
+                <p>SNSを単なるデジタル技術として捉えるのではなく、人類が古代から続けてきた「つながりの技術」の延長線上にあるものとして理解することで、現代の問題をより深く考察することができます。</p>
+            </div>
+        </section>
+
+        <!-- 進化ステージ -->
+        <section id="section2" class="content-section">
+            <h2 class="section-title">人類史におけるネットワークの段階的変遷</h2>
+            
+            <div class="evolution-stages">
+                <div class="evolution-stage oral">
+                    <div class="stage-period">原始時代〜前近代</div>
+                    <div class="stage-title" style="color: #8B4513;">口承・共同体ネットワーク</div>
+                    <div class="stage-description">
+                        声と記憶に依存した最初の情報ネットワーク。神話、歌、儀式が「共有記憶装置」として機能し、集団の結束を図った。
+                    </div>
+                </div>
+                <div class="evolution-stage written">
+                    <div class="stage-period">古代〜中世</div>
+                    <div class="stage-title" style="color: #4682B4;">文字と宗教ネットワーク</div>
+                    <div class="stage-description">
+                        文字の発明により時空を超えた情報保存が可能に。聖書、仏典などが広範囲の信徒コミュニティを結ぶネットワーク基盤となった。
+                    </div>
+                </div>
+                <div class="evolution-stage print">
+                    <div class="stage-period">近世</div>
+                    <div class="stage-title" style="color: #228B22;">印刷・出版ネットワーク</div>
+                    <div class="stage-description">
+                        グーテンベルクの印刷革命により情報の大量複製が実現。「想像の共同体」が形成され、近代国家の基盤となった。
+                    </div>
+                </div>
+                <div class="evolution-stage digital">
+                    <div class="stage-period">現代</div>
+                    <div class="stage-title" style="color: #D4A574;">デジタル・SNSネットワーク</div>
+                    <div class="stage-description">
+                        インターネットの普及により個人が世界規模で情報発信可能に。リアルタイム、双方向、マルチメディアの新たな情報空間が誕生。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション3: 口承文化 -->
+        <section id="section3" class="content-section">
+            <h2 class="section-title">口承・共同体ネットワーク</h2>
+            
+            <p class="content-paragraph">
+                人類最初の情報ネットワークは、声と記憶に依存したものでした。狩猟採集社会では、生存に必要な情報―どこに食料があるか、どの動物が危険か、季節の変化をどう予測するか―は、すべて口承によって世代から世代へと受け継がれました。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">ウォルター・オングの洞察</div>
+                <p>メディア理論家ウォルター・オング氏は、著書『声の文化と文字の文化』で、口承文化から文字文化への移行が人間の意識をどのように変化させたかを詳細に分析しています。口承文化には身体性への依存、即座性と消失性、共同体への結束という特徴がありました。</p>
+            </div>
+
+            <p class="content-paragraph">
+                この特徴は、現代SNSの「ストーリーズ」機能と興味深い類似性を持っています。InstagramやFacebookのストーリーズは24時間で自動削除され、リアルタイムの体験共有を重視します。これは、口承文化の「即座性と消失性」を、デジタル技術で再現したものと解釈することができます。
+            </p>
+        </section>
+
+        <!-- セクション4: 文字と宗教 -->
+        <section id="section4" class="content-section">
+            <h2 class="section-title">文字と宗教ネットワーク</h2>
+            
+            <p class="content-paragraph">
+                人類史上最大の情報革命は、文字の発明でした。文字により、情報を時間と空間を超えて保存・伝達することが可能になりました。この段階で重要な役割を果たしたのは宗教的ネットワークです。
+            </p>
+
+            <p class="content-paragraph">
+                聖書、仏典、コーラン、儒教の経典などは、単なる宗教文書ではなく、広範囲にわたる信徒コミュニティを結びつける「ネットワーク基盤」として機能しました。
+            </p>
+
+            <!-- コミュニケーション手段の比較 -->
+            <div class="interactive-element">
+                <div class="chart-title">時代別情報伝達手段の特徴比較</div>
+                <div class="chart-container">
+                    <canvas id="communicationChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 著者による分析（オング、アンダーソン等の研究を基に作成）</div>
+            </div>
+
+            <p class="content-paragraph">
+                この時期の特徴は、権威の集中、情報の標準化、階層的伝達でした。この構造は、現代SNSにおける「プラットフォーム企業の権威性」や「デジタル格差」の問題と共通点があります。FacebookやTwitterといった企業が巨大な力を持ち、ユーザーの情報環境をコントロールしている現状は、中世における教会や官僚機構の情報支配と構造的に類似しているのです。
+            </p>
+        </section>
+
+        <!-- セクション5: 印刷革命 -->
+        <section id="section5" class="content-section">
+            <h2 class="section-title">印刷・出版ネットワーク</h2>
+            
+            <p class="content-paragraph">
+                1440年代のグーテンベルクによる活版印刷の発明は、情報伝達に革命的な変化をもたらしました。知識の大量複製が可能になり、これまで特権階級に限られていた情報へのアクセスが、一般市民にも開放されました。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">ベネディクト・アンダーソンの「想像の共同体」</div>
+                <p>アンダーソンは著書『想像の共同体』で、印刷資本主義が民族意識と近代国家の形成に果たした決定的役割を論じています。同じ言語で書かれた新聞や小説を読む人々の間に「想像の共同体」が形成されました。</p>
+            </div>
+
+            <div class="image-placeholder">
+                グーテンベルクの印刷機と印刷革命の影響を示す図を挿入推奨<br>
+                （印刷機の図解と書籍の大量生産の様子）
+            </div>
+
+            <p class="content-paragraph">
+                印刷革命の社会的影響は、情報拡散の加速化、知識の民主化、標準語の形成、批判精神の拡大でした。しかし同時に、この時期には現代のフェイクニュース問題の萌芽も見られました。印刷技術により、デマや扇動的な内容も広範囲に拡散されるようになったからです。
+            </p>
+
+            <p class="content-paragraph">
+                日本では江戸時代に「瓦版」という独特の情報媒体が発達しました。瓦版は、庶民向けのニュースメディアとして機能し、災害情報、犯罪事件などを扱いました。その内容は必ずしも正確ではなく、しばしば誇張や創作が混じっていましたが、庶民の情報需要を満たす重要な役割を果たしていました。
+            </p>
+        </section>
+
+        <!-- セクション6: 電信・無線 -->
+        <section id="section6" class="content-section">
+            <h2 class="section-title">郵便・電信・電話・無線ネットワーク</h2>
+            
+            <p class="content-paragraph">
+                19世紀から20世紀初頭にかけて、通信技術は飛躍的な発展を遂げました。この時期に確立された技術は、現代SNSの直接的な前史となります。
+            </p>
+
+            <h3 class="subsection-title">近代郵便制度の確立</h3>
+            <p class="content-paragraph">
+                近代郵便制度は、一般市民が全国規模でコミュニケーションを取ることを初めて可能にしました。日本では1871年に近代郵便制度が開始され、全国均一料金による手紙の送付が可能になりました。郵便の特徴は、一対一のプライベートコミュニケーション、非同期性、物理的な記録の残存、趣味コミュニティの形成でした。
+            </p>
+
+            <h3 class="subsection-title">電信と電話の普及</h3>
+            <p class="content-paragraph">
+                1837年に実用化された電信技術、そして1876年に発明された電話は、距離を超えた即時コミュニケーションを可能にしました。これらの技術の革新性は、即時性の実現、同期性の確保、ビジネスの効率化でした。
+            </p>
+
+            <h3 class="subsection-title">アマチュア無線の文化</h3>
+            <p class="content-paragraph">
+                20世紀初頭に普及したアマチュア無線は、現代SNSの重要な前史となります。無線通信により、国境を越えた個人間のコミュニケーションが可能になったからです。
+            </p>
+
+            <!-- アマチュア無線とSNSの比較 -->
+            <div class="interactive-element">
+                <div class="chart-title">アマチュア無線とSNSの共通特徴</div>
+                <div class="chart-container">
+                    <canvas id="radioSnsChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 日本アマチュア無線連盟 歴史資料、SNS利用実態調査を基に作成</div>
+            </div>
+
+            <p class="content-paragraph">
+                アマチュア無線の特徴―匿名性と仮名性、趣味コミュニティの形成、グローバルな接続、自主的な運営―は、現代インターネットの「ハンドルネーム文化」「趣味クラスタ」「グローバル匿名ネットワーク」の直接的な起源となりました。
+            </p>
+        </section>
+
+        <!-- セクション7: ネットワークの普遍構造 -->
+        <section id="section7" class="content-section">
+            <h2 class="section-title">考察：ネットワークの普遍構造</h2>
+            
+            <p class="content-paragraph">
+                これまでの歴史を振り返ると、時代や技術は変わっても、人間の情報ネットワークには共通する構造があることがわかります。どの時代においても、人間は以下の三つの要素を組み合わせて情報ネットワークを構築してきました。
+            </p>
+
+            <!-- ネットワーク構造の可視化 -->
+            <div class="interactive-element">
+                <div class="chart-title">時代を超えるネットワークの三要素</div>
+                <div class="chart-container">
+                    <canvas id="networkElementsChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 著者による分析（歴史的事例を基に構造化）</div>
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">普遍的な三要素</div>
+                <p><strong>媒介（メディア）：</strong>各時代の技術的制約の中で、情報を伝達するための手段。声→文字→印刷→電気信号→電波→デジタル信号</p>
+                <p><strong>権威（制御主体）：</strong>ネットワークの運営や情報の真正性を保証する主体。長老→聖職者→出版社→国家→通信会社→プラットフォーム企業</p>
+                <p><strong>つながりの形式：</strong>人々が結びつく具体的な方法や理由。血縁・地縁共同体→信徒集団→読者ネットワーク→愛好家コミュニティ→SNS上のフォロワー関係</p>
+            </div>
+
+            <p class="content-paragraph">
+                重要なのは、技術の進歩により媒介の手段は劇的に変化したものの、人間の根本的な欲求―つながりたい、情報を共有したい、承認されたい―は本質的に変わっていないということです。
+            </p>
+        </section>
+
+        <!-- セクション8: 現代SNSとの連続性 -->
+        <section id="section8" class="content-section">
+            <h2 class="section-title">現代SNSとの連続性</h2>
+            
+            <p class="content-paragraph">
+                この歴史的視点から現代SNSを見ると、多くの「新しい問題」が実は古くからある課題の現代版であることがわかります。
+            </p>
+
+            <h3 class="subsection-title">情報の真偽問題</h3>
+            <p class="content-paragraph">
+                古代は口承での誇張や歪曲、中世は写本の写し間違いや意図的改変、近世は印刷物によるデマ拡散、そして現代はSNSのフェイクニュース。形を変えながら、同じ問題が繰り返されています。
+            </p>
+
+            <h3 class="subsection-title">権威と個人の対立</h3>
+            <p class="content-paragraph">
+                古代の長老による情報統制 vs 個人の体験、中世の教会による解釈独占 vs 異端思想、近世の検閲制度 vs 出版の自由、現代のプラットフォーム企業の規制 vs 表現の自由。時代が変わっても、権威と個人の緊張関係は続いています。
+            </p>
+
+            <h3 class="subsection-title">コミュニティの分裂</h3>
+            <p class="content-paragraph">
+                古代の部族間の対立、中世の宗派の分裂、近世の印刷物による党派形成、現代のエコーチェンバーと分極化。情報技術の発展は、しばしば社会の分断も加速させてきました。
+            </p>
+
+            <h3 class="subsection-title">つながりの過負荷</h3>
+            <p class="content-paragraph">
+                古代の共同体内での人間関係の複雑化、近世の文通相手の増加による負担、現代のSNS疲れと情報過多。人間の処理能力を超えるつながりは、時代を問わず負担となってきました。
+            </p>
+        </section>
+
+        <!-- セクション9: 歴史から学ぶ教訓 -->
+        <section id="section9" class="content-section">
+            <h2 class="section-title">歴史から学ぶ教訓</h2>
+            
+            <p class="content-paragraph">
+                では、この長い歴史から、現代の私たちは何を学ぶことができるでしょうか。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">技術決定論への警戒</div>
+                <p>技術それ自体が社会を決定するのではなく、その技術をどのように使うかが重要です。印刷技術は宗教改革と科学革命を可能にしましたが、同時にプロパガンダの手段にもなりました。SNSも同様です。</p>
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">権威の適正化の必要性</div>
+                <p>各時代において、情報ネットワークの健全性は、適切な権威の存在に依存してきました。しかし、権威が過度に集中すると自由が制限され、権威が不在だと無秩序が生じます。現代SNSにおいても、プラットフォーム企業の権力と個人の自由のバランスが重要な課題となっています。</p>
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">多様性維持の重要性</div>
+                <p>歴史上、情報の多様性が失われた時代は、社会の停滞や紛争が起きやすくなりました。現代のフィルターバブル問題は、この古典的な課題の最新版と言えます。</p>
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">教育とリテラシーの役割</div>
+                <p>各時代の情報革命において、新しいメディアを適切に利用するためのリテラシー教育が重要でした。現代においても、デジタル・リテラシーの向上が急務となっています。</p>
+            </div>
+        </section>
+
+        <!-- 結論 -->
+        <section class="content-section">
+            <h2 class="section-title">結論：連続性の中の革新</h2>
+            
+            <p class="content-paragraph">
+                SNSは確かに革新的な技術ですが、それは人類が長い間続けてきた「つながりの探求」の最新章に過ぎません。現代の問題の多くは、過去の類似した課題から学ぶことができます。
+            </p>
+
+            <p class="content-paragraph">
+                重要なのは、技術の新しさに眩惑されるのではなく、人間の根本的な欲求と社会の基本的な構造を理解することです。そうすることで、SNSをより賢く、より人間的に利用する道を見つけることができるでしょう。
+            </p>
+
+            <p class="content-paragraph">
+                私たちは、数万年にわたる人類のネットワーク構築の歴史の最新の担い手です。この長い歴史に敬意を払いながら、次の世代により良いつながりの技術を引き継いでいく責任があるのです。
+            </p>
+
+            <p class="content-paragraph">
+                口承から文字、印刷から電波、そしてデジタルへ―人間のつながりたい欲求は変わらずに、その手段だけが進化し続けています。SNSの未来も、この連続性の中で考えることで、より深い理解と適切な対処法を見つけることができるのです。
+            </p>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <a href="#" class="next-page-button">
+                    本論「系譜」へ戻る
+                </a>
+            </div>
+        </section>
+
+        <!-- 参考文献 -->
+        <section class="content-section">
+            <h3 class="subsection-title">参考文献</h3>
+            <div class="references">
+                <p>ウォルター・J・オング『声の文化と文字の文化：言葉の技術化』藤原書店、1991年</p>
+                <p>ベネディクト・アンダーソン『想像の共同体：ナショナリズムの起源と流行』NTT出版、2007年</p>
+                <p>エリザベス・アイゼンスタイン『印刷革命』みすず書房、1987年</p>
+                <p>日本郵便株式会社『郵便の歴史』日本郵便、2021年</p>
+                <p>総務省『電気通信の歴史』総務省、2020年</p>
+                <p>日本アマチュア無線連盟『アマチュア無線の歴史と文化』JARL、2019年</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ナビゲーション制御
+        let navTimer;
+        const navContainer = document.querySelector('.nav-container');
+        
+        function showNav() {
+            navContainer.classList.remove('hidden');
+            clearTimeout(navTimer);
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 7000);
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientY < 120) {
+                showNav();
+            }
+        });
+        
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(navTimer);
+        });
+        
+        navContainer.addEventListener('mouseleave', () => {
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 3000);
+        });
+        
+        showNav();
+
+        // スクロールアニメーション
+        function handleScroll() {
+            const sections = document.querySelectorAll('.content-section');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+
+            updateTOC();
+        }
+
+        function updateTOC() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 250) {
+                    currentSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            setTimeout(handleScroll, 100);
+            initializeCharts();
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Chart.js初期化
+        function initializeCharts() {
+            // コミュニケーション手段の比較
+            const communicationCtx = document.getElementById('communicationChart');
+            if (communicationCtx) {
+                new Chart(communicationCtx.getContext('2d'), {
+                    type: 'radar',
+                    data: {
+                        labels: ['即時性', '到達範囲', '保存性', '双方向性', '表現力'],
+                        datasets: [
+                            {
+                                label: '口承',
+                                data: [5, 2, 1, 5, 4],
+                                borderColor: '#8B4513',
+                                backgroundColor: 'rgba(139, 69, 19, 0.2)',
+                                pointBackgroundColor: '#8B4513',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: '文字',
+                                data: [1, 3, 5, 2, 3],
+                                borderColor: '#4682B4',
+                                backgroundColor: 'rgba(70, 130, 180, 0.2)',
+                                pointBackgroundColor: '#4682B4',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: '印刷',
+                                data: [2, 4, 4, 1, 3],
+                                borderColor: '#228B22',
+                                backgroundColor: 'rgba(34, 139, 34, 0.2)',
+                                pointBackgroundColor: '#228B22',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: 'SNS',
+                                data: [5, 5, 3, 5, 5],
+                                borderColor: '#D4A574',
+                                backgroundColor: 'rgba(212, 165, 116, 0.2)',
+                                pointBackgroundColor: '#D4A574',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: { size: 13, family: 'Inter', weight: '500' },
+                                    color: '#1a202c',
+                                    padding: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            r: {
+                                angleLines: {
+                                    display: true,
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                },
+                                suggestedMin: 0,
+                                suggestedMax: 5,
+                                ticks: {
+                                    display: false
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // アマチュア無線とSNSの比較
+            const radioSnsCtx = document.getElementById('radioSnsChart');
+            if (radioSnsCtx) {
+                new Chart(radioSnsCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['匿名性・仮名性', '趣味コミュニティ', 'グローバル接続', '自主運営', '技術的興味'],
+                        datasets: [
+                            {
+                                label: 'アマチュア無線（1920年代）',
+                                data: [85, 90, 75, 95, 90],
+                                backgroundColor: 'rgba(212, 165, 116, 0.7)',
+                                borderColor: '#D4A574',
+                                borderWidth: 2,
+                                borderRadius: 8
+                            },
+                            {
+                                label: '現代SNS',
+                                data: [70, 85, 95, 30, 40],
+                                backgroundColor: 'rgba(102, 126, 234, 0.7)',
+                                borderColor: '#667eea',
+                                borderWidth: 2,
+                                borderRadius: 8
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: { size: 14, family: 'Inter', weight: '600' },
+                                    color: '#1a202c',
+                                    padding: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096',
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 11 },
+                                    color: '#718096',
+                                    maxRotation: 45
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // ネットワーク要素
+            const networkElementsCtx = document.getElementById('networkElementsChart');
+            if (networkElementsCtx) {
+                new Chart(networkElementsCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['媒介技術の進歩', '権威構造の変化', 'つながり形式の多様化'],
+                        datasets: [{
+                            data: [40, 30, 30],
+                            backgroundColor: [
+                                'rgba(212, 165, 116, 0.8)',
+                                'rgba(244, 196, 48, 0.8)',
+                                'rgba(184, 149, 106, 0.8)'
+                            ],
+                            borderColor: '#ffffff',
+                            borderWidth: 4,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { size: 13, family: 'Inter', weight: '500' },
+                                    color: '#1a202c',
+                                    padding: 20,
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                padding: 16,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        const descriptions = [
+                                            '声→文字→印刷→電気→デジタル',
+                                            '長老→聖職者→出版社→政府→企業',
+                                            '血縁→信仰→読者→愛好家→SNS'
+                                        ];
+                                        return context.label + ': ' + descriptions[context.dataIndex];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(handleScroll, 250);
+        });
+    </script>
+</body>
+</html>
