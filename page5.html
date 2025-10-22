@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自己：SNSと精神健康 - SNSが現代社会に与えた影響</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #48cae4;
+            --primary-light: #E8F7FA;
+            --primary-dark: #0096c7;
+            --accent-color: #90e0ef;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ナビゲーション */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            padding: 20px;
+        }
+
+        .nav-container.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 16px 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(72, 202, 228, 0.2);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 15px;
+            padding: 14px 24px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            letter-spacing: -0.2px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(72, 202, 228, 0.4);
+        }
+
+        /* サイドバー目次 */
+        .table-of-contents {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 240px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 6px;
+        }
+
+        .toc-link {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toc-link:hover,
+        .toc-link.active {
+            background: var(--primary-light);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateX(4px);
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 140px 40px 100px;
+            margin-left: 320px;
+        }
+
+        .page-header {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .page-subtitle {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .page-subtitle::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .page-title {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.1;
+            letter-spacing: -3px;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        /* セクション */
+        .content-section {
+            margin-bottom: 100px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+            letter-spacing: -1.5px;
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        .subsection-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 48px 0 24px;
+            letter-spacing: -0.8px;
+        }
+
+        .content-paragraph {
+            margin-bottom: 28px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        /* インタラクティブ要素 */
+        .interactive-element {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 50px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .interactive-element:hover {
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 32px 0;
+        }
+
+        .chart-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-source {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* ハイライトボックス */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-light), rgba(72, 202, 228, 0.08));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--primary-color);
+        }
+
+        .highlight-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* 警告ボックス */
+        .warning-box {
+            background: linear-gradient(135deg, #FEF3C7, rgba(245, 158, 11, 0.1));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--warning);
+        }
+
+        .warning-box .highlight-title {
+            color: var(--warning);
+        }
+
+        /* 対策カード */
+        .solution-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .solution-card {
+            background: white;
+            padding: 32px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .solution-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .solution-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .solution-card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .solution-card-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* 統計カード */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            padding: 32px 24px;
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(72, 202, 228, 0.3);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        /* 次ページボタン */
+        .next-page-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 18px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(72, 202, 228, 0.3);
+        }
+
+        .next-page-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(72, 202, 228, 0.4);
+        }
+
+        .next-page-button::after {
+            content: '→';
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .next-page-button:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* 参考文献 */
+        .references {
+            background: var(--surface);
+            padding: 32px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            border: 1px solid var(--border);
+        }
+
+        .references p {
+            margin-bottom: 16px;
+        }
+
+        /* 画像プレースホルダー */
+        .image-placeholder {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #ced4da;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 32px 0;
+            color: var(--text-light);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 1200px) {
+            .table-of-contents {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 140px 60px 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-link {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+            .main-content {
+                padding: 120px 32px 80px;
+            }
+            .page-title {
+                font-size: 2.8rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ナビゲーション -->
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="page2.html" class="nav-link">序論</a></li>
+                <li><a href="page3.html" class="nav-link">系譜</a></li>
+                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
+                <li><a href="page4.html" class="nav-link">両義</a></li>
+                <li><a href="page5.html" class="nav-link active">自己</a></li>
+                <li><a href="page6.html" class="nav-link">資本</a></li>
+                <li><a href="page7.html" class="nav-link">記憶</a></li>
+                <li><a href="page8.html" class="nav-link">未来</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 目次サイドバー -->
+    <nav class="table-of-contents">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#section1" class="toc-link">見えない依存</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">承認欲求の病理</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">比較社会</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">睡眠と認知機能</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">日本の文化的要因</a></li>
+            <li class="toc-item"><a href="#section6" class="toc-link">対策と回復</a></li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- ページヘッダー -->
+        <header class="page-header">
+            <div class="page-subtitle">Page 5</div>
+            <h1 class="page-title">自己</h1>
+            <p class="page-description">
+                スマートフォンを開き、無意識にSNSをチェックする。「いいね」の数を確認し、他人と比較する。
+                当たり前になったこの日常が、私たちの精神的健康に何をもたらしているのか。
+                最新の科学的研究データとともに、デジタル時代のメンタルヘルス危機を解き明かします。
+            </p>
+        </header>
+
+        <!-- セクション1: 見えない依存の実態 -->
+        <section id="section1" class="content-section">
+            <h2 class="section-title">1. 見えない依存の実態</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">13-17歳のSNS利用率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3時間</div>
+                    <div class="stat-label">10代の平日平均利用時間</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">33%</div>
+                    <div class="stat-label">「ほぼ常に」使用する若者</div>
+                </div>
+            </div>
+
+            <p class="content-paragraph">
+                米国ピュー・リサーチ・センターの2023年調査によると、13-17歳の95％がSNSプラットフォームを利用しており、そのうち3分の2が毎日、3分の1が「ほぼ常に」使用しています。日本でも総務省の2024年情報通信白書で、10代のSNS利用時間が平日平均3時間を超えることが報告されています。
+            </p>
+
+            <p class="content-paragraph">
+                しかし、問題はその「量」だけではありません。より深刻なのは、私たちが無意識のうちにSNSを開いてしまう「習慣化」のメカニズムです。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">脳内報酬システムの乗っ取り</div>
+                <p>神経科学の研究によると、SNSの「いいね」や通知を受け取る度に、脳内でドーパミンという快楽物質が分泌されます。このドーパミンは本来、生存に必要な行動（食事、性行為など）を促進するための報酬システムですが、SNSはこの原始的な脳の仕組みを巧妙に利用しています。</p>
+                <p>特に問題となるのは「間欠強化」という心理学的メカニズムです。報酬（いいねやコメント）がランダムなタイミングで与えられることで、行動（SNSチェック）がより強化される現象です。パチンコやギャンブルと同じ仕組みが、私たちのスマートフォンの中で日常的に作動しているのです。</p>
+            </div>
+
+            <div class="image-placeholder">
+                脳内ドーパミン報酬システムの概念図を挿入推奨<br>
+                （SNS通知→ドーパミン分泌→依存形成のサイクル図）
+            </div>
+        </section>
+
+        <!-- セクション2: 承認欲求の病理学 -->
+        <section id="section2" class="content-section">
+            <h2 class="section-title">2. 承認欲求の病理学：「いいね」に支配される自己価値</h2>
+            
+            <p class="content-paragraph">
+                SNSが精神健康に与える最も深刻な影響の一つが、自己価値の外部依存化です。従来、私たちの自己価値は内的な基準や身近な人々との関係性によって形成されていましたが、SNSの登場により、見知らぬ人々からの「承認」が自己価値を決定する重要な要因となりました。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">ハーバード大学の神経科学研究</div>
+                <p>ダイアナ・タミール氏らの研究では、自分について話すことで脳の報酬系が活性化することが明らかになっています。fMRI（機能的磁気共鳴画像法）を使った実験では、自分の考えや体験を他人に話すとき、食べ物や性的快楽を得るときと同じ脳領域が活動することが確認されました。</p>
+                <p>SNSはこの「自己開示の快楽」を極限まで増幅させる装置として機能しています。しかし、問題はその「報酬」が他者の反応に完全に依存していることです。</p>
+            </div>
+
+            <!-- うつ病リスク増加グラフ -->
+            <div class="interactive-element">
+                <div class="chart-title">SNS利用時間とうつ病リスクの関係</div>
+                <div class="chart-container">
+                    <canvas id="depressionRiskChart"></canvas>
+                </div>
+                <div class="chart-source">出典: ジョンズ・ホプキンス大学 2019年縦断研究（n=6,595）</div>
+            </div>
+
+            <p class="content-paragraph">
+                2019年にジョンズ・ホプキンス大学が発表した縦断研究では、6,595人の12-15歳を追跡調査した結果、SNS利用時間が長いほど、うつ病症状のリスクが13％増加することが判明しました。特に女子では、1日3時間以上の利用でリスクが26％も上昇することが明らかになっています。
+            </p>
+        </section>
+
+        <!-- セクション3: 比較社会の心理的コスト -->
+        <section id="section3" class="content-section">
+            <h2 class="section-title">3. 比較社会の心理的コスト</h2>
+            
+            <p class="content-paragraph">
+                社会心理学者レオン・フェスティンガーが1954年に提唱した「社会比較理論」によると、人間は自分の能力や意見を評価するために、他者との比較を行う本能的な傾向があります。しかし、SNS上での比較は、従来の現実世界での比較とは根本的に異なる性質を持っています。
+            </p>
+
+            <h3 class="subsection-title">「編集された現実」との比較</h3>
+            <p class="content-paragraph">
+                SNSに投稿される内容は、投稿者によって慎重に選択・加工されたものです。失敗や悩み、日常の些細な出来事は省略され、成功や幸福な瞬間だけが切り取られて表示されます。私たちは、自分の「ありのままの日常」と、他人の「ハイライト集」を比較してしまっているのです。
+            </p>
+
+            <div class="warning-box">
+                <div class="highlight-title">Instagramの衝撃的な研究結果</div>
+                <p>英国王立公衆衛生協会（RSPH）が2017年に発表した「#StatusOfMind」レポートでは、14-24歳の1,479人を対象にSNSプラットフォームの精神健康への影響を調査しました。</p>
+                <p>その結果、Instagram、Snapchat、Facebook、Twitterの順で精神健康に悪影響を与えることが明らかになり、特にInstagramは身体イメージ、睡眠の質、いじめ、FOMO（取り残される恐怖）の全ての項目で最も悪い評価を受けました。</p>
+            </div>
+
+            <!-- プラットフォーム別影響度グラフ -->
+            <div class="interactive-element">
+                <div class="chart-title">SNSプラットフォーム別 精神健康への影響スコア</div>
+                <div class="chart-container">
+                    <canvas id="platformImpactChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 英国王立公衆衛生協会 #StatusOfMind Report 2017</div>
+            </div>
+        </section>
+
+        <!-- セクション4: 睡眠と認知機能への影響 -->
+        <section id="section4" class="content-section">
+            <h2 class="section-title">4. 睡眠と認知機能への深刻な影響</h2>
+            
+            <p class="content-paragraph">
+                SNSが精神健康に与える影響は、直接的な心理的ストレスだけではありません。睡眠パターンの変化や注意機能の低下といった、より根本的な生理学的変化も引き起こしています。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">ブルーライトと概日リズムの破壊</div>
+                <p>ハーバード医学大学院の研究によると、スマートフォンやタブレットから発せられるブルーライトは、睡眠ホルモンであるメラトニンの分泌を抑制し、概日リズム（体内時計）を2-3時間遅らせることが明らかになっています。特に就寝前2時間以内のデバイス使用は、深い睡眠（ノンレム睡眠）の質を著しく低下させます。</p>
+            </div>
+
+            <!-- 利用時間とうつ症状リスク -->
+            <div class="interactive-element">
+                <div class="chart-title">電子メディア利用時間とうつ症状リスク</div>
+                <div class="chart-container">
+                    <canvas id="usageTimeChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 日本体育大学 野井真吾教授ら 2023年調査（n=34,643）</div>
+            </div>
+
+            <p class="content-paragraph">
+                日本体育大学の野井真吾教授らが2023年に発表した大規模調査では、東京都世田谷区の公立小中学校の8-15歳、34,643人を対象に電子メディア利用と精神健康の関係を調査しました。結果、平日2時間以上の利用でうつ症状のリスクが有意に上昇し、4時間以上では重篤なうつ症状のリスクが2.5倍に増加することが確認されました。
+            </p>
+
+            <h3 class="subsection-title">マルチタスキングによる認知機能の低下</h3>
+            <p class="content-paragraph">
+                スタンフォード大学のクリフォード・ナス教授らの研究では、頻繁にマルチタスキングを行う人は、集中力、記憶力、認知の柔軟性において、シングルタスクを好む人よりも著しく劣る結果を示しています。
+            </p>
+
+            <p class="content-paragraph">
+                特に注意すべきは、この認知機能の低下が一時的なものではないことです。ロンドン大学の神経科学者グレン・ウィルソン博士の研究では、メールやSNSの通知を気にしながら作業をする状態は、マリファナを使用した状態よりもIQを低下させることが報告されています。
+            </p>
+        </section>
+
+        <!-- セクション5: 日本独自の文化的要因 -->
+        <section id="section5" class="content-section">
+            <h2 class="section-title">5. 日本独自の文化的要因：「空気を読む」SNS文化</h2>
+            
+            <p class="content-paragraph">
+                これらの世界共通の問題に加えて、日本のSNS利用には独特の文化的要因が存在します。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">サイレント・プレッシャー現象</div>
+                <p>慶應義塾大学の藤代裕之准教授らの研究によると、日本のSNSユーザーは「炎上」を極度に恐れ、自己検閲を強化する傾向があります。この現象は「サイレント・プレッシャー」と呼ばれ、表向きは問題なく見えても、内的には強いストレスを抱えている状態を作り出します。</p>
+            </div>
+
+            <p class="content-paragraph">
+                また、東京大学の橋元良明教授らが実施した「情報通信メディアの利用時間と情報行動に関する調査」では、日本人のSNS利用は「受動的閲覧」の割合が他国と比較して高く、この受動的な利用パターンがうつ症状のリスクをより高めることが示唆されています。
+            </p>
+
+            <div class="image-placeholder">
+                日本のSNS文化の特徴を示す図を挿入推奨<br>
+                （炎上恐怖→自己検閲→内的ストレス蓄積のサイクル図）
+            </div>
+        </section>
+
+        <!-- セクション6: 対策と回復 -->
+        <section id="section6" class="content-section">
+            <h2 class="section-title">6. 対策と回復：科学的アプローチによるデジタル・ウェルビーイング</h2>
+            
+            <p class="content-paragraph">
+                では、これらの問題に対して、私たちはどのような対策を講じることができるのでしょうか。最新の研究は、いくつかの有効なアプローチを提示しています。
+            </p>
+
+            <div class="solution-cards">
+                <div class="solution-card">
+                    <div class="solution-card-title">マインドフルネス</div>
+                    <div class="solution-card-description">
+                        カリフォルニア大学サンフランシスコ校のアダム・ガザリー博士らの研究では、マインドフルネス瞑想トレーニングが注意機能の回復に効果的であることが実証されています。8週間のプログラムで持続的注意力が20-30％改善しました。
+                    </div>
+                </div>
+
+                <div class="solution-card">
+                    <div class="solution-card-title">段階的デジタル・デトックス</div>
+                    <div class="solution-card-description">
+                        ペンシルベニア大学の研究では、急激な利用制限よりも段階的な削減がより効果的であることが示されています。第1週：通知最適化、第2週：就寝前禁止、第3週：利用時間制限、第4週：アナログ時間の創出。
+                    </div>
+                </div>
+
+                <div class="solution-card">
+                    <div class="solution-card-title">対面コミュニケーション</div>
+                    <div class="solution-card-description">
+                        MITのシェリー・タークル教授の研究では、週に3回以上の対面での深い会話を持つ人は、SNSの悪影響を大幅に軽減できることが示されています。リアルな人間関係がデジタルの悪影響を緩和します。
+                    </div>
+                </div>
+
+                <div class="solution-card">
+                    <div class="solution-card-title">テクノロジーによる支援</div>
+                    <div class="solution-card-description">
+                        AppleのScreen TimeやGoogleのDigital Wellbeingといった機能は、利用パターンを可視化し、意識的な利用を促します。また、FacebookのTake a Break機能は過度の利用を検出して休憩を促します。
+                    </div>
+                </div>
+            </div>
+
+            <!-- SNS利用制限の効果グラフ -->
+            <div class="interactive-element">
+                <div class="chart-title">SNS利用制限による精神健康改善効果</div>
+                <div class="chart-container">
+                    <canvas id="interventionChart"></canvas>
+                </div>
+                <div class="chart-source">出典: ペンシルベニア大学 メリッサ・ハント博士ら 2018年研究</div>
+            </div>
+
+            <div class="warning-box">
+                <div class="highlight-title">実践的な利用制限ガイドライン</div>
+                <p><strong>即座に実践できる5つのステップ：</strong></p>
+                <p>1. 通知設定の見直し：重要でないアプリの通知をすべてオフにする</p>
+                <p>2. 就寝前ルール：就寝1時間前からデバイスを触らない</p>
+                <p>3. 朝のルーティン：起床後30分はSNSをチェックしない</p>
+                <p>4. 利用時間の可視化：Screen Time機能で自分の利用パターンを確認</p>
+                <p>5. アナログ時間の創出：週末は数時間のデジタル・デトックスを実施</p>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="content-section">
+            <h2 class="section-title">まとめ：バランスの取れたデジタル・ライフに向けて</h2>
+            
+            <p class="content-paragraph">
+                SNSと精神健康の関係は、単純な「善悪」で判断できるものではありません。重要なのは、SNSが私たちの脳と心に与える影響を科学的に理解し、意識的に利用することです。
+            </p>
+
+            <p class="content-paragraph">
+                データが示すのは明確な事実です：無制限で無意識的なSNS利用は、確実に私たちの精神的健康を蝕んでいます。しかし同時に、適切に利用すれば、SNSは人とのつながりを深め、自己表現の場を提供し、社会参加の機会を広げる強力なツールでもあります。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">デジタル・ウィズダム（知恵）の獲得</div>
+                <p>私たちに必要なのは、「デジタル・リテラシー」ならぬ「デジタル・ウィズダム（知恵）」です。それは、テクノロジーを使いこなす技術的能力だけでなく、いつ、なぜ、どのようにテクノロジーを使うべきかを判断する智慧なのです。</p>
+                <p>SNSという新しいメディアが登場してまだ20年足らず。私たちはまだ、この強力なツールとの健全な関係性を模索している途中です。しかし、科学的な知見に基づいた意識的な選択によって、SNSをより良い人生のパートナーにしていくことは可能なのです。</p>
+            </div>
+
+            <p class="content-paragraph">
+                次章では、この精神的搾取がいかに経済的搾取と結びついているか、「監視資本主義」の構造を明らかにしていきます。私たちの注意力と感情が、どのように商品化され、巨大な利益の源泉となっているのかを見ていきましょう。
+            </p>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <a href="page6.html" class="next-page-button">
+                    次ページ「資本」
+                </a>
+            </div>
+        </section>
+
+        <!-- 参考文献 -->
+        <section class="content-section">
+            <h3 class="subsection-title">参考文献</h3>
+            <div class="references">
+                <p>Hunt, M. G., Marx, R., Lipson, C., & Young, J. (2018). No more FOMO: Limiting social media decreases loneliness and depression. Journal of Social and Clinical Psychology, 37(10), 751-768.</p>
+                <p>Primack, B. A., Shensa, A., Sidani, J. E., Whaite, E. O., Lin, L. Y., Rosen, D., ... & Miller, E. (2017). Social media use and perceived social isolation among young adults in the US. American Journal of Preventive Medicine, 53(1), 1-8.</p>
+                <p>野井真吾ら (2023). 「児童生徒における電子メディア利用と精神的健康の関連性に関する疫学研究」日本体育大学紀要, 52(3), 15-28.</p>
+                <p>Royal Society for Public Health. (2017). #StatusOfMind: Social media and young people's mental health and wellbeing. London: RSPH.</p>
+                <p>Turkle, S. (2017). Alone together: Why we expect more from technology and less from each other. New York: Basic Books.</p>
+                <p>総務省 (2024). 「令和6年版 情報通信白書」東京：総務省</p>
+                <p>Pew Research Center. (2023). Teens, Social Media and Technology 2023. Washington, DC: Pew Research Center.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ナビゲーション制御
+        let navTimer;
+        const navContainer = document.querySelector('.nav-container');
+        
+        function showNav() {
+            navContainer.classList.remove('hidden');
+            clearTimeout(navTimer);
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 7000);
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientY < 120) {
+                showNav();
+            }
+        });
+        
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(navTimer);
+        });
+        
+        navContainer.addEventListener('mouseleave', () => {
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 3000);
+        });
+        
+        showNav();
+
+        // スクロールアニメーション
+        function handleScroll() {
+            const sections = document.querySelectorAll('.content-section');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+
+            updateTOC();
+        }
+
+        function updateTOC() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 250) {
+                    currentSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            setTimeout(handleScroll, 100);
+            initializeCharts();
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Chart.js初期化
+        function initializeCharts() {
+            // うつ病リスク増加グラフ
+            const depressionRiskCtx = document.getElementById('depressionRiskChart');
+            if (depressionRiskCtx) {
+                new Chart(depressionRiskCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['1時間未満', '1-2時間', '2-3時間', '3時間以上'],
+                        datasets: [
+                            {
+                                label: '全体',
+                                data: [100, 113, 120, 126],
+                                backgroundColor: 'rgba(72, 202, 228, 0.7)',
+                                borderColor: '#48cae4',
+                                borderWidth: 2,
+                                borderRadius: 8
+                            },
+                            {
+                                label: '女子',
+                                data: [100, 115, 122, 126],
+                                backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                                borderColor: '#EF4444',
+                                borderWidth: 2,
+                                borderRadius: 8
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: { size: 14, weight: '600' },
+                                    color: '#1a202c',
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                padding: 16,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': リスク ' + context.parsed.y + '%';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 95,
+                                max: 130,
+                                title: {
+                                    display: true,
+                                    text: 'うつ病リスク指数（ベースライン=100）',
+                                    font: { size: 12 }
+                                },
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // プラットフォーム別影響度
+            const platformImpactCtx = document.getElementById('platformImpactChart');
+            if (platformImpactCtx) {
+                new Chart(platformImpactCtx.getContext('2d'), {
+                    type: 'radar',
+                    data: {
+                        labels: ['身体イメージ', '睡眠の質', 'FOMO', 'いじめ', '孤独感'],
+                        datasets: [
+                            {
+                                label: 'Instagram',
+                                data: [85, 78, 82, 75, 70],
+                                borderColor: '#E4405F',
+                                backgroundColor: 'rgba(228, 64, 95, 0.2)',
+                                pointBackgroundColor: '#E4405F'
+                            },
+                            {
+                                label: 'Snapchat',
+                                data: [75, 72, 78, 68, 65],
+                                borderColor: '#FFFC00',
+                                backgroundColor: 'rgba(255, 252, 0, 0.2)',
+                                pointBackgroundColor: '#FFFC00'
+                            },
+                            {
+                                label: 'Facebook',
+                                data: [65, 60, 70, 72, 68],
+                                borderColor: '#1877F2',
+                                backgroundColor: 'rgba(24, 119, 242, 0.2)',
+                                pointBackgroundColor: '#1877F2'
+                            },
+                            {
+                                label: 'Twitter',
+                                data: [58, 55, 65, 70, 60],
+                                borderColor: '#000000',
+                                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                                pointBackgroundColor: '#000000'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: { size: 13, weight: '500' },
+                                    padding: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            r: {
+                                suggestedMin: 0,
+                                suggestedMax: 100,
+                                ticks: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 利用時間とうつ症状リスク
+            const usageTimeCtx = document.getElementById('usageTimeChart');
+            if (usageTimeCtx) {
+                new Chart(usageTimeCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['0時間', '1時間', '2時間', '3時間', '4時間以上'],
+                        datasets: [{
+                            label: 'うつ症状リスク倍率',
+                            data: [1.0, 1.1, 1.3, 1.8, 2.5],
+                            borderColor: '#48cae4',
+                            backgroundColor: 'rgba(72, 202, 228, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            pointBackgroundColor: '#48cae4',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    font: { size: 14, weight: '600' },
+                                    color: '#1a202c',
+                                    padding: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 3,
+                                title: {
+                                    display: true,
+                                    text: 'リスク倍率',
+                                    font: { size: 12 }
+                                },
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096',
+                                    callback: function(value) {
+                                        return value + '倍';
+                                    }
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '平日の電子メディア利用時間',
+                                    font: { size: 12 }
+                                },
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 介入効果グラフ
+            const interventionCtx = document.getElementById('interventionChart');
+            if (interventionCtx) {
+                new Chart(interventionCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['開始時', '1週間後', '2週間後', '3週間後'],
+                        datasets: [
+                            {
+                                label: '孤独感',
+                                data: [65, 58, 52, 45],
+                                borderColor: '#48cae4',
+                                backgroundColor: 'rgba(72, 202, 228, 0.1)',
+                                tension: 0.4,
+                                fill: false,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                pointBackgroundColor: '#48cae4',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: '気分の落ち込み',
+                                data: [70, 62, 55, 48],
+                                borderColor: '#0096c7',
+                                backgroundColor: 'rgba(0, 150, 199, 0.1)',
+                                tension: 0.4,
+                                fill: false,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                pointBackgroundColor: '#0096c7',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: 'FOMO',
+                                data: [75, 68, 60, 50],
+                                borderColor: '#90e0ef',
+                                backgroundColor: 'rgba(144, 224, 239, 0.1)',
+                                tension: 0.4,
+                                fill: false,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                pointBackgroundColor: '#90e0ef',
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: { size: 14, weight: '600' },
+                                    color: '#1a202c',
+                                    padding: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 40,
+                                max: 80,
+                                title: {
+                                    display: true,
+                                    text: '症状スコア',
+                                    font: { size: 12 }
+                                },
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(handleScroll, 250);
+        });
+    </script>
+</body>
+</html>
