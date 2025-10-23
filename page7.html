@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記憶：デジタル記憶と忘れられる権利 - SNSが現代社会に与えた影響</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6B5B95;
+            --primary-light: #F3F0F7;
+            --primary-dark: #554972;
+            --accent-color: #9B8FC7;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ナビゲーション */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            padding: 20px;
+        }
+
+        .nav-container.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 16px 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(107, 91, 149, 0.2);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 15px;
+            padding: 14px 24px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            letter-spacing: -0.2px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(107, 91, 149, 0.4);
+        }
+
+        /* サイドバー目次 */
+        .table-of-contents {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 240px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 6px;
+        }
+
+        .toc-link {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toc-link:hover,
+        .toc-link.active {
+            background: var(--primary-light);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateX(4px);
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 140px 40px 100px;
+            margin-left: 320px;
+        }
+
+        .page-header {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .page-subtitle {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .page-subtitle::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .page-title {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.1;
+            letter-spacing: -3px;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        /* セクション */
+        .content-section {
+            margin-bottom: 100px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+            letter-spacing: -1.5px;
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        .subsection-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 48px 0 24px;
+            letter-spacing: -0.8px;
+        }
+
+        .content-paragraph {
+            margin-bottom: 28px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        /* 比較カード */
+        .comparison-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin: 60px 0;
+        }
+
+        .comparison-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .comparison-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            opacity: 0.05;
+            transform: rotate(45deg);
+        }
+
+        .comparison-card.human {
+            border-color: #10B981;
+        }
+
+        .comparison-card.human::before {
+            background: linear-gradient(45deg, #10B981, #34D399);
+        }
+
+        .comparison-card.digital {
+            border-color: var(--primary-color);
+        }
+
+        .comparison-card.digital::before {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+        }
+
+        .comparison-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        .comparison-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .comparison-card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .comparison-card.human .comparison-card-title {
+            color: #10B981;
+        }
+
+        .comparison-card.digital .comparison-card-title {
+            color: var(--primary-color);
+        }
+
+        .comparison-card-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        /* インタラクティブ要素 */
+        .interactive-element {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 50px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .interactive-element:hover {
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 32px 0;
+        }
+
+        .chart-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-source {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* ハイライトボックス */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-light), rgba(107, 91, 149, 0.08));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--primary-color);
+        }
+
+        .highlight-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* 警告ボックス */
+        .warning-box {
+            background: linear-gradient(135deg, #FEF3C7, rgba(245, 158, 11, 0.1));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--warning);
+        }
+
+        .warning-box .highlight-title {
+            color: var(--warning);
+        }
+
+        /* 情報ボックス */
+        .info-box {
+            background: linear-gradient(135deg, #DBEAFE, rgba(59, 130, 246, 0.1));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--info);
+        }
+
+        .info-box .highlight-title {
+            color: var(--info);
+        }
+
+        /* タイムライン */
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 40px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .timeline-year {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .timeline-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        /* 次ページボタン */
+        .next-page-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 18px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(107, 91, 149, 0.3);
+        }
+
+        .next-page-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(107, 91, 149, 0.4);
+        }
+
+        .next-page-button::after {
+            content: '→';
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .next-page-button:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* 参考文献 */
+        .references {
+            background: var(--surface);
+            padding: 32px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            border: 1px solid var(--border);
+        }
+
+        .references p {
+            margin-bottom: 16px;
+        }
+
+        /* 画像プレースホルダー */
+        .image-placeholder {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #ced4da;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 32px 0;
+            color: var(--text-light);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 1200px) {
+            .table-of-contents {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 140px 60px 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-link {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+            .main-content {
+                padding: 120px 32px 80px;
+            }
+            .page-title {
+                font-size: 2.8rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .comparison-cards {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ナビゲーション -->
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="page2.html" class="nav-link">序論</a></li>
+                <li><a href="page3.html" class="nav-link">系譜</a></li>
+                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
+                <li><a href="page4.html" class="nav-link">両義</a></li>
+                <li><a href="page5.html" class="nav-link">自己</a></li>
+                <li><a href="page6.html" class="nav-link">資本</a></li>
+                <li><a href="page7.html" class="nav-link active">記憶</a></li>
+                <li><a href="page8.html" class="nav-link">未来</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 目次サイドバー -->
+    <nav class="table-of-contents">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#section1" class="toc-link">人間 vs デジタル記憶</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">Wayback Machine</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">削除の幻想</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">企業 vs アーカイブ</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">炎上とキャンセル</a></li>
+            <li class="toc-item"><a href="#section6" class="toc-link">忘れられる権利</a></li>
+            <li class="toc-item"><a href="#section7" class="toc-link">個人の対策</a></li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- ページヘッダー -->
+        <header class="page-header">
+            <div class="page-subtitle">Page 7</div>
+            <h1 class="page-title">記憶</h1>
+            <p class="page-description">
+                「インターネットは忘れない」―この言葉が現実となったのは、一人の男性の理想主義的なビジョンによるものでした。
+                私たちが削除したつもりの投稿、企業が隠したい過去のページ、そして時間とともに消えていくはずだった記録―すべてがWayback Machineの中で静かに保存され続けています。
+            </p>
+        </header>
+
+        <!-- セクション1: 人間の記憶 vs デジタル記憶 -->
+        <section id="section1" class="content-section">
+            <h2 class="section-title">1. 人間の記憶 vs デジタル記憶：根本的な違い</h2>
+            
+            <p class="content-paragraph">
+                まず、私たち人間の記憶とデジタル記憶の決定的な違いを理解する必要があります。
+            </p>
+
+            <div class="comparison-cards">
+                <div class="comparison-card human">
+                    <div class="comparison-card-title">人間の記憶</div>
+                    <div class="comparison-card-content">
+                        <p>人間の記憶は不完全で、時間とともに変化し、<strong>忘却という機能</strong>を持っています。心理学者ヘルマン・エビングハウスが発見した「忘却曲線」が示すように、私たちは学習した内容の多くを時間の経過とともに自然に忘れていきます。</p>
+                        <p style="margin-top: 16px;">この忘却は、実は人間の心理的健康にとって重要な機能です。嫌な記憶や過去の失敗を完全に覚え続けることは、私たちの精神にとって大きな負担となるからです。</p>
+                    </div>
+                </div>
+
+                <div class="comparison-card digital">
+                    <div class="comparison-card-title">デジタル記憶</div>
+                    <div class="comparison-card-content">
+                        <p>デジタル記憶は<strong>完璧で、劣化せず、忘却しません</strong>。コンピュータに保存されたデータは、意図的に削除されない限り、理論上は永久に残り続けます。</p>
+                        <p style="margin-top: 16px;">Wayback Machineはまさにこの「永久保存」を実現してしまったのです。あなたの知らないところで、あなたの過去の投稿が静かに保存され続けています。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="image-placeholder">
+                🧠 人間の記憶とデジタル記憶の違いを視覚化した図を挿入推奨<br>
+                （忘却曲線と永続的データ保存の対比）
+            </div>
+        </section>
+
+        <!-- セクション2: Wayback Machine -->
+        <section id="section2" class="content-section">
+            <h2 class="section-title">2. Wayback Machine：インターネットの永久記憶装置</h2>
+            
+            <p class="content-paragraph">
+                Internet Archive創設者のブリュースター・ケール氏とブルース・ギリアット氏によって2001年10月にサンフランシスコで開始されたWayback Machineは、主にウェブコンテンツが変更されたり、ウェブサイトが閉鎖されたりしたときに消失する問題に対処するために作られました。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">Wayback Machineの規模</div>
+                <p>現在、Wayback Machineには<strong>9000億を超えるウェブページ</strong>が保存されており、これは人類のオンライン活動の歴史そのものと言えます。</p>
+            </div>
+
+            <div class="interactive-element">
+                <div class="chart-title">Wayback Machine保存ページ数の推移</div>
+                <div class="chart-container">
+                    <canvas id="archiveGrowthChart"></canvas>
+                </div>
+                <div class="chart-source">出典: Internet Archive 公式データ</div>
+            </div>
+
+            <p class="content-paragraph">
+                Wayback Machineの仕組みは比較的シンプルですが、その影響は計り知れません。自動化されたプログラム（クローラー）がインターネット上のウェブページを定期的に巡回し、その内容をスナップショットとして保存します。この過程で、SNSの投稿、プロフィール情報、画像なども含めて記録されていきます。
+            </p>
+
+            <div class="warning-box">
+                <div class="highlight-title">知らないうちに記録される現実</div>
+                <p>重要なのは、この記録作業が<strong>投稿者の許可なく、また多くの場合は投稿者が知らないうちに行われる</strong>ことです。あなたがTwitterで投稿した何気ないつぶやき、Instagramで共有した写真、Facebookでの近況報告―これらすべてが、あなたの知らないところでWayback Machineに保存されている可能性があります。</p>
+            </div>
+        </section>
+
+        <!-- セクション3: 削除されたはずの投稿が蘇る -->
+        <section id="section3" class="content-section">
+            <h2 class="section-title">3. 削除されたはずの投稿が蘇る現実</h2>
+            
+            <p class="content-paragraph">
+                SNSプラットフォームの多くは「削除」機能を提供しています。ユーザーは自分の投稿を後から削除することで、その内容を「なかったこと」にできると考えがちです。しかし、Wayback Machineの存在により、この削除は完全ではなくなりました。
+            </p>
+
+            <div class="timeline-item">
+                <div class="timeline-year">ステップ1：投稿</div>
+                <div class="timeline-content">
+                    あるユーザーがTwitterで不適切な発言をする
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">ステップ2：削除</div>
+                <div class="timeline-content">
+                    後日、その投稿を削除（Twitter上からは消える）
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">ステップ3：保存</div>
+                <div class="timeline-content">
+                    しかしWayback Machineがスナップショットとして保存していた場合、その内容は永続的に残り続ける
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">ステップ4：発掘</div>
+                <div class="timeline-content">
+                    数年後にその発言が「発掘」され、批判にさらされる
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="highlight-title">デジタル考古学という現象</div>
+                <p>この現象は「デジタル考古学」と呼ばれることもあります。過去の発言や行動を意図的に探し出し、現在の文脈で判断する行為です。政治家、芸能人、企業経営者など、公的な立場にある人々が特にその標的となりやすく、学生時代のSNS投稿が就職活動や社会人生活に影響を与えるケースも増えています。</p>
+            </div>
+        </section>
+
+        <!-- セクション4: プラットフォーム企業 vs アーカイブ -->
+        <section id="section4" class="content-section">
+            <h2 class="section-title">4. プラットフォーム企業 vs アーカイブの攻防</h2>
+            
+            <p class="content-paragraph">
+                Wayback Machineの存在は、SNSプラットフォーム企業にとって必ずしも歓迎されるものではありません。企業は自社の利用規約やプライバシーポリシーを頻繁に変更しますが、Wayback Machineはその変更履歴をすべて記録しています。
+            </p>
+
+            <div class="image-placeholder">
+                ⚖️ 企業の説明責任を強化するWayback Machineの役割を表現した図を挿入推奨<br>
+                （過去の約束と現在の政策の比較）
+            </div>
+
+            <p class="content-paragraph">
+                これにより、企業が過去の約束を破ったり、ユーザーに不利な変更を行ったりした際の証拠が残ることになります。例えば、ある企業が「私たちはユーザーのプライバシーを最優先に考えます」と言っていたにも関わらず、後にデータ収集を拡大した場合、Wayback Machineに保存された過去のプライバシーポリシーがその矛盾を証明してしまいます。
+            </p>
+
+            <h3 class="subsection-title">技術的・法的な攻防</h3>
+            <p class="content-paragraph">
+                一部のプラットフォーム企業は、robots.txtファイルやその他の技術的手段を用いて、自社のサイトがWayback Machineに保存されることを防ごうとしています。しかし、一度保存された情報を完全に削除することは困難で、この技術的・法的な攻防は現在も続いています。
+            </p>
+        </section>
+
+        <!-- セクション5: 炎上とキャンセルカルチャー -->
+        <section id="section5" class="content-section">
+            <h2 class="section-title">5. 炎上とキャンセルカルチャーを支える記憶装置</h2>
+            
+            <p class="content-paragraph">
+                現代のSNS社会で頻繁に起こる「炎上」現象において、Wayback Machineは重要な役割を果たしています。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">炎上の典型的なパターン</div>
+                <p><strong>1. きっかけ：</strong>何らかのきっかけで過去の発言に注目が集まる</p>
+                <p><strong>2. 削除：</strong>当該の投稿が削除される</p>
+                <p><strong>3. 発掘：</strong>Wayback Machineから過去のスナップショットが「発掘」される</p>
+                <p><strong>4. 拡散：</strong>スクリーンショットとして拡散される</p>
+                <p><strong>5. 炎上：</strong>文脈を失った状態で批判が拡大する</p>
+            </div>
+
+            <p class="content-paragraph">
+                この過程で特に問題となるのは「文脈の喪失」です。Wayback Machineに保存されるのは、その時点でのページの状態だけであり、その投稿がなされた背景や状況は失われがちです。数年前の冗談が現在の基準で判断されたり、特定のコミュニティ内での会話が一般社会の文脈で解釈されたりすることで、意図しない誤解や批判を生む場合があります。
+            </p>
+
+            <div class="interactive-element">
+                <div class="chart-title">デジタル記憶と炎上の関係性</div>
+                <div class="chart-container">
+                    <canvas id="cancelCultureChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 著者による概念図</div>
+            </div>
+        </section>
+
+        <!-- セクション6: 忘れられる権利 -->
+        <section id="section6" class="content-section">
+            <h2 class="section-title">6. 忘れられる権利 vs 記録する権利：法的な対立</h2>
+            
+            <p class="content-paragraph">
+                この状況に対応するため、ヨーロッパでは「忘れられる権利」という概念が法制化されました。
+            </p>
+
+            <div class="info-box">
+                <div class="highlight-title">Google Spain判決（2014年）</div>
+                <p>2014年の欧州司法裁判所によるGoogle Spain判決では、検索エンジン事業者は個人の要求に応じて、その人の名前で検索した結果からリンクを削除する責任があるとされました。</p>
+                <p style="margin-top: 12px;">この判決により、検索結果の表示は個人データの処理にあたり、検索エンジン事業者は特定の状況において個人情報へのリンクを検索結果から削除する責任があることが明確化されました。</p>
+            </div>
+
+            <p class="content-paragraph">
+                しかし、この「忘れられる権利」は、「記録する権利」や「知る権利」との間で複雑な対立を生んでいます。情報の自由な流通を重視するアメリカでは、忘れられる権利に対する反発も強く、Internet Archiveも時として法的圧力にさらされています。
+            </p>
+
+            <h3 class="subsection-title">Internet Archiveのジレンマ</h3>
+            <p class="content-paragraph">
+                Wayback Machineの運営者であるInternet Archiveは、「人類の知識を保存する」という使命と、個人のプライバシー権の間でバランスを取る難しい立場に置かれています。彼らは削除要請に応じる場合もありますが、歴史的価値や公共の利益を理由に保存を継続する場合もあります。
+            </p>
+
+            <div class="image-placeholder">
+                ⚖️ 忘れられる権利と記録する権利のバランスを表現した天秤の図を挿入推奨<br>
+                （個人のプライバシー vs 社会の透明性）
+            </div>
+        </section>
+
+        <!-- セクション7: SNSの歴史を変えた影響 -->
+        <section id="section7" class="content-section">
+            <h2 class="section-title">7. SNSの歴史を変えたWayback Machineの影響力</h2>
+            
+            <p class="content-paragraph">
+                Wayback Machineの存在は、SNS業界全体の風景を根本的に変えました。
+            </p>
+
+            <h3 class="subsection-title">企業の説明責任の向上</h3>
+            <p class="content-paragraph">
+                企業は過去の発言や約束について、より慎重になる必要が生まれました。利用規約の変更、プライバシーポリシーの修正、公的な発言などが、すべて記録として残ることを前提に行動する必要があります。
+            </p>
+
+            <h3 class="subsection-title">ユーザーの投稿行動への影響</h3>
+            <p class="content-paragraph">
+                特に若い世代は「デジタル・フットプリント」を意識し、将来問題となる可能性のある投稿を避ける傾向が強まっています。これは前章で述べた「自己検閲」の強化とも関連しています。
+            </p>
+
+            <h3 class="subsection-title">ジャーナリズムと研究への貢献</h3>
+            <p class="content-paragraph">
+                記者や研究者は、企業や政治家の過去の発言を検証するためにWayback Machineを活用し、より厳密な事実確認を行えるようになりました。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">企業の責任逃れを防ぐアーカイブの力</div>
+                <p>例えば、ある企業がデータ漏洩事件を起こした際、事後的に自社のセキュリティポリシーを変更して「私たちは常に最高水準のセキュリティを保っていました」と主張したとします。</p>
+                <p style="margin-top: 12px;">しかし、Wayback Machineに保存された過去のページを確認すれば、実際のセキュリティ対策がどの程度だったかを客観的に検証することができます。</p>
+            </div>
+        </section>
+
+        <!-- セクション8: 技術的限界 -->
+        <section id="section8" class="content-section">
+            <h2 class="section-title">8. アーカイブの技術的限界と課題</h2>
+            
+            <p class="content-paragraph">
+                しかし、Wayback Machineにも技術的な限界があります。
+            </p>
+
+            <div class="warning-box">
+                <div class="highlight-title">保存されないコンテンツ</div>
+                <p><strong>・動的に生成されるコンテンツ：</strong>リアルタイムで変化するページ</p>
+                <p><strong>・パスワードで保護されたページ：</strong>ログインが必要な情報</p>
+                <p><strong>・robots.txtで除外されたページ：</strong>クローラーがアクセスできないページ</p>
+                <p><strong>・JavaScriptを多用した複雑なページ：</strong>完全に再現することが困難</p>
+            </div>
+
+            <p class="content-paragraph">
+                さらに、保存のタイミングも重要な要素です。投稿から保存までの間に削除された内容は、原則として記録されません。ただし、他のサイトにシェアされたり引用されたりした場合は、間接的に保存される可能性があります。
+            </p>
+        </section>
+
+        <!-- セクション9: 個人ができる対策 -->
+        <section id="section9" class="content-section">
+            <h2 class="section-title">9. 個人ができるデジタル記憶の管理</h2>
+            
+            <p class="content-paragraph">
+                このようなデジタル記憶の特性を理解した上で、私たち個人はどのような対策を取ることができるでしょうか。
+            </p>
+
+            <h3 class="subsection-title">① 投稿前の慎重な検討</h3>
+            <p class="content-paragraph">
+                まず最も重要なのは、投稿する前にその内容が将来にわたって公開されても問題ないかを慎重に考えることです。「今だけの気持ち」で投稿した内容が、数年後の自分にとって不利益をもたらす可能性があることを常に意識する必要があります。
+            </p>
+
+            <h3 class="subsection-title">② 定期的な投稿の見直し</h3>
+            <p class="content-paragraph">
+                過去の投稿を定期的に見直し、現在の価値観や立場に合わないものは削除することも重要です。ただし、削除してもWayback Machineに保存されている可能性があることも理解しておく必要があります。
+            </p>
+
+            <h3 class="subsection-title">③ プライバシー設定の活用</h3>
+            <p class="content-paragraph">
+                各SNSプラットフォームのプライバシー設定を適切に利用し、投稿の公開範囲を制限することで、アーカイブされるリスクを軽減できます。ただし、完全に防ぐことは困難であることも理解しておきましょう。
+            </p>
+
+            <h3 class="subsection-title">④ デジタル・リテラシーの向上</h3>
+            <p class="content-paragraph">
+                最も根本的な対策は、デジタル社会における情報の特性を理解し、適切な判断力を身につけることです。インターネット上の情報は「忘れない」という前提で行動することが重要です。
+            </p>
+
+            <div class="interactive-element">
+                <div class="chart-title">デジタル記憶管理の実践度チェック</div>
+                <div class="chart-container">
+                    <canvas id="memoryManagementChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 総務省「情報リテラシー向上のための指針」を基に作成</div>
+            </div>
+        </section>
+
+        <!-- セクション10: 教育現場での対応 -->
+        <section id="section10" class="content-section">
+            <h2 class="section-title">10. 教育現場での対応</h2>
+            
+            <p class="content-paragraph">
+                学校教育においても、デジタル記憶の特性について教える必要性が高まっています。
+            </p>
+
+            <p class="content-paragraph">
+                多くの高校生や大学生は、SNSを日常的に利用していますが、その投稿が長期間にわたって記録される可能性については十分に理解していません。就職活動の際に、企業の人事担当者がSNSをチェックするケースも増えており、学生時代の軽はずみな投稿が将来のキャリアに影響を与える可能性があります。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">教育機関で指導すべき重要な点</div>
+                <p><strong>・インターネット上の情報の永続性：</strong>一度投稿した情報は完全には消せない</p>
+                <p><strong>・Wayback Machineをはじめとするアーカイブサービスの存在：</strong>削除しても記録が残る可能性</p>
+                <p><strong>・デジタル・フットプリントの管理方法：</strong>自分の過去の投稿を定期的に見直す</p>
+                <p><strong>・批判的思考力の育成：</strong>投稿する前に将来への影響を考える習慣</p>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="content-section">
+            <h2 class="section-title">まとめ：記憶と忘却のバランスを求めて</h2>
+            
+            <p class="content-paragraph">
+                Wayback Machineは、人類の知識保存という崇高な理念から生まれました。しかし、SNS時代において、それは予想外の社会的影響をもたらしています。
+            </p>
+
+            <p class="content-paragraph">
+                私たちは今、「完全に記憶するシステム」と「忘却する権利」の間でバランスを見つける必要に迫られています。完全な記憶は、企業や権力者の責任追及を可能にし、歴史の改ざんを防ぐ重要な機能を持ちます。一方で、個人の成長や社会の寛容さを阻害する可能性もあります。
+            </p>
+
+            <div class="warning-box">
+                <div class="highlight-title">新しい現実への適応</div>
+                <p>重要なのは、この新しい現実を理解し、適切に対応していくことです。デジタル記憶の特性を理解し、責任ある情報発信を心がけると同時に、過去の発言に対する寛容さも持つ必要があります。</p>
+            </div>
+
+            <p class="content-paragraph">
+                私たちは、技術の進歩によって生まれた新しい課題に直面していますが、それは同時に、より透明で責任ある社会を作る機会でもあるのです。記憶と忘却、個人のプライバシーと社会の透明性―これらのバランスを取りながら、健全なデジタル社会を築いていくことが、私たち一人ひとりに求められています。
+            </p>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <a href="#" class="next-page-button">
+                    次ページ「未来」
+                </a>
+            </div>
+        </section>
+
+        <!-- 参考文献 -->
+        <section class="content-section">
+            <h3 class="subsection-title">参考文献</h3>
+            <div class="references">
+                <p>Internet Archive. (2024). About Internet Archive. Retrieved from https://archive.org/about/</p>
+                <p>Kahle, B. (1996). Internet Archive Mission Statement. Internet Archive.</p>
+                <p>Wayback Machine. (2001). Internet Archive Wayback Machine. Retrieved from https://web.archive.org/</p>
+                <p>Court of Justice of the European Union. (2014). Google Spain SL, Google Inc. v Agencia Española de Protección de Datos, Mario Costeja González. Case C-131/12.</p>
+                <p>EUR-Lex. (2019). Right to be forgotten on the Internet. Retrieved from https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=legissum:310401_1</p>
+                <p>Nieman Journalism Lab. (2022). After 25 years, Brewster Kahle and the Internet Archive are still working to democratize knowledge. Harvard University.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ナビゲーション制御
+        let navTimer;
+        const navContainer = document.querySelector('.nav-container');
+        
+        function showNav() {
+            navContainer.classList.remove('hidden');
+            clearTimeout(navTimer);
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 7000);
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientY < 120) {
+                showNav();
+            }
+        });
+        
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(navTimer);
+        });
+        
+        navContainer.addEventListener('mouseleave', () => {
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 3000);
+        });
+        
+        showNav();
+
+        // スクロールアニメーション
+        function handleScroll() {
+            const sections = document.querySelectorAll('.content-section');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+
+            updateTOC();
+        }
+
+        function updateTOC() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 250) {
+                    currentSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            setTimeout(handleScroll, 100);
+            initializeCharts();
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Chart.js初期化
+        function initializeCharts() {
+            // Wayback Machine保存ページ数の推移
+            const archiveGrowthCtx = document.getElementById('archiveGrowthChart');
+            if (archiveGrowthCtx) {
+                new Chart(archiveGrowthCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['2001', '2005', '2010', '2015', '2020', '2024'],
+                        datasets: [{
+                            label: '保存ページ数（億ページ）',
+                            data: [100, 400, 1500, 4320, 5140, 9000],
+                            borderColor: '#6B5B95',
+                            backgroundColor: 'rgba(107, 91, 149, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            pointBackgroundColor: '#6B5B95',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    font: { size: 14, family: 'Inter', weight: '600' },
+                                    color: '#1a202c',
+                                    usePointStyle: true,
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                padding: 16,
+                                titleFont: { size: 14, weight: '600' },
+                                bodyFont: { size: 13 },
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y + '億ページ';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096',
+                                    callback: function(value) {
+                                        return value + '億';
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // キャンセルカルチャーと記憶
+            const cancelCultureCtx = document.getElementById('cancelCultureChart');
+            if (cancelCultureCtx) {
+                new Chart(cancelCultureCtx.getContext('2d'), {
+                    type: 'radar',
+                    data: {
+                        labels: ['発掘の容易性', '文脈の喪失', '社会的影響', '永続性', '拡散速度'],
+                        datasets: [
+                            {
+                                label: 'アーカイブ前',
+                                data: [30, 40, 35, 25, 45],
+                                borderColor: '#10B981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                                pointBackgroundColor: '#10B981'
+                            },
+                            {
+                                label: 'アーカイブ後',
+                                data: [90, 85, 80, 95, 88],
+                                borderColor: '#6B5B95',
+                                backgroundColor: 'rgba(107, 91, 149, 0.2)',
+                                pointBackgroundColor: '#6B5B95'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: { size: 13, weight: '500' },
+                                    padding: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            r: {
+                                suggestedMin: 0,
+                                suggestedMax: 100,
+                                ticks: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // デジタル記憶管理
+            const memoryManagementCtx = document.getElementById('memoryManagementChart');
+            if (memoryManagementCtx) {
+                new Chart(memoryManagementCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['投稿前の\n慎重な検討', '定期的な\n投稿見直し', 'プライバシー\n設定活用', 'デジタル\nリテラシー', '教育機関\nでの学習'],
+                        datasets: [{
+                            label: '実践度（%）',
+                            data: [45, 32, 58, 38, 25],
+                            backgroundColor: [
+                                'rgba(107, 91, 149, 0.7)',
+                                'rgba(155, 143, 199, 0.7)',
+                                'rgba(107, 91, 149, 0.7)',
+                                'rgba(155, 143, 199, 0.7)',
+                                'rgba(107, 91, 149, 0.7)'
+                            ],
+                            borderColor: '#6B5B95',
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096',
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 11 },
+                                    color: '#718096'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(handleScroll, 250);
+        });
+    </script>
+</body>
+</html>
