@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>資本：SNSと資本主義 - SNSが現代社会に与えた影響</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2C1810;
+            --primary-light: #F5EBE0;
+            --primary-dark: #1A0F08;
+            --accent-color: #D4A574;
+            --warning-color: #E63946;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ナビゲーション */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            padding: 20px;
+        }
+
+        .nav-container.hidden {
+            transform: translateY(-100%);
+        }
+
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 16px 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(44, 24, 16, 0.2);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 15px;
+            padding: 14px 24px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            letter-spacing: -0.2px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(44, 24, 16, 0.4);
+        }
+
+        /* サイドバー目次 */
+        .table-of-contents {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 240px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .toc-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 6px;
+        }
+
+        .toc-link {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toc-link:hover,
+        .toc-link.active {
+            background: var(--primary-light);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateX(4px);
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 140px 40px 100px;
+            margin-left: 320px;
+        }
+
+        .page-header {
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .page-subtitle {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .page-subtitle::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .page-title {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.1;
+            letter-spacing: -3px;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        /* セクション */
+        .content-section {
+            margin-bottom: 100px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+            letter-spacing: -1.5px;
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        .subsection-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 48px 0 24px;
+            letter-spacing: -0.8px;
+        }
+
+        .content-paragraph {
+            margin-bottom: 28px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        /* インタラクティブ要素 */
+        .interactive-element {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 50px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .interactive-element:hover {
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 32px 0;
+        }
+
+        .chart-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-source {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* ハイライトボックス */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-light), rgba(44, 24, 16, 0.08));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--primary-color);
+        }
+
+        .highlight-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* 警告ボックス */
+        .warning-box {
+            background: linear-gradient(135deg, #FEF2F2, rgba(230, 57, 70, 0.1));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid var(--warning-color);
+        }
+
+        .warning-box .highlight-title {
+            color: var(--warning-color);
+        }
+
+        /* データカード */
+        .data-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .data-card {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .data-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .data-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .data-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* アクションリスト */
+        .action-list {
+            display: grid;
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .action-item {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .action-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .action-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* 次ページボタン */
+        .next-page-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 18px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(44, 24, 16, 0.3);
+        }
+
+        .next-page-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(44, 24, 16, 0.4);
+        }
+
+        .next-page-button::after {
+            content: '→';
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .next-page-button:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* 参考文献 */
+        .references {
+            background: var(--surface);
+            padding: 32px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            border: 1px solid var(--border);
+        }
+
+        .references p {
+            margin-bottom: 16px;
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 1200px) {
+            .table-of-contents {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 140px 60px 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-link {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+            .main-content {
+                padding: 120px 32px 80px;
+            }
+            .page-title {
+                font-size: 2.8rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .data-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ナビゲーション -->
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="page2.html" class="nav-link">序論</a></li>
+                <li><a href="page3.html" class="nav-link">系譜</a></li>
+                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
+                <li><a href="page4.html" class="nav-link">両義</a></li>
+                <li><a href="page5.html" class="nav-link">自己</a></li>
+                <li><a href="page6.html" class="nav-link active">資本</a></li>
+                <li><a href="page7.html" class="nav-link">記憶</a></li>
+                <li><a href="page8.html" class="nav-link">未来</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 目次サイドバー -->
+    <nav class="table-of-contents">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#section1" class="toc-link">無料の正体</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">監視資本主義</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">デジタル労働</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">感情操作</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">データ資本主義</a></li>
+            <li class="toc-item"><a href="#section6" class="toc-link">アテンション・エコノミー</a></li>
+            <li class="toc-item"><a href="#section7" class="toc-link">データ植民地主義</a></li>
+            <li class="toc-item"><a href="#section8" class="toc-link">日本の特異性</a></li>
+            <li class="toc-item"><a href="#section9" class="toc-link">個人の対抗策</a></li>
+            <li class="toc-item"><a href="#section10" class="toc-link">政策レベルの対応</a></li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- ページヘッダー -->
+        <header class="page-header">
+            <div class="page-subtitle">Page 6</div>
+            <h1 class="page-title">資本</h1>
+            <p class="page-description">
+                あなたが今日スマートフォンでSNSを開いた瞬間、目に見えない経済取引が始まっています。
+                私たちは「無料」でSNSを利用していると思い込んでいますが、実際には私たち自身が商品となり、労働力となり、
+                この巨大な経済システムを支えているのです。
+            </p>
+        </header>
+
+        <!-- セクション1: 数字で見る「無料」の正体 -->
+        <section id="section1" class="content-section">
+            <h2 class="section-title">1. 数字で見る「無料」の正体</h2>
+            
+            <p class="content-paragraph">
+                まず、SNSプラットフォームがいかに巨大な利益を生み出しているかを、公開されている確実な数字で確認してみましょう。
+            </p>
+
+            <div class="data-cards">
+                <div class="data-card">
+                    <div class="data-value">25兆円</div>
+                    <div class="data-label">Meta（旧Facebook）の2024年年間収益。日本の国家予算の約4分の1に相当</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-value">1,319億ドル</div>
+                    <div class="data-label">2023年の広告収入。前年比16.1％増加</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-value">80%以上</div>
+                    <div class="data-label">Metaの収益のうち広告が占める割合</div>
+                </div>
+            </div>
+
+            <p class="content-paragraph">
+                これらの数字が意味するのは明確です：私たちユーザーが生み出すデータと注意力こそが、Metaの収益の源泉なのです。
+            </p>
+
+            <!-- Meta収益構造グラフ -->
+            <div class="interactive-element">
+                <div class="chart-title">Meta（Facebook）収益構造の推移</div>
+                <div class="chart-container">
+                    <canvas id="metaRevenueChart"></canvas>
+                </div>
+                <div class="chart-source">出典: Meta Platforms Inc. Investor Relations, Statista</div>
+            </div>
+        </section>
+
+        <!-- セクション2: 監視資本主義 -->
+        <section id="section2" class="content-section">
+            <h2 class="section-title">2. 監視資本主義：ショシャナ・ズボフの警告</h2>
+            
+            <p class="content-paragraph">
+                ハーバード・ビジネス・スクール名誉教授ショシャナ・ズボフは、著書『監視資本主義の時代』で、この新しい経済システムを「監視資本主義（Surveillance Capitalism）」と名付けました。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">監視資本主義とは</div>
+                <p>「企業による個人データの広範囲な収集と商品化」を特徴とする概念であり、「利益を追求する動機によって推進され、Googleの AdWords に代表される広告会社が、個人データを使ってより正確に消費者をターゲットにできる可能性を見出したことで生まれた」。</p>
+            </div>
+
+            <div class="warning-box">
+                <div class="highlight-title">ズボフの警告</div>
+                <p>「産業資本主義が自然を搾取し制御して破壊的な結果をもたらしたように、監視資本主義は人間の本性を搾取し制御して全体主義的秩序を発展の終着点とする」</p>
+            </div>
+
+            <p class="content-paragraph">
+                この「監視資本主義」の核心は、私たちの日常的な行動、感情、思考パターンが、私たちの同意なしに「原材料」として収集され、加工され、販売されているということです。
+            </p>
+        </section>
+
+        <!-- セクション3: デジタル労働 -->
+        <section id="section3" class="content-section">
+            <h2 class="section-title">3. デジタル労働：見えない労働者としての私たち</h2>
+            
+            <p class="content-paragraph">
+                マルクス主義的メディア研究で知られるクリスチャン・フックス教授は、現代のSNS利用を「デジタル労働」として分析しています。
+            </p>
+
+            <p class="content-paragraph">
+                私たちがSNSで行う日常的な活動：写真や動画の投稿、コメントやいいねによるエンゲージメント、ストーリーや近況の共有、他者の投稿への反応―これらすべてが、実は「労働」にほかなりません。
+            </p>
+
+            <div class="warning-box">
+                <div class="highlight-title">無償労働の構造</div>
+                <p>この労働は通常無償ですが、私たちが作り出したコンテンツに対するターゲット広告を通じて、プラットフォーム企業が収益を上げるのです。私たちは自分の労働の価値を知らされず、その価値に見合った対価を受け取ることもありません。</p>
+            </div>
+
+            <!-- ユーザー1人あたりの価値 -->
+            <div class="interactive-element">
+                <div class="chart-title">SNSプラットフォームにおけるユーザー1人あたりの年間収益</div>
+                <div class="chart-container">
+                    <canvas id="userValueChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 各社IR資料およびアナリストレポートに基づく推計（YouTubeのデータを含む）</div>
+            </div>
+        </section>
+
+        <!-- セクション4: アルゴリズムによる感情操作 -->
+        <section id="section4" class="content-section">
+            <h2 class="section-title">4. アルゴリズムによる感情操作：怒りと不安の経済学</h2>
+            
+            <p class="content-paragraph">
+                元Google デザイン倫理学者で、現在は非営利団体「Center for Humane Technology」を設立したトリスタン・ハリス氏は、TEDトークやドキュメンタリー映画「監視資本主義：デジタル社会がもたらす光と影」で衝撃的な事実を明かしました。
+            </p>
+
+            <p class="content-paragraph">
+                SNSのアルゴリズムは、ユーザーの「滞在時間」と「エンゲージメント」を最大化するよう設計されており、そのために最も効果的なのは「強い感情を引き起こすコンテンツ」だというのです。
+            </p>
+
+            <div class="action-list">
+                <div class="action-item">
+                    <div class="action-title">怒り・憤り</div>
+                    <div class="action-description">最も強いエンゲージメントを生み出す感情。コメントやシェアを促進</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-title">恐怖・不安</div>
+                    <div class="action-description">注意を強く引きつけ、継続的な確認行動を促す</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-title">驚き・ショック</div>
+                    <div class="action-description">拡散を加速させる要因となる</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-title">悲しみ・同情</div>
+                    <div class="action-description">共感を通じてエンゲージメントを増加させる</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <div class="highlight-title">Facebookファイルが明かした真実</div>
+                <p>2021年に元Facebook社員フランシス・ホーゲン氏によって暴露された「Facebookファイル」。内部文書によると、Facebook（現Meta）は自社のアルゴリズムが分裂や憎悪を増幅させることを十分に認識していながら、エンゲージメントによる収益を優先し、対策を怠っていたことが明らかになりました。</p>
+            </div>
+        </section>
+
+        <!-- セクション5: データ資本主義 -->
+        <section id="section5" class="content-section">
+            <h2 class="section-title">5. データ資本主義：あなたの人生が商品になる瞬間</h2>
+            
+            <p class="content-paragraph">
+                私たちが無意識に提供している「労働」は、単なるコンテンツ作成にとどまりません。私たちの存在そのものが、精密に解析され、商品化されています。
+            </p>
+
+            <h3 class="subsection-title">SNSプラットフォームが収集するデータの範囲</h3>
+
+            <div class="action-list">
+                <div class="action-item">
+                    <div class="action-title">基本的な行動データ</div>
+                    <div class="action-description">投稿内容、いいね、シェア、コメント、滞在時間、スクロール速度、クリックパターン、友人関係、メッセージの頻度と相手</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-title">推論されるデータ</div>
+                    <div class="action-description">政治的志向、宗教観、経済状況、購買力、恋愛関係の状況、興味・関心分野</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-title">デバイス・位置情報</div>
+                    <div class="action-description">GPS位置情報の履歴、Wi-Fi接続履歴、デバイスの識別情報、アプリの使用パターン</div>
+                </div>
+            </div>
+
+            <p class="content-paragraph">
+                これらのデータは、機械学習によって解析され、私たちの将来の行動を予測する「プロファイル」が作成されます。そして、このプロファイルこそが、広告主に販売される商品なのです。
+            </p>
+
+            <!-- データ収集の可視化 -->
+            <div class="interactive-element">
+                <div class="chart-title">収集されるデータの種類と割合</div>
+                <div class="chart-container">
+                    <canvas id="dataCollectionChart"></canvas>
+                </div>
+                <div class="chart-source">出典: Privacy International, Electronic Frontier Foundation</div>
+            </div>
+        </section>
+
+        <!-- セクション6: アテンション・エコノミー -->
+        <section id="section6" class="content-section">
+            <h2 class="section-title">6. 注意力という新しい通貨：アテンション・エコノミーの正体</h2>
+            
+            <p class="content-paragraph">
+                1971年、ノーベル経済学賞受賞者ハーバート・サイモンは預言的な言葉を残しました：「情報豊富な世界では、情報の豊富さは他の何かの不足を意味する。そして、情報が消費するもの、それは受け手の注意である」
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">アテンション・エコノミーの本質</div>
+                <p>私たちの注意力は有限です。一日は24時間しかなく、意識的に何かに集中できる時間はさらに限られています。SNSプラットフォームは、この貴重な「注意という資源」を奪い合い、それを広告主に販売しています。</p>
+            </div>
+
+            <p class="content-paragraph">
+                総務省の情報通信白書によると、日本人の平均的なインターネット利用時間は年々増加しており、その多くがSNSに費やされています。これは、私たちが一日の相当な部分を、自分の意思ではなく、アルゴリズムによって決定されたコンテンツの消費に使っていることを意味します。
+            </p>
+
+            <!-- 注意力の経済価値 -->
+            <div class="interactive-element">
+                <div class="chart-title">日本人の1日あたりSNS利用時間の推移</div>
+                <div class="chart-container">
+                    <canvas id="attentionTimeChart"></canvas>
+                </div>
+                <div class="chart-source">出典: 総務省「情報通信白書」2024年版</div>
+            </div>
+        </section>
+
+        <!-- セクション7: データ植民地主義 -->
+        <section id="section7" class="content-section">
+            <h2 class="section-title">7. データ植民地主義：デジタル時代の新しい搾取構造</h2>
+            
+            <p class="content-paragraph">
+                英国の社会学者ニック・コルドリー（Nick Couldry）とウルリッヒ・メジャー（Ulrich Mejias）は、現代のデータ収集システムを「データ植民地主義」と呼んでいます。
+            </p>
+
+            <div class="warning-box">
+                <div class="highlight-title">新しい植民地主義の形態</div>
+                <p>従来の植民地主義が土地と天然資源を収奪したように、データ植民地主義は人間の経験と行動を「原材料」として収奪します。しかし、その手法はより巧妙です。私たちは「サービスを利用する」という名目で、自ら進んでデータを提供しているのです。</p>
+            </div>
+
+            <p class="content-paragraph">
+                この構造の問題は、データの価値が完全に一方的に決定されることです。私たちは自分のデータがどれほどの価値を持つのか知らされず、その価値に見合った対価を受け取ることもありません。
+            </p>
+        </section>
+
+        <!-- セクション8: 日本における特異性 -->
+        <section id="section8" class="content-section">
+            <h2 class="section-title">8. 日本におけるSNS資本主義の特異性</h2>
+            
+            <p class="content-paragraph">
+                日本のSNS利用には、独特の文化的・経済的特徴があります。
+            </p>
+
+            <h3 class="subsection-title">LINEの支配構造</h3>
+            
+            <p class="content-paragraph">
+                LINEは日本のメッセージング市場を支配しています。2023年時点でアクティブユーザー数は約9,500万人、日本人口の約75％に達します。
+            </p>
+
+            <div class="data-cards">
+                <div class="data-card">
+                    <div class="data-value">9,500万人</div>
+                    <div class="data-label">LINEのアクティブユーザー数（日本）</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-value">75%</div>
+                    <div class="data-label">日本人口に占める割合</div>
+                </div>
+                <div class="data-card">
+                    <div class="data-value">スーパーアプリ</div>
+                    <div class="data-label">決済・ニュース・行政サービスまで統合</div>
+                </div>
+            </div>
+
+            <p class="content-paragraph">
+                注目すべきは、LINEが単なるメッセージアプリを超え、決済、ニュース、ショッピング、行政サービスまでを統合した「スーパーアプリ」として機能していることです。これにより、ユーザーの行動データを横断的に収集し、より精密なプロファイリングが可能になっています。
+            </p>
+
+            <h3 class="subsection-title">日本独特の「自己検閲文化」</h3>
+            
+            <p class="content-paragraph">
+                日本のSNSユーザーは炎上を極度に恐れ、自己検閲を強化する傾向があります。これは皮肉にも、プラットフォーム企業にとっては好都合です。ユーザーが「問題のない」コンテンツを自主的に作成することで、コンテンツ・モデレーションのコストを削減できるからです。
+            </p>
+        </section>
+
+        <!-- セクション9: 個人ができる対抗策 -->
+        <section id="section9" class="content-section">
+            <h2 class="section-title">9. 個人ができる対抗策：デジタル主権の奪還</h2>
+            
+            <p class="content-paragraph">
+                この巨大な搾取構造に対して、個人レベルでできる対抗策を考えてみましょう。
+            </p>
+
+            <h3 class="subsection-title">データの価値を意識する</h3>
+            
+            <p class="content-paragraph">
+                まず重要なのは、自分のデータに価値があることを認識することです。私たちの個人データは、企業にとって非常に価値のある資源であることを理解しましょう。
+            </p>
+
+            <h3 class="subsection-title">プライバシー設定の最適化</h3>
+            
+            <div class="action-list">
+                <div class="action-item">
+                    <div class="action-title">Facebook/Meta</div>
+                    <div class="action-description">広告設定で個人情報に基づく広告をオフにする。位置情報の履歴記録をオフにする。アクティビティログを定期的に確認・削除する。</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-title">Google</div>
+                    <div class="action-description">マイアクティビティで自動削除を設定する。広告設定でパーソナライズド広告をオフにする。位置履歴を完全にオフにする。</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-title">X (Twitter)</div>
+                    <div class="action-description">データ共有設定を見直す。広告のカスタマイズをオフにする。位置情報の共有を制限する。</div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">代替プラットフォームの利用</h3>
+            
+            <p class="content-paragraph">
+                プライバシーを重視する代替サービスの利用を検討しましょう：
+            </p>
+
+            <div class="action-list">
+                <div class="action-item">
+                    <div class="action-title">DuckDuckGo</div>
+                    <div class="action-description">追跡なし検索エンジン。検索履歴を収集・販売しない</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-title">Signal</div>
+                    <div class="action-description">エンドツーエンド暗号化メッセージング。メタデータも最小化</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-title">Mastodon</div>
+                    <div class="action-description">分散型SNS。企業に支配されない</div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">デジタル・デトックスの実践</h3>
+            
+            <p class="content-paragraph">
+                前章で述べた心理的効果に加え、経済的な観点からもデジタル・デトックスは有効です。SNS利用時間を意識的に削減することで、自分の注意力を「商品」として提供する時間を減らすことができます。
+            </p>
+
+            <h3 class="subsection-title">データポータビリティの活用</h3>
+            
+            <p class="content-paragraph">
+                個人情報保護法により、私たちには自分のデータをダウンロードする権利が認められています。積極的にこの権利を行使することで、企業に対してデータの価値を意識させることができます。
+            </p>
+        </section>
+
+        <!-- セクション10: 政策レベルでの対応 -->
+        <section id="section10" class="content-section">
+            <h2 class="section-title">10. 政策レベルでの対応：規制の現状と課題</h2>
+            
+            <p class="content-paragraph">
+                個人の努力だけでは限界があるため、政策レベルでの対応も重要です。
+            </p>
+
+            <h3 class="subsection-title">欧州連合（EU）の先進的取り組み</h3>
+            
+            <p class="content-paragraph">
+                EUは世界で最も厳格なデジタル規制を実施しています：
+            </p>
+
+            <div class="action-list">
+                <div class="action-item">
+                    <div class="action-title">GDPR（一般データ保護規則）</div>
+                    <div class="action-description">個人データ保護の包括的規制。データの利用目的明示、同意取得の厳格化、忘れられる権利の保障</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-title">デジタルサービス法（DSA）</div>
+                    <div class="action-description">プラットフォームの透明性義務。アルゴリズムの説明責任、違法コンテンツへの対応義務</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-title">デジタル市場法（DMA）</div>
+                    <div class="action-description">巨大テック企業の市場支配力制限。競争促進、相互運用性の確保</div>
+                </div>
+            </div>
+
+            <!-- EU規制の効果 -->
+            <div class="interactive-element">
+                <div class="chart-title">GDPR施行後のデータ保護意識の変化</div>
+                <div class="chart-container">
+                    <canvas id="gdprImpactChart"></canvas>
+                </div>
+                <div class="chart-source">出典: European Commission Survey 2023</div>
+            </div>
+
+            <h3 class="subsection-title">日本の課題</h3>
+            
+            <p class="content-paragraph">
+                日本では2022年4月に改正個人情報保護法が施行されましたが、SNSプラットフォームに対する規制はまだ不十分です。特に、アルゴリズムの透明性や、データの価値に見合った対価の支払いについて、より踏み込んだ議論が必要です。
+            </p>
+
+            <div class="warning-box">
+                <div class="highlight-title">日本が直面する課題</div>
+                <p>プラットフォーム企業への規制が欧米に比べて緩い。アルゴリズムの透明性確保が不十分。データポータビリティの実効性が低い。デジタル・リテラシー教育の遅れ。</p>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="content-section">
+            <h2 class="section-title">まとめ：見えない搾取からの解放に向けて</h2>
+            
+            <p class="content-paragraph">
+                SNSは私たちに多くの恩恵をもたらしましたが、同時に前例のない規模の経済的搾取システムをも生み出しました。私たちの注意力、感情、人間関係、そして存在そのものが商品化され、巨大な利益の源泉となっています。
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title">ショシャナ・ズボフからの警告</div>
+                <p>ショシャナ・ズボフが『監視資本主義の時代』で鳴らす警鐘は、まさに現代を生きる私たちに必要なものです。私たちは、この見えない搾取構造を理解し、意識的に対抗していく必要があります。</p>
+            </div>
+
+            <p class="content-paragraph">
+                重要なのは、SNSそのものを否定することではありません。問題は、現在の資本主義的な設計が、ユーザーの利益よりも株主の利益を優先していることです。私たちには、より公正で持続可能なデジタル社会を要求する権利があります。
+            </p>
+
+            <p class="content-paragraph">
+                テクノロジーの力は中立ではありません。それは設計者の価値観と意図を反映します。今こそ、私たち自身の価値観に基づいた、人間的なテクノロジーのあり方を考える時なのです。
+            </p>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <a href="page7.html" class="next-page-button">
+                    次ページ「記憶」
+                </a>
+            </div>
+        </section>
+
+        <!-- 参考文献 -->
+        <section class="content-section">
+            <h3 class="subsection-title">参考文献</h3>
+            <div class="references">
+                <p>Zuboff, S. (2019). The Age of Surveillance Capitalism: The Fight for a Human Future at the New Frontier of Power. New York: PublicAffairs.</p>
+                <p>Meta Platforms Inc. (2025). Meta Reports Fourth Quarter and Full Year 2024 Results. Investor Relations.</p>
+                <p>Statista. (2024). Meta: annual revenue 2023. Retrieved from https://www.statista.com/statistics/268604/annual-revenue-of-facebook/</p>
+                <p>Harvard Business School Faculty & Research. Shoshana Zuboff - The Age of Surveillance Capitalism.</p>
+                <p>Couldry, N., & Mejias, U. A. (2019). The Costs of Connection: How Data Is Colonizing Human Life and Appropriating It for Capitalism. Stanford University Press.</p>
+                <p>総務省 (2024). 「令和6年版 情報通信白書」東京：総務省.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ナビゲーション制御
+        let navTimer;
+        const navContainer = document.querySelector('.nav-container');
+        
+        function showNav() {
+            navContainer.classList.remove('hidden');
+            clearTimeout(navTimer);
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 7000);
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientY < 120) {
+                showNav();
+            }
+        });
+        
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(navTimer);
+        });
+        
+        navContainer.addEventListener('mouseleave', () => {
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 3000);
+        });
+        
+        showNav();
+
+        // スクロールアニメーション
+        function handleScroll() {
+            const sections = document.querySelectorAll('.content-section');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+
+            updateTOC();
+        }
+
+        function updateTOC() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 250) {
+                    currentSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            setTimeout(handleScroll, 100);
+            initializeCharts();
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Chart.js初期化
+        function initializeCharts() {
+            // Meta収益構造
+            const metaRevenueCtx = document.getElementById('metaRevenueChart');
+            if (metaRevenueCtx) {
+                new Chart(metaRevenueCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+                        datasets: [{
+                            label: '総収益（億ドル）',
+                            data: [558, 707, 859, 1179, 1166, 1348, 1645],
+                            borderColor: '#2C1810',
+                            backgroundColor: 'rgba(44, 24, 16, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    font: { size: 14, weight: '600' },
+                                    color: '#1a202c',
+                                    padding: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096',
+                                    callback: function(value) {
+                                        return value + '億ドル';
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // ユーザー1人あたりの価値 (YouTube/Googleの推定値を $72 として追加)
+            const userValueCtx = document.getElementById('userValueChart');
+            if (userValueCtx) {
+                new Chart(userValueCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        // YouTube (Google) のデータを追加
+                        labels: ['YouTube/Google', 'Facebook', 'Instagram', 'Twitter/X', 'TikTok', 'LINE'],
+                        datasets: [{
+                            label: 'ユーザー1人あたり年間収益（ドル）',
+                            // 修正後のデータ: YouTube/Google ($72) を追加し、他を調整
+                            data: [72, 54, 48, 23, 18, 12],
+                            backgroundColor: [
+                                'rgba(255, 0, 0, 0.8)',      // YouTube: 赤
+                                'rgba(44, 24, 16, 0.8)',    // Facebook: 濃茶
+                                'rgba(212, 165, 116, 0.8)', // Instagram: 薄茶
+                                'rgba(0, 0, 0, 0.8)',        // Twitter/X: 黒
+                                'rgba(255, 0, 80, 0.8)',     // TikTok: ピンク
+                                'rgba(0, 185, 0, 0.8)'       // LINE: 緑
+                            ],
+                            borderColor: [
+                                '#FF0000',
+                                '#2C1810',
+                                '#D4A574',
+                                '#000000',
+                                '#FF0050',
+                                '#00B900'
+                            ],
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096',
+                                    // エラー修正済みのcallback関数
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // データ収集の可視化
+            const dataCollectionCtx = document.getElementById('dataCollectionChart');
+            if (dataCollectionCtx) {
+                new Chart(dataCollectionCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['行動データ', '推論データ', '位置情報', 'デバイス情報', 'その他'],
+                        datasets: [{
+                            data: [35, 25, 20, 15, 5],
+                            backgroundColor: [
+                                'rgba(44, 24, 16, 0.8)',
+                                'rgba(212, 165, 116, 0.8)',
+                                'rgba(230, 57, 70, 0.8)',
+                                'rgba(113, 128, 150, 0.8)',
+                                'rgba(156, 163, 175, 0.6)'
+                            ],
+                            borderColor: '#ffffff',
+                            borderWidth: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { size: 13, weight: '500' },
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 注意力時間の推移
+            const attentionTimeCtx = document.getElementById('attentionTimeChart');
+            if (attentionTimeCtx) {
+                new Chart(attentionTimeCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+                        datasets: [{
+                            label: '平均利用時間（分/日）',
+                            data: [95, 110, 135, 145, 158, 172, 185],
+                            borderColor: '#E63946',
+                            backgroundColor: 'rgba(230, 57, 70, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '分';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // GDPR影響
+            const gdprImpactCtx = document.getElementById('gdprImpactChart');
+            if (gdprImpactCtx) {
+                new Chart(gdprImpactCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['プライバシー意識', 'データ管理', '企業への信頼', '権利行使'],
+                        datasets: [
+                            {
+                                label: 'GDPR施行前（2017）',
+                                data: [42, 28, 35, 15],
+                                backgroundColor: 'rgba(156, 163, 175, 0.6)'
+                            },
+                            {
+                                label: 'GDPR施行後（2023）',
+                                data: [78, 65, 58, 52],
+                                backgroundColor: 'rgba(44, 24, 16, 0.8)'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(handleScroll, 250);
+        });
+    </script>
+</body>
+</html>
