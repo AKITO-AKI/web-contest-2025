@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>Sitemap Universe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Three.js r160+ Moudle CDN -->
+<script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/controls/OrbitControls.js";
+
+const container = document.body;
+
+// ======================
+// PAGE MAP
+// ======================
+const pages = [
+  { title: "序章：世界と出会う", slug: "intro.html", desc: "知と好奇心が交錯し、物語はここから始まる。世界の輪郭を探り、思考の扉を開くための前章。" },
+  { title: "理念と指針", slug: "philosophy.html", desc: "思想の中枢に触れ、軸となる哲学を編み上げる。未来への態度を、ここで定義する。" },
+  { title: "概念アーカイブ", slug: "concepts.html", desc: "抽象の迷宮から概念をすくい取り、言語化し、共有する。認識が世界を形作る。" },
+  { title: "社会と知性", slug: "society.html", desc: "社会構造、知識の連鎖、人間とテクノロジー。観測者として世界に問いかける。" },
+  { title: "技術洞察", slug: "tech.html", desc: "先端技術の内部へ潜る。AI・数理・情報の深度まで思考を沈める。" },
+  { title: "分析と構造", slug: "analysis.html", desc: "複雑性をほどき、要素と関係性へ還元する。世界を理解するためのレンズ。" },
+  { title: "実践知と創造", slug: "practice.html", desc: "学習と実験、制作の記録。知が行為となる瞬間を追う。" },
+  { title: "方法論と体系", slug: "method.html", desc: "思考の流儀、研究の技法、精神の姿勢。自らの道を築くための構造化。" },
+  { title: "対話と共同知", slug: "dialogue.html", desc: "他者との思考の交差。聴き、語り、磨き合う知の場。" },
+  { title: "インタビュー", slug: "interview.html", desc: "最前線の声を受け取り、未来の気配をつかむ。" },
+  { title: "未来予測", slug: "future.html", desc: "兆しを読み、変化を予測し、まだ見ぬ世界へ飛ぶ。" },
+  { title: "概念実装", slug: "prototype.html", desc: "理論を現実に落とし込み、モデルを構築する。" },
+  { title: "探求録", slug: "explore.html", desc: "調査・実験・思索の歩みを記録。進化の痕跡。" },
+  { title: "書誌", slug: "library.html", desc: "参考文献・知的資源の収蔵庫。" },
+  { title: "語彙", slug: "glossary.html", desc: "語の定義、概念の杭。言葉を整えることで世界が整う。" },
+  { title: "研究記録", slug: "notes.html", desc: "内部思考と未成熟な断片。生成途中の知。" },
+  { title: "作品群", slug: "works.html", desc: "制作物、可視化された精神。" },
+  { title: "資料庫", slug: "archive.html", desc: "一次資料の保存庫。" },
+  { title: "サポート", slug: "support.html", desc: "制度、関係性、人的支援。" },
+  { title: "終章：帰還と再出発", slug: "outro.html", desc: "旅を終え、また始まる。円環する知。" },
+];
+
+// ================
+// SCENE SETUP
+// ================
+let scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
+camera.position.set(0, 0, 4);
+
+let renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+container.appendChild(renderer.domElement);
+
+// LIGHT
+const light = new THREE.DirectionalLight(0xffffff, 1.2);
+light.position.set(3, 3, 5);
+scene.add(light);
+scene.add(new THREE.AmbientLight(0xffffff, .4));
+
+// ======================
+// GEOMETRY
+// ======================
+const geo = new THREE.IcosahedronGeometry(1, 0);
+const wireMat = new THREE.MeshBasicMaterial({
+  color: 0x000000,
+  wireframe: true,
+  wireframeLinewidth: 1
+});
+const wire = new THREE.Mesh(geo, wireMat);
+scene.add(wire);
+
+const faceCenters = [];
+geo.faces.forEach((f, i)=>{
+  const v = new THREE.Vector3()
+    .add(geo.vertices[f.a])
+    .add(geo.vertices[f.b])
+    .add(geo.vertices[f.c])
+    .divideScalar(3)
+    .normalize()
+    .multiplyScalar(1.2);
+  faceCenters.push(v);
+});
+
+// ======================
+// STATE
+// ======================
+let mode = "float"; 
+let hoveredFace = -1;
+let activeFace = -1;
+let idleTimer = 0;
+const snapTime = 0.07;
+
+// ======================
+// DOM UI
+// ======================
+const ui = document.createElement("div");
+ui.style.cssText = `
+ position:fixed;right:0;top:0;bottom:0;
+ width:33vw;pointer-events:none;
+ padding:60px 50px;
+ font-family:-apple-system, BlinkMacSystemFont, "SF Pro", Helvetica, sans-serif;
+ color:#000;display:flex;flex-direction:column;
+ justify-content:center;background:rgba(255,255,255,0);
+ transition:opacity .6s ease;opacity:0;
+`;
+document.body.appendChild(ui);
+
+const tag = document.createElement("div");
+tag.style.cssText = "font-size:14px;font-weight:500;margin-bottom:6px;opacity:.75;";
+ui.appendChild(tag);
+
+const title = document.createElement("div");
+title.style.cssText = "font-size:32px;font-weight:600;margin-bottom:12px;";
+ui.appendChild(title);
+
+const desc = document.createElement("div");
+desc.style.cssText = "font-size:15px;line-height:1.6;max-width:26vw;color:#222;";
+ui.appendChild(desc);
+
+// ======================
+// SLOT LIST UI
+// ======================
+const slot = document.createElement("div");
+slot.style.cssText = `
+ position:fixed;left:20px;top:0;bottom:0;width:220px;
+ display:flex;flex-direction:column;justify-content:center;
+ pointer-events:auto;z-index:10;
+`;
+document.body.appendChild(slot);
+
+let slotItems=[];
+pages.forEach((p,i)=>{
+  const e=document.createElement("div");
+  e.textContent=p.title;
+  e.style.cssText=`
+    font-family:-apple-system, 'SF Pro', sans-serif;
+    padding:14px 10px;margin:2px 0;
+    font-size:13px;font-weight:500;
+    border-radius:6px;cursor:pointer;
+    transition:all .25s ease;
+  `;
+  slot.appendChild(e);
+  slotItems.push(e);
+  e.addEventListener("click",()=>focusFace(i));
+});
+
+// ======================
+// HIT DETECTION
+// ======================
+function getFaceUnderPointer(event) {
+  const r = new THREE.Raycaster();
+  const m = new THREE.Vector2(
+    (event.clientX / window.innerWidth)*2 -1,
+    -(event.clientY / window.innerHeight)*2 +1
+  );
+  r.setFromCamera(m,camera);
+  const hits = r.intersectObject(wire);
+  return hits.length ? hits[0].faceIndex : -1;
+}
+
+// ======================
+// FOCUS / UI UPDATE
+// ======================
+function focusFace(i){
+  activeFace=i;
+  mode="focus";
+  idleTimer=0;
+
+  const v=faceCenters[i];
+  const targetPos=v.clone().multiplyScalar(1.8);
+  const start = camera.position.clone();
+  const end   = new THREE.Vector3(targetPos.x,targetPos.y,4);
+  let t=0;
+  const animate=()=>{
+    t=Math.min(1,t+snapTime);
+    camera.position.lerpVectors(start,end,t);
+    camera.lookAt(0,0,0);
+    if(t<1) requestAnimationFrame(animate);
+  };
+  animate();
+
+  const color = new THREE.Color().setHSL(i/pages.length,0.75,0.55);
+  wire.material.color.copy(color);
+
+  slotItems.forEach((el,j)=>{
+    const dist=Math.abs(j-i);
+    const alpha = dist===0 ? 1 : Math.max(0.1, .2/(dist));
+    const sat = dist===0 ? "1" : (.4/(dist)).toFixed(2);
+    el.style.background = `hsl(${(i/pages.length)*360},${sat*100}%,65%)`;
+    el.style.opacity = alpha;
+  });
+
+  tag.textContent=`Section ${(i+1)}`;
+  title.textContent=pages[i].title;
+  desc.textContent=pages[i].desc;
+  ui.style.opacity=1;
+}
+
+// ======================
+// FLOAT MODE
+// ======================
+function gotoFloat(){
+  mode="float";
+  activeFace=-1;
+  ui.style.opacity=0;
+}
+
+// ======================
+// POINTER EVENTS
+// ======================
+document.addEventListener("pointerdown",e=>{
+  const f=getFaceUnderPointer(e);
+  if(f>=0){
+    if(mode==="focus" && activeFace===f){
+      window.location.href=pages[f].slug;
+      return;
+    }
+    focusFace(f);
+  }
+});
+
+document.addEventListener("pointermove",e=>{
+  if(mode==="focus") return;
+  const f=getFaceUnderPointer(e);
+  hoveredFace=f;
+});
+
+// ======================
+// LOOP
+// ======================
+function animate(){
+  requestAnimationFrame(animate);
+  idleTimer+=0.016;
+
+  if(mode==="float"){
+    wire.rotation.x+=0.0025;
+    wire.rotation.y+=0.0018;
+  }
+
+  if(idleTimer>6 && mode==="focus"){
+    gotoFloat();
+    idleTimer=0;
+  }
+
+  renderer.render(scene,camera);
+}
+animate();
+
+// ======================
+// RESIZE
+// ======================
+window.addEventListener("resize",()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+});
+</script>
+</head>
+<body style="margin:0;overflow:hidden;"></body>
+</html>
