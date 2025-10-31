@@ -1,261 +1,539 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<title>Sitemap Universe</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sitemap — Final Prototype</title>
+<style>
+  :root{
+    --panel-w:34vw;
+    --slot-w:20vw;
+    --bg-a:#fbfcfd; --bg-b:#f6f8fb;
+    --text:#0b0b0b;
+    font-family:-apple-system,"SF Pro Text","SF Pro Display","Inter","Noto Sans JP",system-ui,sans-serif;
+  }
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-a),var(--bg-b));color:var(--text);overflow:hidden}
+  #app{position:relative;width:100%;height:100vh;overflow:hidden}
+  canvas{display:block;width:100%;height:100vh}
 
-<!-- Three.js r160+ Moudle CDN -->
+  .slot {
+    position:fixed;left:0;top:0;bottom:0;width:var(--slot-w);
+    display:flex;align-items:center;justify-content:center;
+    pointer-events:auto;z-index:30;padding-left:24px;
+  }
+  .slotInner {
+    width:calc(var(--slot-w) - 32px);
+    height:96vh;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling:touch;
+    scroll-behavior:smooth;
+    padding:8vh 0;
+    box-sizing:border-box;
+  }
+  .slotItem {
+    margin:8px 0;padding:14px 12px;border-radius:10px;
+    text-align:center;font-weight:600;cursor:pointer;
+    transition:transform .22s cubic-bezier(.2,.9,.2,1), opacity .22s ease, background .22s ease;
+    user-select:none;
+    background:transparent;color:#111;
+  }
+  .slotItem.center {
+    transform:scale(1.06);
+    opacity:1;
+    background:rgba(255,255,255,0.9);
+    box-shadow:0 10px 30px rgba(11,11,11,0.06);
+    border-left:6px solid transparent;
+  }
+
+  .panel {
+    position:fixed; right:4vw; top:50%; transform:translateY(-50%);
+    width:var(--panel-w); max-width:480px; min-width:300px; z-index:32;
+    pointer-events:none;
+  }
+  .info {
+    pointer-events:auto;
+    background:rgba(255,255,255,0.86);
+    backdrop-filter:blur(8px);
+    padding:28px;border-radius:14px;box-shadow:0 18px 50px rgba(16,20,24,0.06);
+    opacity:0; transform:translateX(10px); transition:opacity .36s ease, transform .36s ease;
+  }
+  .info.show{opacity:1; transform:translateX(0)}
+  .chap { font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; font-weight:600; opacity:.9 }
+  .title { font-size:22px; font-weight:700; line-height:1.06; margin-bottom:12px; color:var(--text) }
+  .desc { font-size:15px; line-height:1.65; color:#222; max-height:52vh; overflow:auto; padding-right:6px }
+
+  .hint { position:fixed; left:calc(var(--slot-w) + 2vw); bottom:4vh; font-size:13px; color:#8b8e93; z-index:20; }
+  .ui-text { opacity:0; transform:translateY(8px); transition:opacity .36s ease, transform .36s ease; }
+  .ui-text.visible{ opacity:1; transform:translateY(0) }
+  .slotInner::-webkit-scrollbar{display:none}
+  @media(max-width:900px){
+    :root{--panel-w:56vw;--slot-w:30vw}
+    .slot{padding-left:12px}
+    .title{font-size:18px}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="slot"><div id="slotInner" class="slotInner" aria-label="ページリスト"></div></div>
+  <div id="canvas"></div>
+
+  <div class="panel">
+    <div id="info" class="info" aria-live="polite">
+      <div id="chap" class="chap ui-text"></div>
+      <div id="title" class="title ui-text"></div>
+      <div id="desc" class="desc ui-text"></div>
+    </div>
+  </div>
+
+  <div class="hint">ドラッグで回転 / スロット上下で即選択 / 面クリックで表示 → 表示中に同面クリックで遷移</div>
+</div>
+
+<!-- three.jsの非モジュール版は削除してください -->
+<!-- 代わりに下記を入れる -->
 <script type="module">
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/controls/OrbitControls.js";
+  import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+  import { CSS2DRenderer, CSS2DObject } from "https://unpkg.com/three@0.160.0/examples/jsm/renderers/CSS2DRenderer.js";
 
-const container = document.body;
+  // 以下にあなたのスクリプト全部（const CATEGORY_HUES = ... 以降）
 
-// ======================
-// PAGE MAP
-// ======================
-const pages = [
-  { title: "序章：世界と出会う", slug: "intro.html", desc: "知と好奇心が交錯し、物語はここから始まる。世界の輪郭を探り、思考の扉を開くための前章。" },
-  { title: "理念と指針", slug: "philosophy.html", desc: "思想の中枢に触れ、軸となる哲学を編み上げる。未来への態度を、ここで定義する。" },
-  { title: "概念アーカイブ", slug: "concepts.html", desc: "抽象の迷宮から概念をすくい取り、言語化し、共有する。認識が世界を形作る。" },
-  { title: "社会と知性", slug: "society.html", desc: "社会構造、知識の連鎖、人間とテクノロジー。観測者として世界に問いかける。" },
-  { title: "技術洞察", slug: "tech.html", desc: "先端技術の内部へ潜る。AI・数理・情報の深度まで思考を沈める。" },
-  { title: "分析と構造", slug: "analysis.html", desc: "複雑性をほどき、要素と関係性へ還元する。世界を理解するためのレンズ。" },
-  { title: "実践知と創造", slug: "practice.html", desc: "学習と実験、制作の記録。知が行為となる瞬間を追う。" },
-  { title: "方法論と体系", slug: "method.html", desc: "思考の流儀、研究の技法、精神の姿勢。自らの道を築くための構造化。" },
-  { title: "対話と共同知", slug: "dialogue.html", desc: "他者との思考の交差。聴き、語り、磨き合う知の場。" },
-  { title: "インタビュー", slug: "interview.html", desc: "最前線の声を受け取り、未来の気配をつかむ。" },
-  { title: "未来予測", slug: "future.html", desc: "兆しを読み、変化を予測し、まだ見ぬ世界へ飛ぶ。" },
-  { title: "概念実装", slug: "prototype.html", desc: "理論を現実に落とし込み、モデルを構築する。" },
-  { title: "探求録", slug: "explore.html", desc: "調査・実験・思索の歩みを記録。進化の痕跡。" },
-  { title: "書誌", slug: "library.html", desc: "参考文献・知的資源の収蔵庫。" },
-  { title: "語彙", slug: "glossary.html", desc: "語の定義、概念の杭。言葉を整えることで世界が整う。" },
-  { title: "研究記録", slug: "notes.html", desc: "内部思考と未成熟な断片。生成途中の知。" },
-  { title: "作品群", slug: "works.html", desc: "制作物、可視化された精神。" },
-  { title: "資料庫", slug: "archive.html", desc: "一次資料の保存庫。" },
-  { title: "サポート", slug: "support.html", desc: "制度、関係性、人的支援。" },
-  { title: "終章：帰還と再出発", slug: "outro.html", desc: "旅を終え、また始まる。円環する知。" },
+
+const CATEGORY_HUES = [200, 10, 42, 220, 48];
+const IDLE_RETURN_MS = 6000;
+/* ---------- CONTENT (20 pages) ---------- */
+const PAGES = [
+  {category:0, title:"トップページ", slug:"index.html", desc:"「@IronY ー(サブタイ)ー」のトップページ。ここから様々なページへと飛ぶことが可能です。迷った方はまずこちらのページから、このサイトを踏破する第一歩を踏み出してみて下さい。"},
+  {category:0, title:"序論", slug:"page2.html", desc:"そもそもSNSとは一体何なのか、そんな最も前提的な、しかしそれでいてこの問題の根幹に根付く「SNSの定義」を明らかにします。知の探究が、このページから幕を開けます。"},
+  {category:1, title:"本論：系譜", slug:"page3.html", desc:"本質は歴史にこそ隠れた、とはよく言うものです。SNSとは一体どのようにして今の強固な立ち位置を手に入れたのか、その過去を紐解きます。そこに本質があり、同時に全てを解き明かす謎が隠れているのです。"},
+  {category:1, title:"本論：両義", slug:"page4.html", desc:"社会に変革という名の深い爪痕を残したSNS。しかしそのSNSの、光が落とした闇に気づくことができていたでしょうか？そんな真実と虚構の二面性、両義的なその存在を今知覚しましょう。"},
+  {category:1, title:"本論：自己", slug:"page5.html", desc:"SNSに浸食されていく日常時間。私たちの体には、私たちの思考には一体何が起きているのでしょうか。SNSが生み出した「絶え間ない常時接続」から抜け出すために、まずはその問題を理解しましょう。"},
+  {category:1, title:"本論：資本", slug:"page6.html", desc:"私たちが多用するSNSは、世界中の天才達の「狩場」になりました。SNSによって誕生した新たな支配的資本主義形態の中で、私たちが狩られずに生き残るために、強大な社会構造のメカニズムを知りましょう。"},
+  {category:1, title:"本論：記憶", slug:"page7.html", desc:"インターネットは「生きて」います。かつて崇高な理念より生み出された存在「Wayback machine」。しかしそれはインターネットの全てを刻み、やがて黒い部分が表層へと顔を出すようになりました。"},
+  {category:1, title:"結論：未来", slug:"page8.html", desc:"問題は、現在のSNSが誰のために、どのような価値観で設計されているかにあります。そして、それを変える力は、私たち一人ひとりの手の中にあるのです。"},
+  {category:2, title:"発展論：旧網", slug:"page3_advance.html", desc:"応用トピックでは、Page3「系譜」で扱ったデジタル時代のSNS史の前に存在した、人類の長大なネットワーク構築史を振り返ります。"},
+  {category:2, title:"発展論：偽装", slug:"page4_advance.html", desc:"生成AIと情報倫理の関係、偽装・誤情報問題に向き合うための視点を提示します。"},
+  {category:2, title:"発展論：依存", slug:"page5_advance.html", desc:"日常化したSNSが依存へ向かうメカニズムを分析し、距離を取るための実践を考えます。"},
+  {category:2, title:"発展論：労働", slug:"page6_advance.html", desc:"SNS時代に変容する『労働』を見つめ直し、制作と注意の価値をどう守るかを議論します。"},
+  {category:2, title:"発展論：監視", slug:"page7_advance.html", desc:"プライバシーと監視の現状を整理し、制度的な対策や個人の防衛手段を提示します。"},
+  {category:3, title:"探求", slug:"interview.html", desc:"専門家の声を通じて現場の実務・研究の知見を届けます。"},
+  {category:3, title:"探求からの考察", slug:"interview_summary.html", desc:"インタビューで得た洞察を体系化し、実践的な示唆を整理します。"},
+  {category:4, title:"クイズ：試練", slug:"quiz.html", desc:"学んだことを確認するための短い演習を用意しました。"},
+  {category:4, title:"参考文献：源泉", slug:"reference.html", desc:"参考文献・引用元を整理した一覧です。"},
+  {category:4, title:"サイトマップ：羅針", slug:"sitemap.html", desc:"このサイトマップから各コンテンツへアクセスできます。設計意図も併記しています。"},
+  {category:4, title:"用語集", slug:"word_summary.html", desc:"専門用語の定義と簡潔な解説をまとめています。"},
+  {category:4, title:"アート解説：鑑識", slug:"art_explain.html", desc:"アート的要素と制作意図の解説です。"}
 ];
 
-// ================
-// SCENE SETUP
-// ================
-let scene = new THREE.Scene();
-scene.background = new THREE.Color(0xffffff);
-
-let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
-camera.position.set(0, 0, 4);
-
-let renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
+/* ---------- three.js setup ---------- */
+const container = document.getElementById('canvas');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, innerWidth/innerHeight, 0.1, 1000);
+camera.position.set(0,0,5);
+const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 container.appendChild(renderer.domElement);
 
-// LIGHT
-const light = new THREE.DirectionalLight(0xffffff, 1.2);
-light.position.set(3, 3, 5);
-scene.add(light);
-scene.add(new THREE.AmbientLight(0xffffff, .4));
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(innerWidth, innerHeight);
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0';
+labelRenderer.domElement.style.pointerEvents = 'none';
+document.body.appendChild(labelRenderer.domElement);
 
-// ======================
-// GEOMETRY
-// ======================
-const geo = new THREE.IcosahedronGeometry(1, 0);
-const wireMat = new THREE.MeshBasicMaterial({
-  color: 0x000000,
-  wireframe: true,
-  wireframeLinewidth: 1
+scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+const dir = new THREE.DirectionalLight(0xffffff, 0.9); dir.position.set(4,4,6); scene.add(dir);
+/* ---------- geometry & mapping ---------- */
+const R = 1.2;
+const geo = new THREE.IcosahedronGeometry(R, 0);
+geo.computeVertexNormals();
+
+// We'll create vertex colors based on face index -> page category hue
+const pos = geo.attributes.position;
+const colors = new Float32Array(pos.count);
+const colorTmp = new THREE.Color();
+for(let i=0;i<pos.count;i+=3){
+  const faceIdx = i/3; // 0..19
+  const page = PAGES[faceIdx % PAGES.length];
+  const hue = CATEGORY_HUES[page.category % CATEGORY_HUES.length] / 360;
+  colorTmp.setHSL(hue, 0.78, 0.62);
+  // apply same color for three vertices
+  for(let k=0;k<3;k++){
+    const vi = (i+k);
+    colors[vi*3+0] = colorTmp.r;
+    colors[vi*3+1] = colorTmp.g;
+    colors[vi*3+2] = colorTmp.b;
+  }
+}
+geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+const material = new THREE.MeshStandardMaterial({
+  vertexColors: true,
+  roughness: 0.94,
+  metalness: 0.02,
+  flatShading: true,
+  transparent: false
 });
-const wire = new THREE.Mesh(geo, wireMat);
-scene.add(wire);
+const mesh = new THREE.Mesh(geo, material);
+scene.add(mesh);
 
+// edges (thin)
+const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color:0x333333, transparent:true, opacity:0.9 }));
+scene.add(edges);
+
+// labels & face centers
 const faceCenters = [];
-geo.faces.forEach((f, i)=>{
-  const v = new THREE.Vector3()
-    .add(geo.vertices[f.a])
-    .add(geo.vertices[f.b])
-    .add(geo.vertices[f.c])
-    .divideScalar(3)
-    .normalize()
-    .multiplyScalar(1.2);
-  faceCenters.push(v);
-});
+const labels = [];
+for(let i=0;i<pos.count;i+=3){
+  const a = new THREE.Vector3().fromBufferAttribute(pos, i);
+  const b = new THREE.Vector3().fromBufferAttribute(pos, i+1);
+  const c = new THREE.Vector3().fromBufferAttribute(pos, i+2);
+  const center = new THREE.Vector3().addVectors(a,b).add(c).multiplyScalar(1/3).normalize().multiplyScalar(R);
+  faceCenters.push(center);
 
-// ======================
-// STATE
-// ======================
-let mode = "float"; 
-let hoveredFace = -1;
-let activeFace = -1;
-let idleTimer = 0;
-const snapTime = 0.07;
-
-// ======================
-// DOM UI
-// ======================
-const ui = document.createElement("div");
-ui.style.cssText = `
- position:fixed;right:0;top:0;bottom:0;
- width:33vw;pointer-events:none;
- padding:60px 50px;
- font-family:-apple-system, BlinkMacSystemFont, "SF Pro", Helvetica, sans-serif;
- color:#000;display:flex;flex-direction:column;
- justify-content:center;background:rgba(255,255,255,0);
- transition:opacity .6s ease;opacity:0;
-`;
-document.body.appendChild(ui);
-
-const tag = document.createElement("div");
-tag.style.cssText = "font-size:14px;font-weight:500;margin-bottom:6px;opacity:.75;";
-ui.appendChild(tag);
-
-const title = document.createElement("div");
-title.style.cssText = "font-size:32px;font-weight:600;margin-bottom:12px;";
-ui.appendChild(title);
-
-const desc = document.createElement("div");
-desc.style.cssText = "font-size:15px;line-height:1.6;max-width:26vw;color:#222;";
-ui.appendChild(desc);
-
-// ======================
-// SLOT LIST UI
-// ======================
-const slot = document.createElement("div");
-slot.style.cssText = `
- position:fixed;left:20px;top:0;bottom:0;width:220px;
- display:flex;flex-direction:column;justify-content:center;
- pointer-events:auto;z-index:10;
-`;
-document.body.appendChild(slot);
-
-let slotItems=[];
-pages.forEach((p,i)=>{
-  const e=document.createElement("div");
-  e.textContent=p.title;
-  e.style.cssText=`
-    font-family:-apple-system, 'SF Pro', sans-serif;
-    padding:14px 10px;margin:2px 0;
-    font-size:13px;font-weight:500;
-    border-radius:6px;cursor:pointer;
-    transition:all .25s ease;
-  `;
-  slot.appendChild(e);
-  slotItems.push(e);
-  e.addEventListener("click",()=>focusFace(i));
-});
-
-// ======================
-// HIT DETECTION
-// ======================
-function getFaceUnderPointer(event) {
-  const r = new THREE.Raycaster();
-  const m = new THREE.Vector2(
-    (event.clientX / window.innerWidth)*2 -1,
-    -(event.clientY / window.innerHeight)*2 +1
-  );
-  r.setFromCamera(m,camera);
-  const hits = r.intersectObject(wire);
-  return hits.length ? hits[0].faceIndex : -1;
+  const div = document.createElement('div');
+  div.className = 'label';
+  div.style.pointerEvents = 'none';
+  div.style.opacity = '0.9';
+  div.style.background = 'rgba(0,0,0,0.45)';
+  div.style.color = '#fff';
+  div.style.width = '28px';
+  div.style.height = '28px';
+  div.style.display = 'flex';
+  div.style.alignItems = 'center';
+  div.style.justifyContent = 'center';
+  div.style.borderRadius = '50%';
+  div.style.fontWeight = '700';
+  div.textContent = (Math.floor(i/3)+1).toString();
+  const label = new CSS2DObject(div);
+  label.position.copy(center).multiplyScalar(1.06);
+  labels.push(label);
+  mesh.add(label);
 }
 
-// ======================
-// FOCUS / UI UPDATE
-// ======================
-function focusFace(i){
-  activeFace=i;
-  mode="focus";
-  idleTimer=0;
+/* ---------- interactions & UI ---------- */
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
 
-  const v=faceCenters[i];
-  const targetPos=v.clone().multiplyScalar(1.8);
-  const start = camera.position.clone();
-  const end   = new THREE.Vector3(targetPos.x,targetPos.y,4);
-  let t=0;
-  const animate=()=>{
-    t=Math.min(1,t+snapTime);
-    camera.position.lerpVectors(start,end,t);
-    camera.lookAt(0,0,0);
-    if(t<1) requestAnimationFrame(animate);
+let mode = 'intro'; // 'intro' | 'float' | 'display'
+let activeFace = -1;
+let lastInteraction = Date.now();
+const idleReturnMs = 6000;
+let currentAnim = null;
+
+/* DOM nodes */
+const slotInner = document.getElementById('slotInner');
+const infoEl = document.getElementById('info');
+const chapEl = document.getElementById('chap');
+const titleEl = document.getElementById('title');
+const descEl = document.getElementById('desc');
+
+/* build slot items */
+const slotItems = [];
+function buildSlots(){
+  PAGES.forEach((p,i)=>{
+    const el = document.createElement('div');
+    el.className = 'slotItem';
+    el.textContent = `${i+1}. ${p.title}`;
+    el.dataset.index = i;
+    el.addEventListener('click', ()=> { focusFace(i); });
+    slotInner.appendChild(el);
+    slotItems.push(el);
+  });
+  // ensure center initial
+  requestAnimationFrame(()=>updateSlotAppearance());
+}
+buildSlots();
+
+/* scroll->appearance */
+function updateSlotAppearance(){
+  const scTop = slotInner.scrollTop;
+  const vh = slotInner.clientHeight;
+  const centerY = scTop + vh/2;
+  const maxDist = vh/2;
+  slotItems.forEach((el,i)=>{
+    const elTop = el.offsetTop + el.clientHeight/2;
+    const dist = Math.abs(centerY - elTop);
+    const factor = Math.max(0, 1 - dist / maxDist);
+    const scale = 0.82 + 0.38 * factor;
+    const opacity = 0.18 + 0.82 * factor;
+    el.style.transform = `translateX(${(1-factor)*-18}px) scale(${scale})`;
+    el.style.opacity = opacity;
+    if(factor > 0.66){
+      el.classList.add('center');
+    } else {
+      el.classList.remove('center');
+    }
+    // if this becomes the exact center most, sync immediately
+    if(factor > 0.96){
+      if(i !== activeFace) snapToFace(i);
+    }
+  });
+}
+
+/* helpers: tween */
+function cancelAnim(){ if(currentAnim && currentAnim.cancel) currentAnim.cancel(); currentAnim = null; }
+function tween(duration, onUpdate, onComplete, ease=(t)=>1-Math.pow(1-t,3)){
+  cancelAnim();
+  const start = performance.now();
+  let stopped = false;
+  currentAnim = {
+    cancel(){ stopped = true; }
   };
-  animate();
+  (function frame(now){
+    if(stopped) return;
+    const raw = Math.min(1, (now - start)/duration);
+    const t = ease(raw);
+    onUpdate(t, raw);
+    if(raw < 1) requestAnimationFrame(frame);
+    else {
+      currentAnim = null;
+      if(onComplete) onComplete();
+    }
+  })(start);
+  return currentAnim;
+}
 
-  const color = new THREE.Color().setHSL(i/pages.length,0.75,0.55);
-  wire.material.color.copy(color);
+/* snap rotation to face (no translate) */
+function snapToFace(faceIdx){
+  activeFace = faceIdx;
+  // update slot selection visual
+  const item = slotItems[faceIdx];
+  const itemCenterTop = item.offsetTop - slotInner.offsetTop + item.clientHeight/2;
+  slotInner.scrollTo({ top: itemCenterTop - slotInner.clientHeight/2, behavior:'smooth' });
 
-  slotItems.forEach((el,j)=>{
-    const dist=Math.abs(j-i);
-    const alpha = dist===0 ? 1 : Math.max(0.1, .2/(dist));
-    const sat = dist===0 ? "1" : (.4/(dist)).toFixed(2);
-    el.style.background = `hsl(${(i/pages.length)*360},${sat*100}%,65%)`;
-    el.style.opacity = alpha;
+  // rotate mesh so that face faces camera
+  const localNormal = faceCenters[faceIdx].clone().normalize();
+  const worldNormal = localNormal.clone().applyQuaternion(mesh.quaternion).normalize();
+  const camDir = new THREE.Vector3().subVectors(camera.position, mesh.position).normalize();
+  const q = new THREE.Quaternion().setFromUnitVectors(worldNormal, camDir);
+  const targetQuat = q.multiply(mesh.quaternion.clone());
+  const fromQuat = mesh.quaternion.clone();
+
+  tween(600, (t)=>{ mesh.quaternion.copy(fromQuat); mesh.quaternion.slerp(targetQuat, t); edges.quaternion.copy(mesh.quaternion); }, ()=>{ if(mode==='float') miniShow(faceIdx); });
+}
+
+/* mini info in float mode */
+function miniShow(idx){
+  const p = PAGES[idx];
+  chapEl.textContent = p.title.slice(0,20); // short above
+  chapEl.style.color = `hsl(${CATEGORY_HUES[p.category]%360} 90% 40%)`;
+  titleEl.textContent = p.title;
+  descEl.textContent = p.desc.length > 140 ? p.desc.slice(0,140) + '…' : p.desc;
+  infoEl.classList.add('show');
+  // tint edges slightly
+  const hue = CATEGORY_HUES[p.category]/360;
+  edges.material.color.setStyle(new THREE.Color().setHSL(hue, 0.8, 0.45).getStyle());
+}
+
+/* enter display mode: zoom toward camera and show full text */
+function focusFace(faceIdx){
+  lastInteraction = Date.now();
+  if(mode === 'display' && activeFace === faceIdx){
+    // second click => navigate
+    window.location.href = PAGES[faceIdx].slug;
+    return;
+  }
+  mode = 'display';
+  activeFace = faceIdx;
+  // stop ongoing animations
+  cancelAnim();
+  // rotation target
+  const localNormal = faceCenters[faceIdx].clone().normalize();
+  const worldNormal = localNormal.clone().applyQuaternion(mesh.quaternion).normalize();
+  const camDir = new THREE.Vector3().subVectors(camera.position, mesh.position).normalize();
+  const q = new THREE.Quaternion().setFromUnitVectors(worldNormal, camDir);
+  const targetQuat = q.multiply(mesh.quaternion.clone());
+  const fromQuat = mesh.quaternion.clone();
+  // compute translation for mesh so face appears closer
+  const centroidWorld = faceCenters[faceIdx].clone().applyQuaternion(mesh.quaternion).add(mesh.position);
+  const currentFaceDistance = centroidWorld.distanceTo(camera.position);
+  const desiredFaceDist = 2.1;
+  const moveAmount = Math.max(0, currentFaceDistance - desiredFaceDist);
+  const moveVec = camDir.clone().multiplyScalar(moveAmount * 0.92);
+  const fromPos = mesh.position.clone();
+  const targetPos = mesh.position.clone().add(moveVec);
+
+  tween(700, (t)=>{
+    mesh.quaternion.copy(fromQuat); mesh.quaternion.slerp(targetQuat, t);
+    // slight overshoot bounce
+    const overs = Math.sin(t * Math.PI) * 0.04;
+    mesh.position.lerpVectors(fromPos, targetPos.clone().add(camDir.clone().multiplyScalar(overs)), t);
+    edges.position.copy(mesh.position); edges.quaternion.copy(mesh.quaternion);
+  }, ()=>{
+    showFullInfo(faceIdx);
   });
 
-  tag.textContent=`Section ${(i+1)}`;
-  title.textContent=pages[i].title;
-  desc.textContent=pages[i].desc;
-  ui.style.opacity=1;
+  // hide all labels (clarity)
+  labels.forEach(l => l.element.style.opacity = '0.0');
+
+  // sync slot highlight
+  const el = slotItems[faceIdx];
+  el.classList.add('center'); el.style.background = `hsl(${CATEGORY_HUES[PAGES[faceIdx].category]} 85% 66%)`;
 }
 
-// ======================
-// FLOAT MODE
-// ======================
-function gotoFloat(){
-  mode="float";
-  activeFace=-1;
-  ui.style.opacity=0;
+/* show full info in panel */
+function showFullInfo(idx){
+  const p = PAGES[idx];
+  chapEl.textContent = p.category !== undefined ? `SECTION ${idx+1}` : '';
+  chapEl.style.color = `hsl(${CATEGORY_HUES[p.category]} 90% 40%)`;
+  titleEl.textContent = p.title;
+  descEl.textContent = p.desc;
+  infoEl.classList.add('show');
+  document.querySelectorAll('.ui-text').forEach(el => el.classList.add('visible'));
+  // stronger tint
+  edges.material.color.setStyle(new THREE.Color().setHSL(CATEGORY_HUES[p.category]/360, 0.85, 0.48).getStyle());
+  edges.material.opacity = 1.0;
+  lastInteraction = Date.now();
+  // start idle timer to return
+  startIdleReturn();
 }
 
-// ======================
-// POINTER EVENTS
-// ======================
-document.addEventListener("pointerdown",e=>{
-  const f=getFaceUnderPointer(e);
-  if(f>=0){
-    if(mode==="focus" && activeFace===f){
-      window.location.href=pages[f].slug;
-      return;
+/* return to float */
+function returnToFloat(){
+  if(mode === 'float') return;
+  mode = 'float';
+  activeFace = -1;
+  // restore position/rotation smoothly
+  cancelAnim();
+  const fromPos = mesh.position.clone();
+  const toPos = new THREE.Vector3(0,0,0);
+  const fromQuat = mesh.quaternion.clone();
+  const toQuat = new THREE.Quaternion(); // identity
+  tween(700, (t)=>{
+    mesh.position.lerpVectors(fromPos, toPos, t);
+    mesh.quaternion.copy(fromQuat); mesh.quaternion.slerp(toQuat, t);
+    edges.position.copy(mesh.position); edges.quaternion.copy(mesh.quaternion);
+    edges.material.opacity = 0.9 * (1 - t*0.6);
+  }, ()=>{
+    infoEl.classList.remove('show');
+    document.querySelectorAll('.ui-text').forEach(el => el.classList.remove('visible'));
+    labels.forEach(l => l.element.style.opacity = '0.9');
+    // reset slot item visuals
+    slotItems.forEach((el)=>{ el.style.background = 'transparent'; });
+  });
+}
+
+/* idle timer */
+let idleHandle = null;
+function startIdleReturn(){
+  if(idleHandle) clearTimeout(idleHandle);
+  idleHandle = setTimeout(()=>{ returnToFloat(); }, idleReturnMs);
+}
+
+/* raycasting & pointer handling */
+let isDown=false, downX=0, downY=0, moved=false, startRot=new THREE.Euler();
+const dragThreshold = 6;
+
+window.addEventListener('pointerdown',(e)=>{
+  isDown = true; moved = false; downX = e.clientX; downY = e.clientY; startRot.copy(mesh.rotation);
+  lastInteraction = Date.now();
+});
+window.addEventListener('pointermove',(e)=>{
+  pointer.x = (e.clientX / innerWidth) * 2 - 1;
+  pointer.y = - (e.clientY / innerHeight) * 2 + 1;
+  if(!isDown) return;
+  const dx = e.clientX - downX, dy = e.clientY - downY;
+  if(Math.abs(dx) > dragThreshold || Math.abs(dy) > dragThreshold) moved = true;
+  if(moved && mode === 'float'){
+    mesh.rotation.y = startRot.y + dx / innerWidth * Math.PI * 1.6;
+    mesh.rotation.x = startRot.x + dy / innerHeight * Math.PI * 1.6;
+    edges.rotation.copy(mesh.rotation);
+  }
+  lastInteraction = Date.now();
+});
+window.addEventListener('pointerup',(e)=>{
+  const wasMoved = moved; isDown = false; moved = false; lastInteraction = Date.now();
+  if(!wasMoved){
+    // click
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObject(mesh, true);
+    if(hits.length){
+      const hit = hits[0];
+      // faceIndex is triangle index; map directly to page index 0..19
+      const faceIndex = hit.faceIndex;
+      if(faceIndex >= 0 && faceIndex < PAGES.length){
+        focusFace(faceIndex);
+      }
+    } else {
+      if(mode === 'display') returnToFloat();
+      else infoEl.classList.remove('show');
     }
-    focusFace(f);
+  } else {
+    if(mode === 'float'){
+      const nearest = findNearestFace();
+      snapToFace(nearest);
+    }
   }
 });
 
-document.addEventListener("pointermove",e=>{
-  if(mode==="focus") return;
-  const f=getFaceUnderPointer(e);
-  hoveredFace=f;
-});
-
-// ======================
-// LOOP
-// ======================
-function animate(){
-  requestAnimationFrame(animate);
-  idleTimer+=0.016;
-
-  if(mode==="float"){
-    wire.rotation.x+=0.0025;
-    wire.rotation.y+=0.0018;
+/* find nearest face (facing camera) */
+function findNearestFace(){
+  const camDir = new THREE.Vector3().subVectors(camera.position, mesh.position).normalize();
+  let best=0, bestDot=-Infinity;
+  for(let i=0;i<faceCenters.length;i++){
+    const v = faceCenters[i].clone().applyQuaternion(mesh.quaternion).normalize();
+    const dot = v.dot(camDir);
+    if(dot > bestDot){ bestDot = dot; best = i; }
   }
-
-  if(idleTimer>6 && mode==="focus"){
-    gotoFloat();
-    idleTimer=0;
-  }
-
-  renderer.render(scene,camera);
+  return best;
 }
-animate();
 
-// ======================
-// RESIZE
-// ======================
-window.addEventListener("resize",()=>{
-  camera.aspect=window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth,window.innerHeight);
+/* slot scroll to center detection */
+slotInner.addEventListener('scroll', ()=>{ updateSlotAppearance(); lastInteraction = Date.now(); });
+
+/* initial intro animation */
+function playIntro(){
+  cancelAnim();
+  const startPos = mesh.position.clone();
+  const startScale = mesh.scale.clone();
+  mesh.position.set(0,-1.6,-0.4);
+  mesh.scale.setScalar(0.6);
+  tween(900, (t)=>{ const e = 1 - Math.pow(1 - t, 3); mesh.position.lerpVectors(new THREE.Vector3(0,-1.6,-0.4), new THREE.Vector3(0,0,0), e); mesh.scale.lerpVectors(startScale.setScalar(0.6), new THREE.Vector3(1,1,1), e); }, ()=>{
+    mode = 'float';
+    lastInteraction = Date.now();
+  }, (t)=>t);
+}
+playIntro();
+
+/* animation loop */
+const clock = new THREE.Clock();
+function render(){
+  requestAnimationFrame(render);
+  const dt = clock.getDelta();
+  const now = Date.now();
+  if(mode === 'float'){
+    // slow auto-rotation
+    mesh.rotation.y += 0.0018;
+    mesh.rotation.x = Math.sin(clock.elapsedTime * 0.12) * 0.06;
+  } else if(mode === 'display'){
+    // idle check handled by timer
+  }
+  // subtle label facing
+  labels.forEach(l => {
+    // face label towards camera using underlying label renderer
+    // no change here (CSS2D handles it)
+  });
+  updateSlotAppearance();
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+}
+render();
+
+/* resize */
+window.addEventListener('resize', ()=>{
+  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight); labelRenderer.setSize(innerWidth, innerHeight);
 });
+
+/* utility: CATEGORY_HUES for UI color */
+
+/* fallback: ensure slot centered initially */
+setTimeout(()=>{ updateSlotAppearance(); }, 120);
+
+/* end of module */
 </script>
-</head>
-<body style="margin:0;overflow:hidden;"></body>
+</body>
 </html>
+
+
