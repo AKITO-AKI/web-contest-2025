@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.165.0/build/three.module.js"
+            }
+        }
+    </script>
 <title>Sitemap — Final Prototype</title>
 <style>
   :root{
@@ -90,8 +97,8 @@
 </div>
 
 <script type="module">
-  import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
-  import { CSS2DRenderer, CSS2DObject } from "https://unpkg.com/three@0.160.0/examples/jsm/renderers/CSS2DRenderer.js";
+  import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
+  import { CSS2DRenderer, CSS2DObject } from "https://unpkg.com/three@0.165.0/examples/jsm/renderers/CSS2DRenderer.js";
 
 
 const CATEGORY_HUES = [200, 10, 42, 220, 48];
