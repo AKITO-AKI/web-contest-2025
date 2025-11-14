@@ -67,7 +67,42 @@ body {
 .subsection-title{ font-size:1.8rem; font-weight:600; color:var(--text-primary); margin:48px 0 24px; letter-spacing:-0.8px; }
 .content-paragraph{ margin-bottom:28px; font-size:1.15rem; line-height:1.8; color:var(--text-primary); }
 
-/* インタラクティブ要素 */
+/* カード個別カラー設定 */
+.page-card[data-theme="normal"][data-page="intro"] {
+		--card-color-1: #667eea;
+		--card-color-2: #764ba2;
+}
+
+.page-card[data-theme="normal"][data-page="genealogy"] {
+		--card-color-1: #D4A574;
+		--card-color-2: #F4C430;
+}
+
+.page-card[data-theme="chaos"][data-page="duality"] {
+		--card-color-1: #8B7355;
+		--card-color-2: #C9A961;
+}
+
+.page-card[data-theme="chaos"][data-page="self"] {
+		--card-color-1: #48cae4;
+		--card-color-2: #0096c7;
+}
+
+.page-card[data-theme="chaos"][data-page="capital"] {
+		--card-color-1: #EF4444;
+		--card-color-2: #DC2626;
+}
+
+.page-card[data-theme="chaos"][data-page="memory"] {
+		--card-color-1: #6B7280;
+		--card-color-2: #4B5563;
+}
+
+.page-card[data-theme="normal"][data-page="future"] {
+		--card-color-1: #10B981;
+		--card-color-2: #059669;
+}
+		/* インタラクティブ要素 */
 .interactive-element{ background:var(--surface); border-radius:20px; padding:40px; margin:50px 0; border:1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.06); transition:all .3s ease; }
 .interactive-element:hover{ transform:translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
 
