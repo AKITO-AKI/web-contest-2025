@@ -13,72 +13,366 @@
 <title>Sitemap — Final Prototype</title>
 <style>
   :root{
-    --panel-w:34vw;
-    --slot-w:20vw;
-    --bg-a:#fbfcfd; --bg-b:#f6f8fb;
-    --text:#0b0b0b;
+    --bg-deep:#04061a;
+    --bg-mid:#070a24;
+
+    --ink-main:#f6f7ff;
+    --ink-muted:#a2a9c8;
+
+    --neon-pink:#ff7ac0;
+    --neon-cyan:#6df6ff;
+    --neon-core:#7aa4ff;
+
+    --panel-border:rgba(160,185,245,0.46);
+    --shadow-soft:0 26px 80px rgba(0,0,0,0.9);
+
+    --slot-width:22vw;
+    --panel-width:32vw;
+
     font-family:-apple-system,"SF Pro Text","SF Pro Display","Inter","Noto Sans JP",system-ui,sans-serif;
   }
-  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-a),var(--bg-b));color:var(--text);overflow:hidden}
-  #app{position:relative;width:100%;height:100vh;overflow:hidden}
-  canvas{display:block;width:100%;height:100vh}
 
-  .slot {
-    position:fixed;left:0;top:0;bottom:0;width:var(--slot-w);
-    display:flex;align-items:center;justify-content:center;
-    pointer-events:auto;z-index:30;padding-left:24px;
+  html,body{
+    margin:0;
+    height:100%;
+    color:var(--ink-main);
+    background:
+      radial-gradient(circle at 65% 20%, rgba(255,120,210,0.44) 0, transparent 55%),
+      radial-gradient(circle at 25% 82%, rgba(100,245,255,0.42) 0, transparent 55%),
+      linear-gradient(135deg,#090e2e,#070b27 32%,#050920 78%,#04061a);
+    overflow:hidden;
   }
-  .slotInner {
-    width:calc(var(--slot-w) - 32px);
-    height:96vh;
-    overflow-y:scroll;
+
+  #app{
+    position:relative;
+    width:100%;
+    height:100vh;
+    overflow:hidden;
+  }
+
+  #canvas{
+    position:absolute;
+    inset:0;
+    z-index:1;
+  }
+
+  canvas{
+    display:block;
+    width:100%;
+    height:100%;
+  }
+
+  /* ========= 左：軌道コンソール ========= */
+
+  .slot{
+    position:fixed;
+    z-index:30;
+    left:0;
+    top:0;
+    bottom:0;
+    width:var(--slot-width);
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    pointer-events:none;
+    padding-left:2.6vw;
+  }
+
+  .slotInner{
+    position:relative;
+    pointer-events:auto;
+
+    width:100%;
+    max-width:280px;
+    height:calc(100vh - 10vh);
+    margin:5vh 0;
+
+    padding:0;
+    box-sizing:border-box;
+    overflow-y:auto;
     -webkit-overflow-scrolling:touch;
     scroll-behavior:smooth;
-    padding:8vh 0;
-    box-sizing:border-box;
-  }
-  .slotItem {
-    margin:8px 0;padding:14px 12px;border-radius:10px;
-    text-align:center;font-weight:600;cursor:pointer;
-    transition:transform .22s cubic-bezier(.2,.9,.2,1), opacity .22s ease, background .22s ease;
-    user-select:none;
-    background:transparent;color:#111;
-  }
-  .slotItem.center {
-    transform:scale(1.06);
-    opacity:1;
-    background:rgba(255,255,255,0.9);
-    box-shadow:0 10px 30px rgba(11,11,11,0.06);
-    border-left:6px solid transparent;
+
+    background:
+      radial-gradient(circle at 0% 0%, rgba(160,190,255,0.3) 0, transparent 65%),
+      linear-gradient(180deg,rgba(10,14,38,0.98),rgba(6,9,26,0.98));
+    border-radius:22px 26px 26px 22px;
+    box-shadow:var(--shadow-soft);
+    border:1px solid var(--panel-border);
+    backdrop-filter:blur(22px) saturate(165%);
+    -webkit-backdrop-filter:blur(22px) saturate(165%);
   }
 
-  .panel {
-    position:fixed; right:4vw; top:50%; transform:translateY(-50%);
-    width:var(--panel-w); max-width:480px; min-width:300px; z-index:32;
+  .slotInner::before{
+    content:"";
+    position:absolute;
+    left:42px;
+    top:22px;
+    bottom:22px;
+    width:2px;
+    border-radius:999px;
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(120,155,235,0.2),
+        rgba(170,205,255,0.95),
+        rgba(120,155,235,0.2)
+      );
+    opacity:0.95;
     pointer-events:none;
   }
-  .info {
-    pointer-events:auto;
-    background:rgba(255,255,255,0.86);
-    backdrop-filter:blur(8px);
-    padding:28px;border-radius:14px;box-shadow:0 18px 50px rgba(16,20,24,0.06);
-    opacity:0; transform:translateX(10px); transition:opacity .36s ease, transform .36s ease;
-  }
-  .info.show{opacity:1; transform:translateX(0)}
-  .chap { font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; font-weight:600; opacity:.9 }
-  .title { font-size:22px; font-weight:700; line-height:1.06; margin-bottom:12px; color:var(--text) }
-  .desc { font-size:15px; line-height:1.65; color:#222; max-height:52vh; overflow:auto; padding-right:6px }
 
-  .hint { position:fixed; left:calc(var(--slot-w) + 2vw); bottom:4vh; font-size:13px; color:#8b8e93; z-index:20; }
-  .ui-text { opacity:0; transform:translateY(8px); transition:opacity .36s ease, transform .36s ease; }
-  .ui-text.visible{ opacity:1; transform:translateY(0) }
-  .slotInner::-webkit-scrollbar{display:none}
+  .slotInner::-webkit-scrollbar{ display:none; }
+
+  /* スクロール端でも中央に寄せるためのスペーサー */
+  .slotSpacer{
+    width:100%;
+  }
+
+  .slotItem{
+    position:relative;
+    margin:4px 0;
+    padding:7px 20px 7px 64px;
+    border-radius:999px;
+    text-align:left;
+    font-size:14px;
+    font-weight:500;
+    letter-spacing:.03em;
+    cursor:pointer;
+    user-select:none;
+
+    color:var(--ink-muted);
+    background:transparent;
+    transform:translateX(0) scale(0.9);
+    opacity:.5;
+    transition:
+      background .22s ease,
+      color .22s ease,
+      box-shadow .22s ease,
+      transform .22s ease,
+      opacity .22s ease;
+  }
+
+  .slotItem::before{
+    content:"";
+    position:absolute;
+    left:34px;
+    top:50%;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#7079a7;
+    transform:translateY(-50%);
+    box-shadow:0 0 0 0 rgba(0,0,0,0);
+    transition:
+      background .2s ease,
+      box-shadow .2s ease,
+      transform .18s ease;
+  }
+
+  .slotItem:hover{
+    color:#f0f3ff;
+  }
+
+  .slotItem.center{
+    color:#f7f8ff;
+    background:
+      radial-gradient(circle at 0% 50%, rgba(150,190,255,0.7) 0, transparent 72%);
+    box-shadow:0 18px 55px rgba(0,0,0,0.95);
+    transform:translateX(-22px) scale(1.02);
+    opacity:1;
+  }
+
+  .slotItem.center::before{
+    transform:translate(-1px,-50%) scale(1.15);
+    box-shadow:0 0 0 4px rgba(140,205,255,0.5);
+  }
+
+  /* カテゴリ別ドット */
+  .slotItem:nth-child(2)::before{ background:var(--neon-core); }
+  .slotItem:nth-child(3)::before,
+  .slotItem:nth-child(4)::before,
+  .slotItem:nth-child(5)::before,
+  .slotItem:nth-child(6)::before,
+  .slotItem:nth-child(7)::before,
+  .slotItem:nth-child(8)::before{
+    background:var(--neon-pink);
+  }
+  .slotItem:nth-child(9)::before,
+  .slotItem:nth-child(10)::before,
+  .slotItem:nth-child(11)::before,
+  .slotItem:nth-child(12)::before,
+  .slotItem:nth-child(13)::before{
+    background:var(--neon-cyan);
+  }
+  .slotItem:nth-child(14)::before,
+  .slotItem:nth-child(15)::before{
+    background:#ce8bff;
+  }
+  .slotItem:nth-child(16)::before,
+  .slotItem:nth-child(17)::before,
+  .slotItem:nth-child(18)::before,
+  .slotItem:nth-child(19)::before,
+  .slotItem:nth-child(20)::before{
+    background:#f9e08a;
+  }
+
+  /* ========= HUD ラベル ========= */
+
+  .label{
+  min-width:34px;
+  padding:3px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  background:rgba(5,8,20,0.92) !important;
+  color:#f5f7ff !important;
+  border:1px solid rgba(150,180,255,0.9);
+  box-shadow:0 12px 30px rgba(0,0,0,0.9);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.label--active{
+  border-color:rgba(255,255,255,0.95) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.55),
+    0 16px 38px rgba(0,0,0,0.95);
+  background:
+    linear-gradient(90deg,
+      rgba(95,246,255,0.42),
+      rgba(255,122,192,0.6)
+    ) !important;
+}
+
+  /* ========= 右：観測ログパネル ========= */
+
+  .panel{
+    position:fixed;
+    z-index:32;
+    right:4vw;
+    top:50%;
+    transform:translateY(-50%);
+    width:var(--panel-width);
+    max-width:460px;
+    min-width:300px;
+    pointer-events:none;
+  }
+
+  .info{
+    pointer-events:auto;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(150,190,255,0.32) 0, transparent 70%),
+      linear-gradient(135deg,rgba(15,20,46,0.98),rgba(6,9,28,0.98));
+    padding:22px 24px 20px;
+    border-radius:18px;
+    border:1px solid var(--panel-border);
+    box-shadow:var(--shadow-soft);
+    backdrop-filter:blur(24px) saturate(170%);
+    -webkit-backdrop-filter:blur(24px) saturate(170%);
+
+    opacity:0;
+    transform:translateX(14px);
+    transition:opacity .4s ease, transform .4s ease;
+  }
+
+  .info.show{
+    opacity:1;
+    transform:translateX(0);
+  }
+
+  .chap{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.18em;
+    margin-bottom:6px;
+    font-weight:600;
+    color:var(--ink-muted);
+  }
+
+  .title{
+    font-size:22px;
+    font-weight:700;
+    line-height:1.18;
+    margin-bottom:8px;
+    color:#fdfdff;
+  }
+
+  .desc{
+    font-size:14px;
+    line-height:1.7;
+    color:#d4daf6;
+    max-height:52vh;
+    overflow:auto;
+    padding-right:6px;
+  }
+
+  .desc::-webkit-scrollbar{
+    width:4px;
+  }
+  .desc::-webkit-scrollbar-thumb{
+    background:rgba(150,162,222,0.85);
+    border-radius:999px;
+  }
+  .desc::-webkit-scrollbar-track{
+    background:transparent;
+  }
+
+  /* ========= 下：操作ヒント ========= */
+
+  .hint{
+    position:fixed;
+    left:calc(var(--slot-width) + 2.6vw);
+    bottom:4vh;
+    font-size:12px;
+    color:var(--ink-muted);
+    letter-spacing:.03em;
+    z-index:20;
+
+    padding:8px 16px;
+    border-radius:999px;
+    background:rgba(7,9,26,0.94);
+    border:1px solid rgba(155,175,235,0.35);
+    box-shadow:0 18px 45px rgba(0,0,0,0.9);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+  }
+
+  .ui-text{
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity .32s ease, transform .32s ease;
+  }
+
+  .ui-text.visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ========= レスポンシブ ========= */
+
   @media(max-width:900px){
-    :root{--panel-w:56vw;--slot-w:30vw}
-    .slot{padding-left:12px}
-    .title{font-size:18px}
+    :root{
+      --slot-width:30vw;
+      --panel-width:60vw;
+    }
+    .slot{
+      padding-left:3vw;
+    }
+    .panel{
+      right:3vw;
+    }
+    .title{
+      font-size:18px;
+    }
   }
 </style>
+
+
+
 </head>
 <body>
 <div id="app">
@@ -100,442 +394,718 @@
   import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
   import { CSS2DRenderer, CSS2DObject } from "https://unpkg.com/three@0.165.0/examples/jsm/renderers/CSS2DRenderer.js";
 
+  // ================== CONTENT & CATEGORY ==================
 
-const CATEGORY_HUES = [200, 10, 42, 220, 48];
-const IDLE_RETURN_MS = 6000;
-/* ---------- CONTENT (20 pages) ---------- */
-const PAGES = [
-  {category:0, title:"トップページ", slug:"index.html", desc:"「@IronY ー(サブタイ)ー」のトップページ。ここから様々なページへと飛ぶことが可能です。迷った方はまずこちらのページから、このサイトを踏破する第一歩を踏み出してみて下さい。"},
-  {category:0, title:"序論", slug:"page2.html", desc:"そもそもSNSとは一体何なのか、そんな最も前提的な、しかしそれでいてこの問題の根幹に根付く「SNSの定義」を明らかにします。知の探究が、このページから幕を開けます。"},
-  {category:1, title:"本論：系譜", slug:"page3.html", desc:"本質は歴史にこそ隠れた、とはよく言うものです。SNSとは一体どのようにして今の強固な立ち位置を手に入れたのか、その過去を紐解きます。そこに本質があり、同時に全てを解き明かす謎が隠れているのです。"},
-  {category:1, title:"本論：両義", slug:"page4.html", desc:"社会に変革という名の深い爪痕を残したSNS。しかしそのSNSの、光が落とした闇に気づくことができていたでしょうか？そんな真実と虚構の二面性、両義的なその存在を今知覚しましょう。"},
-  {category:1, title:"本論：自己", slug:"page5.html", desc:"SNSに浸食されていく日常時間。私たちの体には、私たちの思考には一体何が起きているのでしょうか。SNSが生み出した「絶え間ない常時接続」から抜け出すために、まずはその問題を理解しましょう。"},
-  {category:1, title:"本論：資本", slug:"page6.html", desc:"私たちが多用するSNSは、世界中の天才達の「狩場」になりました。SNSによって誕生した新たな支配的資本主義形態の中で、私たちが狩られずに生き残るために、強大な社会構造のメカニズムを知りましょう。"},
-  {category:1, title:"本論：記憶", slug:"page7.html", desc:"インターネットは「生きて」います。かつて崇高な理念より生み出された存在「Wayback machine」。しかしそれはインターネットの全てを刻み、やがて黒い部分が表層へと顔を出すようになりました。"},
-  {category:1, title:"結論：未来", slug:"page8.html", desc:"問題は、現在のSNSが誰のために、どのような価値観で設計されているかにあります。そして、それを変える力は、私たち一人ひとりの手の中にあるのです。"},
-  {category:2, title:"発展論：旧網", slug:"page3_advance.html", desc:"応用トピックでは、Page3「系譜」で扱ったデジタル時代のSNS史の前に存在した、人類の長大なネットワーク構築史を振り返ります。"},
-  {category:2, title:"発展論：偽装", slug:"page4_advance.html", desc:"生成AIと情報倫理の関係、偽装・誤情報問題に向き合うための視点を提示します。"},
-  {category:2, title:"発展論：依存", slug:"page5_advance.html", desc:"日常化したSNSが依存へ向かうメカニズムを分析し、距離を取るための実践を考えます。"},
-  {category:2, title:"発展論：労働", slug:"page6_advance.html", desc:"SNS時代に変容する『労働』を見つめ直し、制作と注意の価値をどう守るかを議論します。"},
-  {category:2, title:"発展論：監視", slug:"page7_advance.html", desc:"プライバシーと監視の現状を整理し、制度的な対策や個人の防衛手段を提示します。"},
-  {category:3, title:"探求", slug:"interview.html", desc:"専門家の声を通じて現場の実務・研究の知見を届けます。"},
-  {category:3, title:"探求からの考察", slug:"interview_summary.html", desc:"インタビューで得た洞察を体系化し、実践的な示唆を整理します。"},
-  {category:4, title:"クイズ：試練", slug:"quiz.html", desc:"学んだことを確認するための短い演習を用意しました。"},
-  {category:4, title:"参考文献：源泉", slug:"reference.html", desc:"参考文献・引用元を整理した一覧です。"},
-  {category:4, title:"サイトマップ：羅針", slug:"sitemap.html", desc:"このサイトマップから各コンテンツへアクセスできます。設計意図も併記しています。"},
-  {category:4, title:"用語集", slug:"word_summary.html", desc:"専門用語の定義と簡潔な解説をまとめています。"},
-  {category:4, title:"アート解説：鑑識", slug:"art_explain.html", desc:"アート的要素と制作意図の解説です。"}
-];
+  const PAGES = [
+    {category:0, title:"トップページ", slug:"index.html", desc:"「@IronY ー(サブタイ)ー」のトップページ。ここから様々なページへと飛ぶことが可能です。迷った方はまずこちらのページから、このサイトを踏破する第一歩を踏み出してみて下さい。"},
+    {category:0, title:"序論", slug:"page2.html", desc:"そもそもSNSとは一体何なのか、そんな最も前提的な、しかしそれでいてこの問題の根幹に根付く「SNSの定義」を明らかにします。知の探究が、このページから幕を開けます。"},
+    {category:1, title:"本論：系譜", slug:"page3.html", desc:"本質は歴史にこそ隠れた、とはよく言うものです。SNSとは一体どのようにして今の強固な立ち位置を手に入れたのか、その過去を紐解きます。そこに本質があり、同時に全てを解き明かす謎が隠れているのです。"},
+    {category:1, title:"本論：両義", slug:"page4.html", desc:"社会に変革という名の深い爪痕を残したSNS。しかしそのSNSの、光が落とした闇に気づくことができていたでしょうか？そんな真実と虚構の二面性、両義的なその存在を今知覚しましょう。"},
+    {category:1, title:"本論：自己", slug:"page5.html", desc:"SNSに浸食されていく日常時間。私たちの体には、私たちの思考には一体何が起きているのでしょうか。SNSが生み出した「絶え間ない常時接続」から抜け出すために、まずはその問題を理解しましょう。"},
+    {category:1, title:"本論：資本", slug:"page6.html", desc:"私たちが多用するSNSは、世界中の天才達の「狩場」になりました。SNSによって誕生した新たな支配的資本主義形態の中で、私たちが狩られずに生き残るために、強大な社会構造のメカニズムを知りましょう。"},
+    {category:1, title:"本論：記憶", slug:"page7.html", desc:"インターネットは「生きて」います。かつて崇高な理念より生み出された存在「Wayback machine」。しかしそれはインターネットの全てを刻み、やがて黒い部分が表層へと顔を出すようになりました。"},
+    {category:1, title:"結論：未来", slug:"page8.html", desc:"問題は、現在のSNSが誰のために、どのような価値観で設計されているかにあります。そして、それを変える力は、私たち一人ひとりの手の中にあるのです。"},
+    {category:2, title:"発展論：旧網", slug:"page3_advance.html", desc:"応用トピックでは、Page3「系譜」で扱ったデジタル時代のSNS史の前に存在した、人類の長大なネットワーク構築史を振り返ります。"},
+    {category:2, title:"発展論：偽装", slug:"page4_advance.html", desc:"生成AIと情報倫理の関係、偽装・誤情報問題に向き合うための視点を提示します。"},
+    {category:2, title:"発展論：依存", slug:"page5_advance.html", desc:"日常化したSNSが依存へ向かうメカニズムを分析し、距離を取るための実践を考えます。"},
+    {category:2, title:"発展論：労働", slug:"page6_advance.html", desc:"SNS時代に変容する『労働』を見つめ直し、制作と注意の価値をどう守るかを議論します。"},
+    {category:2, title:"発展論：監視", slug:"page7_advance.html", desc:"プライバシーと監視の現状を整理し、制度的な対策や個人の防衛手段を提示します。"},
+    {category:3, title:"探求", slug:"interview.html", desc:"専門家の声を通じて現場の実務・研究の知見を届けます。"},
+    {category:3, title:"探求からの考察", slug:"interview_summary.html", desc:"インタビューで得た洞察を体系化し、実践的な示唆を整理します。"},
+    {category:4, title:"クイズ：試練", slug:"quiz.html", desc:"学んだことを確認するための短い演習を用意しました。"},
+    {category:4, title:"参考文献：源泉", slug:"reference.html", desc:"参考文献・引用元を整理した一覧です。"},
+    {category:4, title:"サイトマップ：羅針", slug:"sitemap.html", desc:"このサイトマップから各コンテンツへアクセスできます。設計意図も併記しています。"},
+    {category:4, title:"用語集", slug:"word_summary.html", desc:"専門用語の定義と簡潔な解説をまとめています。"},
+    {category:4, title:"アート解説：鑑識", slug:"art_explain.html", desc:"アート的要素と制作意図の解説です。"}
+  ];
 
-/* ---------- three.js setup ---------- */
-const container = document.getElementById('canvas');
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(42, innerWidth/innerHeight, 0.1, 1000);
-camera.position.set(0,0,5);
-const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
-renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-container.appendChild(renderer.domElement);
+  const CATEGORY_NEON = [
+    { edge: new THREE.Color(0x7aa4ff) }, // core
+    { edge: new THREE.Color(0xff7ac0) }, // main
+    { edge: new THREE.Color(0x6df6ff) }, // advance
+    { edge: new THREE.Color(0xce8bff) }, // explore
+    { edge: new THREE.Color(0xf9e08a) }  // supplement
+  ];
 
-const labelRenderer = new CSS2DRenderer();
-labelRenderer.setSize(innerWidth, innerHeight);
-labelRenderer.domElement.style.position = 'absolute';
-labelRenderer.domElement.style.top = '0';
-labelRenderer.domElement.style.pointerEvents = 'none';
-document.body.appendChild(labelRenderer.domElement);
+  const EDGE_BASE_COLOR = new THREE.Color(0x141827);
+  const IDLE_RETURN_MS = 6000;
 
-scene.add(new THREE.AmbientLight(0xffffff, 0.85));
-const dir = new THREE.DirectionalLight(0xffffff, 0.9); dir.position.set(4,4,6); scene.add(dir);
-/* ---------- geometry & mapping ---------- */
-const R = 1.2;
-const geo = new THREE.IcosahedronGeometry(R, 0);
-geo.computeVertexNormals();
+  // ================== THREE BASIC SETUP ==================
 
-// We'll create vertex colors based on face index -> page category hue
-const pos = geo.attributes.position;
-const colors = new Float32Array(pos.count);
-const colorTmp = new THREE.Color();
-for(let i=0;i<pos.count;i+=3){
-  const faceIdx = i/3; // 0..19
-  const page = PAGES[faceIdx % PAGES.length];
-  const hue = CATEGORY_HUES[page.category % CATEGORY_HUES.length] / 360;
-  colorTmp.setHSL(hue, 0.78, 0.62);
-  // apply same color for three vertices
-  for(let k=0;k<3;k++){
-    const vi = (i+k);
-    colors[vi*3+0] = colorTmp.r;
-    colors[vi*3+1] = colorTmp.g;
-    colors[vi*3+2] = colorTmp.b;
+  const container = document.getElementById("canvas");
+
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(
+    42,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
+  camera.position.set(0, 0.9, 5.2);
+  camera.lookAt(0, -0.2, 0);
+
+  const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  container.appendChild(renderer.domElement);
+
+  const labelRenderer = new CSS2DRenderer();
+  labelRenderer.setSize(window.innerWidth, window.innerHeight);
+  labelRenderer.domElement.style.position = "absolute";
+  labelRenderer.domElement.style.top = "0";
+  labelRenderer.domElement.style.pointerEvents = "none";
+  container.appendChild(labelRenderer.domElement);
+
+  // ---- Lights: key / fill / rim / front ----
+
+  scene.add(new THREE.AmbientLight(0x30344a, 0.75));
+
+  // 右上前：キーライト
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.25);
+  keyLight.position.set(4.5, 6.0, 8.0);
+  scene.add(keyLight);
+
+  // 左側：フィル（シアン寄り）
+  const fillLight = new THREE.DirectionalLight(0x6df6ff, 0.9);
+  fillLight.position.set(-5.0, 2.0, 4.0);
+  scene.add(fillLight);
+
+  // 後ろ：リム（マゼンタ）
+  const rimLight = new THREE.DirectionalLight(0xff7ac0, 0.95);
+  rimLight.position.set(-4.0, -3.0, -7.0);
+  scene.add(rimLight);
+
+  // 正面寄り：フロントライト（少しシアンを混ぜた白）
+  const frontLight = new THREE.DirectionalLight(0xcfdfff, 0.75);
+  frontLight.position.set(0, 0.6, 4.0);
+  scene.add(frontLight);
+
+  // ================== ICOSAHEDRON & HUD LABELS ==================
+
+  const R = 1.25;
+  const geo = new THREE.IcosahedronGeometry(R, 0);
+  geo.computeVertexNormals();
+
+  const meshMaterial = new THREE.MeshStandardMaterial({
+    color: 0xbfcfe4,
+    roughness: 0.36,
+    metalness: 0.48,
+    flatShading: true,
+    vertexColors: false
+  });
+
+  const mesh = new THREE.Mesh(geo, meshMaterial);
+  scene.add(mesh);
+
+  const edgeMaterial = new THREE.LineBasicMaterial({
+    color: EDGE_BASE_COLOR,
+    transparent: true,
+    opacity: 0.9,
+    linewidth: 1
+  });
+  const edges = new THREE.LineSegments(
+    new THREE.EdgesGeometry(geo),
+    edgeMaterial
+  );
+  scene.add(edges);
+
+  const pos = geo.attributes.position;
+  const faceCenters = [];
+  const labels = [];
+
+  for (let i = 0; i < pos.count; i += 3) {
+    const faceIndex = i / 3;
+
+    const a = new THREE.Vector3().fromBufferAttribute(pos, i);
+    const b = new THREE.Vector3().fromBufferAttribute(pos, i + 1);
+    const c = new THREE.Vector3().fromBufferAttribute(pos, i + 2);
+    const center = new THREE.Vector3()
+      .addVectors(a, b)
+      .add(c)
+      .multiplyScalar(1 / 3)
+      .normalize()
+      .multiplyScalar(R);
+
+    faceCenters.push(center);
+
+    const div = document.createElement("div");
+    div.className = "label";
+    div.textContent = (faceIndex + 1).toString().padStart(2, "0");
+
+    const label = new CSS2DObject(div);
+    label.position.copy(center.clone().normalize().multiplyScalar(R * 1.12));
+    labels.push(label);
+    mesh.add(label);
   }
-}
-geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-const material = new THREE.MeshStandardMaterial({
-  vertexColors: true,
-  roughness: 0.94,
-  metalness: 0.02,
-  flatShading: true,
-  transparent: false
-});
-const mesh = new THREE.Mesh(geo, material);
-scene.add(mesh);
-
-// edges (thin)
-const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color:0x333333, transparent:true, opacity:0.9 }));
-scene.add(edges);
-
-// labels & face centers
-const faceCenters = [];
-const labels = [];
-for(let i=0;i<pos.count;i+=3){
-  const a = new THREE.Vector3().fromBufferAttribute(pos, i);
-  const b = new THREE.Vector3().fromBufferAttribute(pos, i+1);
-  const c = new THREE.Vector3().fromBufferAttribute(pos, i+2);
-  const center = new THREE.Vector3().addVectors(a,b).add(c).multiplyScalar(1/3).normalize().multiplyScalar(R);
-  faceCenters.push(center);
-
-  const div = document.createElement('div');
-  div.className = 'label';
-  div.style.pointerEvents = 'none';
-  div.style.opacity = '0.9';
-  div.style.background = 'rgba(0,0,0,0.45)';
-  div.style.color = '#fff';
-  div.style.width = '28px';
-  div.style.height = '28px';
-  div.style.display = 'flex';
-  div.style.alignItems = 'center';
-  div.style.justifyContent = 'center';
-  div.style.borderRadius = '50%';
-  div.style.fontWeight = '700';
-  div.textContent = (Math.floor(i/3)+1).toString();
-  const label = new CSS2DObject(div);
-  label.position.copy(center).multiplyScalar(1.06);
-  labels.push(label);
-  mesh.add(label);
-}
-
-/* ---------- interactions & UI ---------- */
-const raycaster = new THREE.Raycaster();
-const pointer = new THREE.Vector2();
-
-let mode = 'intro'; // 'intro' | 'float' | 'display'
-let activeFace = -1;
-let lastInteraction = Date.now();
-const idleReturnMs = 6000;
-let currentAnim = null;
-
-/* DOM nodes */
-const slotInner = document.getElementById('slotInner');
-const infoEl = document.getElementById('info');
-const chapEl = document.getElementById('chap');
-const titleEl = document.getElementById('title');
-const descEl = document.getElementById('desc');
-
-/* build slot items */
-const slotItems = [];
-function buildSlots(){
-  PAGES.forEach((p,i)=>{
-    const el = document.createElement('div');
-    el.className = 'slotItem';
-    el.textContent = `${i+1}. ${p.title}`;
-    el.dataset.index = i;
-    el.addEventListener('click', ()=> { focusFace(i); });
-    slotInner.appendChild(el);
-    slotItems.push(el);
-  });
-  // ensure center initial
-  requestAnimationFrame(()=>updateSlotAppearance());
-}
-buildSlots();
-
-/* scroll->appearance */
-function updateSlotAppearance(){
-  const scTop = slotInner.scrollTop;
-  const vh = slotInner.clientHeight;
-  const centerY = scTop + vh/2;
-  const maxDist = vh/2;
-  slotItems.forEach((el,i)=>{
-    const elTop = el.offsetTop + el.clientHeight/2;
-    const dist = Math.abs(centerY - elTop);
-    const factor = Math.max(0, 1 - dist / maxDist);
-    const scale = 0.82 + 0.38 * factor;
-    const opacity = 0.18 + 0.82 * factor;
-    el.style.transform = `translateX(${(1-factor)*-18}px) scale(${scale})`;
-    el.style.opacity = opacity;
-    if(factor > 0.66){
-      el.classList.add('center');
-    } else {
-      el.classList.remove('center');
+  let activeLabelIndex = null;
+  function setActiveLabel(index) {
+    if (activeLabelIndex !== null && labels[activeLabelIndex]) {
+      labels[activeLabelIndex].element.classList.remove("label--active");
     }
-    // if this becomes the exact center most, sync immediately
-    if(factor > 0.96){
-      if(i !== activeFace) snapToFace(i);
+    activeLabelIndex = index;
+    if (index != null && labels[index]) {
+      labels[index].element.classList.add("label--active");
     }
-  });
-}
-
-/* helpers: tween */
-function cancelAnim(){ if(currentAnim && currentAnim.cancel) currentAnim.cancel(); currentAnim = null; }
-function tween(duration, onUpdate, onComplete, ease=(t)=>1-Math.pow(1-t,3)){
-  cancelAnim();
-  const start = performance.now();
-  let stopped = false;
-  currentAnim = {
-    cancel(){ stopped = true; }
-  };
-  (function frame(now){
-    if(stopped) return;
-    const raw = Math.min(1, (now - start)/duration);
-    const t = ease(raw);
-    onUpdate(t, raw);
-    if(raw < 1) requestAnimationFrame(frame);
-    else {
-      currentAnim = null;
-      if(onComplete) onComplete();
-    }
-  })(start);
-  return currentAnim;
-}
-
-/* snap rotation to face (no translate) */
-function snapToFace(faceIdx){
-  activeFace = faceIdx;
-  // update slot selection visual
-  const item = slotItems[faceIdx];
-  const itemCenterTop = item.offsetTop - slotInner.offsetTop + item.clientHeight/2;
-  slotInner.scrollTo({ top: itemCenterTop - slotInner.clientHeight/2, behavior:'smooth' });
-
-  // rotate mesh so that face faces camera
-  const localNormal = faceCenters[faceIdx].clone().normalize();
-  const worldNormal = localNormal.clone().applyQuaternion(mesh.quaternion).normalize();
-  const camDir = new THREE.Vector3().subVectors(camera.position, mesh.position).normalize();
-  const q = new THREE.Quaternion().setFromUnitVectors(worldNormal, camDir);
-  const targetQuat = q.multiply(mesh.quaternion.clone());
-  const fromQuat = mesh.quaternion.clone();
-
-  tween(600, (t)=>{ mesh.quaternion.copy(fromQuat); mesh.quaternion.slerp(targetQuat, t); edges.quaternion.copy(mesh.quaternion); }, ()=>{ if(mode==='float') miniShow(faceIdx); });
-}
-
-/* mini info in float mode */
-function miniShow(idx){
-  const p = PAGES[idx];
-  chapEl.textContent = p.title.slice(0,20); // short above
-  chapEl.style.color = `hsl(${CATEGORY_HUES[p.category]%360} 90% 40%)`;
-  titleEl.textContent = p.title;
-  descEl.textContent = p.desc.length > 140 ? p.desc.slice(0,140) + '…' : p.desc;
-  infoEl.classList.add('show');
-  // tint edges slightly
-  const hue = CATEGORY_HUES[p.category]/360;
-  edges.material.color.setStyle(new THREE.Color().setHSL(hue, 0.8, 0.45).getStyle());
-}
-
-/* enter display mode: zoom toward camera and show full text */
-function focusFace(faceIdx){
-  lastInteraction = Date.now();
-  if(mode === 'display' && activeFace === faceIdx){
-    // second click => navigate
-    window.location.href = PAGES[faceIdx].slug;
-    return;
   }
-  mode = 'display';
-  activeFace = faceIdx;
-  // stop ongoing animations
-  cancelAnim();
-  // rotation target
-  const localNormal = faceCenters[faceIdx].clone().normalize();
-  const worldNormal = localNormal.clone().applyQuaternion(mesh.quaternion).normalize();
-  const camDir = new THREE.Vector3().subVectors(camera.position, mesh.position).normalize();
-  const q = new THREE.Quaternion().setFromUnitVectors(worldNormal, camDir);
-  const targetQuat = q.multiply(mesh.quaternion.clone());
-  const fromQuat = mesh.quaternion.clone();
-  // compute translation for mesh so face appears closer
-  const centroidWorld = faceCenters[faceIdx].clone().applyQuaternion(mesh.quaternion).add(mesh.position);
-  const currentFaceDistance = centroidWorld.distanceTo(camera.position);
-  const desiredFaceDist = 2.1;
-  const moveAmount = Math.max(0, currentFaceDistance - desiredFaceDist);
-  const moveVec = camDir.clone().multiplyScalar(moveAmount * 0.92);
-  const fromPos = mesh.position.clone();
-  const targetPos = mesh.position.clone().add(moveVec);
 
-  tween(700, (t)=>{
-    mesh.quaternion.copy(fromQuat); mesh.quaternion.slerp(targetQuat, t);
-    // slight overshoot bounce
-    const overs = Math.sin(t * Math.PI) * 0.04;
-    mesh.position.lerpVectors(fromPos, targetPos.clone().add(camDir.clone().multiplyScalar(overs)), t);
-    edges.position.copy(mesh.position); edges.quaternion.copy(mesh.quaternion);
-  }, ()=>{
-    showFullInfo(faceIdx);
+  // ================== NEON GRID WAVE (床) ==================
+
+  const GRID_COLS = 32;
+  const GRID_ROWS = 22;
+  const TILE_SIZE = 0.24;
+  const TILE_GAP  = 0.04;
+
+  const waveGroup = new THREE.Group();
+  waveGroup.position.set(0, -1.7, -0.8);
+  waveGroup.rotation.set(0, 0, 0);
+  scene.add(waveGroup);
+
+  const tileGeo = new THREE.BoxGeometry(TILE_SIZE, 0.04, TILE_SIZE);
+
+  const baseFloorColor = new THREE.Color(0x02030a);  // ほぼ黒に近い床
+  const baseEmissive   = new THREE.Color(0x000000);
+
+  let activeFloorColor = new THREE.Color(0x1b3047);
+  let activeEmissive   = new THREE.Color(0x06283e);
+
+  const waveMaterial = new THREE.MeshStandardMaterial({
+    color: baseFloorColor.clone(),
+    roughness: 0.9,
+    metalness: 0.3,
+    emissive: baseEmissive.clone(),
+    emissiveIntensity: 1.0,
+    transparent: true,
+    opacity: 0.97
   });
 
-  // hide all labels (clarity)
-  labels.forEach(l => l.element.style.opacity = '0.0');
+  const totalTiles = GRID_COLS * GRID_ROWS;
+  const waveMesh = new THREE.InstancedMesh(tileGeo, waveMaterial, totalTiles);
+  waveMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  waveGroup.add(waveMesh);
 
-  // sync slot highlight
-  const el = slotItems[faceIdx];
-  el.classList.add('center'); el.style.background = `hsl(${CATEGORY_HUES[PAGES[faceIdx].category]} 85% 66%)`;
-}
+  const tilePositions = [];
+  const dummy = new THREE.Object3D();
 
-/* show full info in panel */
-function showFullInfo(idx){
-  const p = PAGES[idx];
-  chapEl.textContent = p.category !== undefined ? `SECTION ${idx+1}` : '';
-  chapEl.style.color = `hsl(${CATEGORY_HUES[p.category]} 90% 40%)`;
-  titleEl.textContent = p.title;
-  descEl.textContent = p.desc;
-  infoEl.classList.add('show');
-  document.querySelectorAll('.ui-text').forEach(el => el.classList.add('visible'));
-  // stronger tint
-  edges.material.color.setStyle(new THREE.Color().setHSL(CATEGORY_HUES[p.category]/360, 0.85, 0.48).getStyle());
-  edges.material.opacity = 1.0;
-  lastInteraction = Date.now();
-  // start idle timer to return
-  startIdleReturn();
-}
+  let tileIndex = 0;
+  for (let r = 0; r < GRID_ROWS; r++) {
+    for (let c = 0; c < GRID_COLS; c++) {
+      const x = (c - GRID_COLS / 2 + 0.5) * (TILE_SIZE + TILE_GAP);
+      const z = (r - GRID_ROWS / 2 + 0.5) * (TILE_SIZE + TILE_GAP);
+      tilePositions.push({ x, z });
 
-/* return to float */
-function returnToFloat(){
-  if(mode === 'float') return;
-  mode = 'float';
-  activeFace = -1;
-  // restore position/rotation smoothly
-  cancelAnim();
-  const fromPos = mesh.position.clone();
-  const toPos = new THREE.Vector3(0,0,0);
-  const fromQuat = mesh.quaternion.clone();
-  const toQuat = new THREE.Quaternion(); // identity
-  tween(700, (t)=>{
-    mesh.position.lerpVectors(fromPos, toPos, t);
-    mesh.quaternion.copy(fromQuat); mesh.quaternion.slerp(toQuat, t);
-    edges.position.copy(mesh.position); edges.quaternion.copy(mesh.quaternion);
-    edges.material.opacity = 0.9 * (1 - t*0.6);
-  }, ()=>{
-    infoEl.classList.remove('show');
-    document.querySelectorAll('.ui-text').forEach(el => el.classList.remove('visible'));
-    labels.forEach(l => l.element.style.opacity = '0.9');
-    // reset slot item visuals
-    slotItems.forEach((el)=>{ el.style.background = 'transparent'; });
-  });
-}
-
-/* idle timer */
-let idleHandle = null;
-function startIdleReturn(){
-  if(idleHandle) clearTimeout(idleHandle);
-  idleHandle = setTimeout(()=>{ returnToFloat(); }, idleReturnMs);
-}
-
-/* raycasting & pointer handling */
-let isDown=false, downX=0, downY=0, moved=false, startRot=new THREE.Euler();
-const dragThreshold = 6;
-
-window.addEventListener('pointerdown',(e)=>{
-  isDown = true; moved = false; downX = e.clientX; downY = e.clientY; startRot.copy(mesh.rotation);
-  lastInteraction = Date.now();
-});
-window.addEventListener('pointermove',(e)=>{
-  pointer.x = (e.clientX / innerWidth) * 2 - 1;
-  pointer.y = - (e.clientY / innerHeight) * 2 + 1;
-  if(!isDown) return;
-  const dx = e.clientX - downX, dy = e.clientY - downY;
-  if(Math.abs(dx) > dragThreshold || Math.abs(dy) > dragThreshold) moved = true;
-  if(moved && mode === 'float'){
-    mesh.rotation.y = startRot.y + dx / innerWidth * Math.PI * 1.6;
-    mesh.rotation.x = startRot.x + dy / innerHeight * Math.PI * 1.6;
-    edges.rotation.copy(mesh.rotation);
+      dummy.position.set(x, 0, z);
+      dummy.scale.set(1, 1, 1);
+      dummy.updateMatrix();
+      waveMesh.setMatrixAt(tileIndex++, dummy.matrix);
+    }
   }
-  lastInteraction = Date.now();
-});
-window.addEventListener('pointerup',(e)=>{
-  const wasMoved = moved; isDown = false; moved = false; lastInteraction = Date.now();
-  if(!wasMoved){
-    // click
-    raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObject(mesh, true);
-    if(hits.length){
-      const hit = hits[0];
-      // faceIndex is triangle index; map directly to page index 0..19
-      const faceIndex = hit.faceIndex;
-      if(faceIndex >= 0 && faceIndex < PAGES.length){
-        focusFace(faceIndex);
+
+  let waveTime = 0;
+  let waveStrength = 0;
+
+  // 色用の補間変数
+  let colorT = 0;          // 0→1→0
+  let colorDirection = 0;  // 1: up, -1: down, 0: stop
+
+  function randomPaletteColor() {
+    const choices = [
+      0x1b3047, // シアン寄りブルー
+      0x362148, // マゼンタ寄りパープル
+      0x184547, // ティール
+      0x3b3154  // ディープパープル
+    ];
+    const hex = choices[Math.floor(Math.random() * choices.length)];
+    return new THREE.Color(hex);
+  }
+
+  function kickWave(amount = 1) {
+    waveStrength = Math.min(1.7, waveStrength + amount);
+    if (waveTime === 0) waveTime = 0.0001;
+
+    // 色をランダムに決めて、黒 → ネオン → 黒 の往復を開始
+    activeFloorColor = randomPaletteColor();
+    activeEmissive   = activeFloorColor.clone().multiplyScalar(0.22);
+
+    colorT = 0;
+    colorDirection = 1;
+  }
+
+  function updateWave(dt) {
+    if (waveStrength <= 0 && colorDirection === 0) return;
+
+    // 高低差のアニメーション
+    if (waveStrength > 0) {
+      waveTime += dt;
+      const decay = Math.exp(-waveTime * 1.3);
+      const strength = waveStrength * decay;
+
+      if (strength < 0.02) {
+        waveStrength = 0;
+        waveTime = 0;
       }
-    } else {
-      if(mode === 'display') returnToFloat();
-      else infoEl.classList.remove('show');
+
+      const speed = 4.0;
+      const freq = 2.3;
+      const baseH = 0.04;
+
+      for (let i = 0; i < totalTiles; i++) {
+        const pos = tilePositions[i];
+        const dist = Math.sqrt(pos.x * pos.x + pos.z * pos.z);
+        const wave = Math.sin(dist * freq - waveTime * speed);
+
+        const h = baseH + 0.6 * ((wave + 1) * 0.5) * strength;
+        dummy.position.set(pos.x, h * 0.5, pos.z);
+        dummy.scale.set(1, h / baseH, 1);
+        dummy.updateMatrix();
+        waveMesh.setMatrixAt(i, dummy.matrix);
+      }
+      waveMesh.instanceMatrix.needsUpdate = true;
     }
-  } else {
-    if(mode === 'float'){
-      const nearest = findNearestFace();
-      snapToFace(nearest);
+
+    // 色の補間：黒 → ネオン → 黒
+    if (colorDirection !== 0) {
+      colorT += dt * 1.1 * colorDirection;
+      if (colorT >= 1) {
+        colorT = 1;
+        colorDirection = -1;
+      } else if (colorT <= 0) {
+        colorT = 0;
+        colorDirection = 0;
+      }
+    }
+
+    const mix = colorT;
+    waveMaterial.color
+      .copy(baseFloorColor)
+      .lerp(activeFloorColor, mix);
+    waveMaterial.emissive
+      .copy(baseEmissive)
+      .lerp(activeEmissive, mix);
+  }
+
+  // ================== DOM REFERENCES ==================
+
+  const slotInner = document.getElementById("slotInner");
+  const infoEl   = document.getElementById("info");
+  const chapEl   = document.getElementById("chap");
+  const titleEl  = document.getElementById("title");
+  const descEl   = document.getElementById("desc");
+
+  const slotItems = [];
+  let spacerTop = null;
+  let spacerBottom = null;
+
+  // ================== STATE ==================
+
+  let currentIndex = 0;
+  let focusIndex   = null;
+
+  let isDraggingCanvas = false;
+  let dragMoved = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragStartRot = new THREE.Euler();
+  const dragThreshold = 6;
+
+  let activeTween = null;
+  let lastInteractionTime = performance.now();
+
+  function markInteraction() {
+    lastInteractionTime = performance.now();
+    kickWave(0.9);
+  }
+
+  // ================== TWEEN HELPER ==================
+
+  function startTween(duration, onUpdate, onComplete) {
+    if (activeTween && activeTween.cancel) {
+      activeTween.cancel();
+    }
+    const startTime = performance.now();
+    let cancelled = false;
+
+    activeTween = {
+      cancel() { cancelled = true; }
+    };
+
+    function frame(now) {
+      if (cancelled) return;
+      const tRaw = Math.min(1, (now - startTime) / duration);
+      const t = tRaw < 0.5
+        ? 4 * tRaw * tRaw * tRaw
+        : 1 - Math.pow(-2 * tRaw + 2, 3) / 2;
+
+      onUpdate(t);
+
+      if (tRaw < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        activeTween = null;
+        if (onComplete) onComplete();
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  // ================== SLOT UI ==================
+
+  function buildSlots() {
+    slotInner.innerHTML = "";
+    slotItems.length = 0;
+
+    spacerTop = document.createElement("div");
+    spacerTop.className = "slotSpacer";
+    slotInner.appendChild(spacerTop);
+
+    PAGES.forEach((p, i) => {
+      const el = document.createElement("div");
+      el.className = "slotItem";
+      el.textContent = `${i + 1}. ${p.title}`;
+      el.dataset.index = String(i);
+
+      el.addEventListener("click", () => {
+        markInteraction();
+        const idx = i;
+        if (focusIndex === idx) {
+          window.location.href = PAGES[idx].slug;
+        } else {
+          openInfo(idx);
+        }
+      });
+
+      slotInner.appendChild(el);
+      slotItems.push(el);
+    });
+
+    spacerBottom = document.createElement("div");
+    spacerBottom.className = "slotSpacer";
+    slotInner.appendChild(spacerBottom);
+
+    updateSlotSpacers();
+    requestAnimationFrame(updateSlotAppearance);
+  }
+
+  function updateSlotSpacers() {
+    if (!spacerTop || !spacerBottom) return;
+    const vh = slotInner.clientHeight;
+    const pad = Math.max(32, vh * 0.5 - 28);
+    spacerTop.style.height = pad + "px";
+    spacerBottom.style.height = pad + "px";
+  }
+
+  buildSlots();
+
+  function updateSlotAppearance() {
+    if (!slotItems.length) return;
+
+    const scrollTop = slotInner.scrollTop;
+    const vh = slotInner.clientHeight;
+    const centerY = scrollTop + vh / 2;
+    const maxDist = vh / 2;
+
+    let nearestIndex = 0;
+    let nearestDist = Infinity;
+
+    slotItems.forEach((el, i) => {
+      const elCenter = el.offsetTop + el.clientHeight / 2;
+      const dist = Math.abs(centerY - elCenter);
+      const factor = Math.max(0, 1 - dist / maxDist);
+      const scale = 0.88 + 0.22 * factor;
+      const opacity = 0.25 + 0.75 * factor;
+      const translateX = (1 - factor) * -24;
+
+      el.style.transform = `translateX(${translateX}px) scale(${scale})`;
+      el.style.opacity = String(opacity);
+
+      if (dist < nearestDist) {
+        nearestDist = dist;
+        nearestIndex = i;
+      }
+    });
+
+    slotItems.forEach((el, i) => {
+      if (i === nearestIndex) {
+        el.classList.add("center");
+      } else {
+        el.classList.remove("center");
+      }
+    });
+
+    if (focusIndex === null && nearestIndex !== currentIndex) {
+      selectIndex(nearestIndex, { fromScroll: true });
     }
   }
-});
 
-/* find nearest face (facing camera) */
-function findNearestFace(){
-  const camDir = new THREE.Vector3().subVectors(camera.position, mesh.position).normalize();
-  let best=0, bestDot=-Infinity;
-  for(let i=0;i<faceCenters.length;i++){
-    const v = faceCenters[i].clone().applyQuaternion(mesh.quaternion).normalize();
-    const dot = v.dot(camDir);
-    if(dot > bestDot){ bestDot = dot; best = i; }
-  }
-  return best;
-}
-
-/* slot scroll to center detection */
-slotInner.addEventListener('scroll', ()=>{ updateSlotAppearance(); lastInteraction = Date.now(); });
-
-/* initial intro animation */
-function playIntro(){
-  cancelAnim();
-  const startPos = mesh.position.clone();
-  const startScale = mesh.scale.clone();
-  mesh.position.set(0,-1.6,-0.4);
-  mesh.scale.setScalar(0.6);
-  tween(900, (t)=>{ const e = 1 - Math.pow(1 - t, 3); mesh.position.lerpVectors(new THREE.Vector3(0,-1.6,-0.4), new THREE.Vector3(0,0,0), e); mesh.scale.lerpVectors(startScale.setScalar(0.6), new THREE.Vector3(1,1,1), e); }, ()=>{
-    mode = 'float';
-    lastInteraction = Date.now();
-  }, (t)=>t);
-}
-playIntro();
-
-/* animation loop */
-const clock = new THREE.Clock();
-function render(){
-  requestAnimationFrame(render);
-  const dt = clock.getDelta();
-  const now = Date.now();
-  if(mode === 'float'){
-    // slow auto-rotation
-    mesh.rotation.y += 0.0018;
-    mesh.rotation.x = Math.sin(clock.elapsedTime * 0.12) * 0.06;
-  } else if(mode === 'display'){
-    // idle check handled by timer
-  }
-  // subtle label facing
-  labels.forEach(l => {
-    // face label towards camera using underlying label renderer
-    // no change here (CSS2D handles it)
+  slotInner.addEventListener("scroll", () => {
+    markInteraction();
+    updateSlotAppearance();
   });
-  updateSlotAppearance();
-  renderer.render(scene, camera);
-  labelRenderer.render(scene, camera);
-}
-render();
 
-/* resize */
-window.addEventListener('resize', ()=>{
-  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth, innerHeight); labelRenderer.setSize(innerWidth, innerHeight);
-});
+  // ================== ORIENTATION HELPERS ==================
 
-/* utility: CATEGORY_HUES for UI color */
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  const tmpVec3 = new THREE.Vector3();
 
-/* fallback: ensure slot centered initially */
-setTimeout(()=>{ updateSlotAppearance(); }, 120);
+  function updatePointerFromEvent(event) {
+    const rect = renderer.domElement.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    pointer.set(x, y);
+  }
 
-/* end of module */
+  function orientToFace(index, { focus = false, duration = 650 } = {}) {
+    if (index < 0 || index >= faceCenters.length) return;
+
+    const fromQuat = mesh.quaternion.clone();
+    const targetQuat = (() => {
+      const localNormal = faceCenters[index].clone().normalize();
+      const worldNormal = localNormal.clone().applyQuaternion(mesh.quaternion).normalize();
+      const camDir = tmpVec3.subVectors(camera.position, mesh.position).normalize();
+      const rotQuat = new THREE.Quaternion().setFromUnitVectors(
+        worldNormal,
+        camDir
+      );
+      return rotQuat.multiply(mesh.quaternion.clone());
+    })();
+
+    const fromPos   = mesh.position.clone();
+    const targetPos = mesh.position.clone();
+
+    startTween(duration, (t) => {
+      mesh.quaternion.copy(fromQuat).slerp(targetQuat, t);
+      mesh.position.lerpVectors(fromPos, targetPos, t);
+      edges.quaternion.copy(mesh.quaternion);
+      edges.position.copy(mesh.position);
+    });
+  }
+
+  function findNearestFaceIndex() {
+    const camDir = tmpVec3
+      .subVectors(camera.position, mesh.position)
+      .normalize();
+
+    let best = 0;
+    let bestDot = -Infinity;
+
+    for (let i = 0; i < faceCenters.length; i++) {
+      const dir = faceCenters[i]
+        .clone()
+        .normalize()
+        .applyQuaternion(mesh.quaternion);
+      const dot = dir.dot(camDir);
+      if (dot > bestDot) {
+        bestDot = dot;
+        best = i;
+      }
+    }
+    return best;
+  }
+
+  // ================== SELECTION & INFO ==================
+
+  function selectIndex(index, { fromScroll = false } = {}) {
+    if (index < 0 || index >= PAGES.length) return;
+    currentIndex = index;
+
+    if (!fromScroll) {
+      const item = slotItems[index];
+      if (item) {
+        const targetTop =
+          item.offsetTop + item.clientHeight / 2 - slotInner.clientHeight / 2;
+        slotInner.scrollTo({ top: targetTop, behavior: "smooth" });
+        requestAnimationFrame(updateSlotAppearance);
+      }
+    }
+
+    setActiveLabel(index);
+
+    if (focusIndex === null) {
+      orientToFace(index, { focus: false, duration: 550 });
+      edgeMaterial.color.copy(EDGE_BASE_COLOR);
+      edgeMaterial.opacity = 0.9;
+    }
+  }
+
+  function openInfo(index) {
+    if (index < 0 || index >= PAGES.length) return;
+    markInteraction();
+    currentIndex = index;
+    focusIndex = index;
+
+    const page = PAGES[index];
+    chapEl.textContent = `SECTION ${index + 1}`;
+    const neon = CATEGORY_NEON[page.category]?.edge || CATEGORY_NEON[0].edge;
+    chapEl.style.color = `#${neon.getHexString()}`;
+
+    titleEl.textContent = page.title;
+    descEl.textContent = page.desc;
+
+    orientToFace(index, { focus: true, duration: 650 });
+
+    infoEl.classList.add("show");
+    document
+      .querySelectorAll(".ui-text")
+      .forEach((el) => el.classList.add("visible"));
+
+    edgeMaterial.color.copy(neon);
+    edgeMaterial.opacity = 1.0;
+
+    setActiveLabel(index);
+
+    const item = slotItems[index];
+    if (item) {
+      const targetTop =
+        item.offsetTop + item.clientHeight / 2 - slotInner.clientHeight / 2;
+      slotInner.scrollTo({ top: targetTop, behavior: "smooth" });
+      requestAnimationFrame(updateSlotAppearance);
+    }
+  }
+
+  function closeInfo() {
+    if (focusIndex === null) return;
+    focusIndex = null;
+
+    infoEl.classList.remove("show");
+    document
+      .querySelectorAll(".ui-text")
+      .forEach((el) => el.classList.remove("visible"));
+
+    edgeMaterial.color.copy(EDGE_BASE_COLOR);
+    edgeMaterial.opacity = 0.9;
+
+    orientToFace(currentIndex, { focus: false, duration: 550 });
+  }
+
+  // ================== CANVAS POINTER INTERACTION ==================
+
+  renderer.domElement.addEventListener("pointerdown", (event) => {
+    markInteraction();
+    isDraggingCanvas = true;
+    dragMoved = false;
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    dragStartRot.copy(mesh.rotation);
+    updatePointerFromEvent(event);
+    renderer.domElement.setPointerCapture(event.pointerId);
+  });
+
+  renderer.domElement.addEventListener("pointermove", (event) => {
+    updatePointerFromEvent(event);
+    if (!isDraggingCanvas) return;
+
+    const dx = event.clientX - dragStartX;
+    const dy = event.clientY - dragStartY;
+    const distSq = dx * dx + dy * dy;
+
+    if (!dragMoved && distSq > dragThreshold * dragThreshold) {
+      dragMoved = true;
+    }
+
+    if (dragMoved && focusIndex === null) {
+      mesh.rotation.y = dragStartRot.y + (dx / window.innerWidth) * Math.PI * 1.4;
+      mesh.rotation.x = dragStartRot.x + (dy / window.innerHeight) * Math.PI * 1.4;
+      edges.rotation.copy(mesh.rotation);
+    }
+  });
+
+  renderer.domElement.addEventListener("pointerup", (event) => {
+    markInteraction();
+    renderer.domElement.releasePointerCapture(event.pointerId);
+    const wasDragging = dragMoved;
+    isDraggingCanvas = false;
+    dragMoved = false;
+
+    if (!wasDragging) {
+      handleCanvasClick(event);
+    } else if (focusIndex === null) {
+      const idx = findNearestFaceIndex();
+      selectIndex(idx, { fromScroll: false });
+    }
+  });
+
+  renderer.domElement.addEventListener("pointerleave", (event) => {
+    if (!isDraggingCanvas) return;
+    renderer.domElement.releasePointerCapture(event.pointerId);
+    isDraggingCanvas = false;
+    dragMoved = false;
+  });
+
+  // ================== FACE CLICK ==================
+
+  function handleCanvasClick(event) {
+    updatePointerFromEvent(event);
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObject(mesh, false);
+    if (hits.length > 0) {
+      const faceIndex = hits[0].faceIndex;
+      if (faceIndex != null && faceIndex >= 0 && faceIndex < PAGES.length) {
+        if (focusIndex === faceIndex) {
+          window.location.href = PAGES[faceIndex].slug;
+        } else {
+          openInfo(faceIndex);
+        }
+        return;
+      }
+    }
+
+    if (focusIndex !== null) {
+      closeInfo();
+    }
+  }
+
+  // ================== ANIMATION LOOP ==================
+
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+    const now = performance.now();
+
+    if (focusIndex !== null && now - lastInteractionTime > IDLE_RETURN_MS) {
+      closeInfo();
+    }
+
+    if (focusIndex === null && !isDraggingCanvas && !activeTween) {
+      mesh.rotation.y += 0.12 * dt;
+      mesh.rotation.x = Math.sin(clock.elapsedTime * 0.12) * 0.05;
+      edges.rotation.copy(mesh.rotation);
+    }
+
+    updateWave(dt);
+
+    renderer.render(scene, camera);
+    labelRenderer.render(scene, camera);
+  }
+  animate();
+
+  // ================== RESIZE ==================
+
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    labelRenderer.setSize(window.innerWidth, window.innerHeight);
+    updateSlotSpacers();
+    requestAnimationFrame(updateSlotAppearance);
+  });
+
+  // 初期選択
+  selectIndex(0, { fromScroll: false });
 </script>
+
+
+
+
+
 </body>
 </html>
 
