@@ -102,6 +102,41 @@ body {
 		--card-color-1: #10B981;
 		--card-color-2: #059669;
 }
+/* ヘッダー個別カラー設定 */
+.nav-link:hover[data-theme="normal"][data-page="intro"] {
+		--primary-color: #667eea;
+		--card-color-2: #764ba2;
+}
+
+.nav-link:hover[data-theme="normal"][data-page="genealogy"] {
+		background-color: #D4A574;
+		--card-color-2: #F4C430;
+}
+
+.nav-link:hover[data-theme="chaos"][data-page="duality"] {
+		background-color: #8B7355;
+		--card-color-2: #C9A961;
+}
+
+.nav-link:hover[data-theme="chaos"][data-page="self"] {
+		background-color: #48cae4;
+		--card-color-2: #0096c7;
+}
+
+.nav-link:hover[data-theme="chaos"][data-page="capital"] {
+		background-color: #EF4444;
+		--card-color-2: #DC2626;
+}
+
+.nav-link:hover[data-theme="chaos"][data-page="memory"] {
+		background-color: #6B7280;
+		--card-color-2: #4B5563;
+}
+
+.nav-link:hover[data-theme="normal"][data-page="future"] {
+		background-color: #10B981;
+		--card-color-2: #059669;
+}
 		/* インタラクティブ要素 */
 .interactive-element{ background:var(--surface); border-radius:20px; padding:40px; margin:50px 0; border:1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.06); transition:all .3s ease; }
 .interactive-element:hover{ transform:translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
