@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>発展論：依存 - デジタル・アディクションの神経科学</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* Page4/Page5のテーマカラーを継承（仮） */
+        :root{
+            --primary-color: #48cae4;
+            --primary-light: #E8F7FA;
+            --primary-dark: #0096c7;
+            --accent-color: #90e0ef;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --solution: #3B82F6; 
+            --solution-light: #EFF6FF;
+        }
+    </style>
+        <style>
+        /* ページ固有: ナビゲーションのボーダー色 */
+        .navigation {
+            border-color: rgba(139, 115, 85, 0.2);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            box-shadow: 0 8px 24px rgba(139, 115, 85, 0.4);
+        }
+
+        /* Page4_advanceから継承するスタイル */
+
+        /* 引用ブロック */
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 24px;
+            margin: 32px 0;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            background-color: var(--primary-light);
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-right: 24px;
+            border-radius: 0 8px 8px 0;
+        }
+        blockquote footer {
+            margin-top: 12px;
+            font-style: normal;
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+            text-align: right;
+        }
+
+        /* 警告・ハイライトボックス */
+        .warning-box, .highlight-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .highlight-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary-dark);
+        }
+        .warning-box {
+            border-left: 4px solid var(--warning);
+        }
+        .warning-box .highlight-title {
+            color: var(--warning);
+        }
+
+        /* 参考文献 */
+        .references p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        /* グラフコンテナ */
+        .chart-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            height: 400px; /* グラフの高さ指定 */
+        }
+
+        /* リスト（対策など） */
+        .solution-list {
+            display: grid;
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .solution-item {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border-left: 4px solid var(--solution); /* 青色 */
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        .solution-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        .solution-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--solution); /* 青色 */
+            margin-bottom: 12px;
+        }
+        .solution-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="page2.html" class="nav-link">序論</a></li>
+                <li><a href="page3.html" class="nav-link">系譜</a></li>
+                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
+                <li><a href="page4.html" class="nav-link">両義</a></li>
+                <li><a href="page4_advance.html" class="nav-link">偽装</a></li>
+                <li><a href="page5.html" class="nav-link">自己</a></li>
+                <li><a href="page5_advance.html" class="nav-link active">依存</a></li>
+                <li><a href="page6.html" class="nav-link">資本</a></li>
+                <li><a href="page7.html" class="nav-link">記憶</a></li>
+                <li><a href="page8.html" class="nav-link">未来</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <nav class="table-of-contents">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#section1" class="toc-link">1. 依存症のメカニズム</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">2. ゲーミフィケーションの心理学</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">3. スマホ依存の実態</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">4. 企業の設計意図</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">5. デジタル・デトックスの効果と限界</a></li>
+            <li class="toc-item"><a href="#section6" class="toc-link">6. 依存から回復するためのステップ</a></li>
+            <li class="toc-item"><a href="#section7" class="toc-link">7. WHO「ゲーム障害」認定</a></li>
+            <li class="toc-item"><a href="#section8" class="toc-link">8. 本論への還元</a></li>
+            <li class="toc-item"><a href="#section9" class="toc-link">9. 筆者の視点</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div class="page-subtitle">Page 5 - 発展論</div>
+            <h1 class="page-title">依存</h1>
+            <p class="page-description">
+                気がつくと、手が勝手にポケットの中のスマホを探している。<br>
+                勉強中に、特に理由もないのに通知を確認してしまう。<br>
+                寝る直前まで画面を見つめ、ベッドに入ってもスクロールをやめられない。
+            </p>
+            <p class="content-paragraph">
+                これは単なる「クセ」なのでしょうか。
+                それとも、脳のレベルで「依存」と呼んでもいい状態なのか。
+            </p>
+            <p class="content-paragraph">
+                本論「自己」では、SNSが自己評価やメンタルヘルスに与える影響を見てきました。自己価値が「いいね」の数やフォロワー数に強く引きずられ、他人との比較が止まらなくなる構造です。この発展論では、もう一段奥へ進みます。
+            </p>
+            <p class="content-paragraph">
+                テーマは、脳の報酬系とデジタル・アディクション。
+                なぜ私たちは、ここまでスマホやSNSに惹きつけられるのでしょうか。
+                その背景にある神経科学と、行動としての「依存」を追いかけていきます。
+                キーワードは、ドーパミン。報酬系。そして「ゲームのように設計された日常」です。
+            </p>
+        </header>
+
+        <section id="section1" class="content-section">
+            <h2 class="section-title">1. 依存症のメカニズム：ドーパミン回路と行動嗜癖</h2>
+            <p class="content-paragraph">
+                人が何かを「繰り返したくなる」とき、脳の報酬系が働いていると考えられています。
+                その中心にあるのが、ドーパミンという神経伝達物質です。好きなことをしているときだけでなく、「これからご褒美がもらえそうだ」と予測した瞬間にも、ドーパミンは放出されます。(PMC, サイエンスダイレクト)
+            </p>
+            <p class="content-paragraph">
+                本来この仕組みは、生存に必要な行動（食事、睡眠、対人関係など）を強化するためのもの。ところが、現代のスマホやSNSは、この報酬回路と非常に相性が良い設計になっています。
+            </p>
+            <ul>
+                <li>新しい通知が来た瞬間</li>
+                <li>タイムラインを更新したときに現れる「新情報」</li>
+                <li>メッセージアプリの未読バッジ</li>
+            </ul>
+            <p class="content-paragraph">
+                こうした一つ一つが、小さな報酬として脳を刺激する構造です。
+            </p>
+            <p class="content-paragraph">
+                最近の神経画像研究では、スマホの過剰使用が、報酬系や衝動性の制御に関わる脳領域（前頭葉や側坐核など）の機能的な結びつきの変化と関連している可能性が指摘されています。(Wiley Online Library)
+            </p>
+            <p class="content-paragraph">
+                「スマホを見たいから見る」のではなく、「見ないと落ち着かないから見てしまう」状態。
+                こうした行動の背景には、報酬系のバランスの変化が隠れていると考えられています。
+            </p>
+            <p class="content-paragraph">
+                物質を摂取しなくても、行動そのものがやめられなくなる状態は「行動嗜癖」と呼ばれます。ギャンブルや買い物、ゲームなどがよく挙げられますが、スマホやSNSについても、同様の枠組みで研究が進んでいます。(PMC)
+            </p>
+        </section>
+
+        <section id="section2" class="content-section">
+            <h2 class="section-title">2. ゲーミフィケーションの心理学：終わらない「次の報酬」</h2>
+            <p class="content-paragraph">
+                「次のレベルまであと少し」<br>
+                「今日のログインボーナス」<br>
+                「連続ログイン○日目」
+            </p>
+            <p class="content-paragraph">
+                ゲームの世界ではおなじみの仕掛けです。
+                しかし今では、多くのSNSやアプリが同じような仕組みをまとうようになりました。
+                日常の行動にゲーム的な要素を埋め込むこと。これを「ゲーミフィケーション」と呼びます。
+            </p>
+            <p class="content-paragraph">
+                ゲーミフィケーションの本質は、次のようなシンプルな要素の組み合わせだと考えられています。
+            </p>
+            <ul>
+                <li>わかりやすい目標の提示</li>
+                <li>進捗やスコアの可視化</li>
+                <li>ときどき予想外の報酬を混ぜること</li>
+            </ul>
+            <p class="content-paragraph">
+                この3つがそろうと、人は驚くほど粘り強く行動を続けてしまう傾向があります。(世界保健機関, PMC)
+            </p>
+            <p class="content-paragraph">
+                Facebook初代社長のショーン・パーカーは、後年のインタビューで、当時の設計思想をこう振り返っています。
+            </p>
+            <blockquote>
+                「どうやって、あなたの時間と意識を最大限奪うか、という発想だった」「いいねやコメントがつくたびに、小さなドーパミンのヒットを与える」「それはソーシャル・バリデーション（社会的承認）のフィードバックループであり、人間の心理の弱点を意図的についていた」。
+                <footer>(Business Insider, ガーディアン, Axios)</footer>
+            </blockquote>
+            <p class="content-paragraph">
+                プラットフォームは、ユーザーがアプリ内にとどまる時間が長いほど広告収入などの利益を得ます。
+                そのため、
+                「あと一回だけスクロールしてほしい」
+                「もう一本だけ動画を見てほしい」
+                という方向に、アルゴリズムとインターフェースが細かく最適化されていく。
+            </p>
+            <p class="content-paragraph">
+                終わらないフィード。自動再生。通知のバッジ。
+                日常そのものが「ゲームのように設計された環境」へ変わりつつある、と言えるかもしれません。(ガーディアン)
+            </p>
+        </section>
+
+        <section id="section3" class="content-section">
+            <h2 class="section-title">3. スマホ依存の実態：睡眠・学習・人間関係</h2>
+            <p class="content-paragraph">
+                では、こうした仕組みが、実際にどのような影響を生んでいるのでしょうか。
+            </p>
+            <p class="content-paragraph">
+                大学生や若年成人を対象にした研究では、「スマホ依存」と判定された人の割合が、おおむね3～4割程度に達していると報告されています。(Frontiers, ResearchGate)
+            </p>
+            <p class="content-paragraph">
+                また、別の調査では、学生が一生のうち約25年分をスマホ画面の前で過ごす可能性がある、という試算も示されています。(ザ・タイムズ)
+            </p>
+            <p class="content-paragraph">
+                特に注目されているのが、睡眠への影響です。
+                英国の若年成人約1000人を対象にした研究では、全体の61.6％が「睡眠の質がよくない」と回答していました。その中でも、スマホ依存傾向があるグループでは68.7％が睡眠の質の悪さを訴え、非依存グループの57.1％より明らかに高い値となっています。(blogs.the-hospitalist.org, PubMed, Frontiers)
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title" style="text-align: center;">グラフ：スマホ依存傾向と睡眠の質</div>
+                <p class="content-paragraph" style="text-align: center; color: var(--text-light);">(スマホ依存群と非依存群の「睡眠の質が悪い人の割合」を比較)</p>
+                <div class="chart-container">
+                    <canvas id="sleepQualityChart"></canvas>
+                </div>
+            </div>
+
+            <p class="content-paragraph">
+                夜遅くまでスマホを見てしまうと、ブルーライトや精神的な興奮によって入眠が遅くなり、睡眠の質が落ちやすいと考えられています。(MDPI, Redalyc)
+            </p>
+            <p class="content-paragraph">
+                さらに、同じ研究グループの分析では、スマホ依存が強い学生ほど成績（GPA）が低い傾向にあることも示されました。(Studocu, PubMed, MDPI)
+            </p>
+            <p class="content-paragraph">
+                睡眠不足、集中力の低下、授業への遅刻や欠席。
+                それぞれは小さな変化に見えても、積み重なると学習全体にじわじわと効いてくる影響です。
+            </p>
+            <p class="content-paragraph">
+                人間関係への影響も無視できません。
+                問題的スマホ使用に関するレビューでは、スマホの過剰利用が、不安感、抑うつ、ストレスの高さと関連していることが繰り返し報告されています。(PMC, ウィキペディア)
+            </p>
+            <p class="content-paragraph">
+                「誰かとつながっていないと不安」
+                「既読をつけたのに返信がないと落ち着かない」
+                そんな感覚そのものが、心の負担として積み重なっているのかもしれません。
+            </p>
+        </section>
+
+        <section id="section4" class="content-section">
+            <h2 class="section-title">4. 企業の設計意図：「時間と意識を奪う」アーキテクチャ</h2>
+            <p class="content-paragraph">
+                ここであらためて、企業側の視点を見てみます。
+                SNSや多くの無料アプリのビジネスモデルは、広告収入に依存しています。
+            </p>
+            <p class="content-paragraph">
+                ユーザーがアプリ内に滞在する時間が長くなればなるほど、インプレッション（広告の表示回数）は増えます。滞在時間を伸ばす設計が、ビジネスとして合理的になってしまう構造です。
+            </p>
+            <p class="content-paragraph">
+                元Facebook幹部の証言や、他の元社員による告白は、この構造を裏付けています。
+            </p>
+            <ul>
+                <li>いかにして「時間と意識を最大限奪うか」を中心に設計されていたこと</li>
+                <li>いいねや通知を通じて「短期的なドーパミンのフィードバックループ」を生み出そうとしていたこと</li>
+                <li>それが「人間の心理的な脆弱性を意図的についている」と認識されていたこと。(Business Insider, ガーディアン, Axios)</li>
+            </ul>
+            <p class="content-paragraph">
+                もちろん、すべてのプラットフォームが「依存を生み出すこと」だけを目的としているわけではありません。実際には、ユーザーのウェルビーイングを考慮した設計指針や、スクリーンタイムの表示機能を導入する動きも出てきています。とはいえ、「ビジネスとしての利益」と「ユーザーの健康的な利用」の間には、依然として緊張関係が残っていると言わざるをえません。
+            </p>
+        </section>
+
+        <section id="section5" class="content-section">
+            <h2 class="section-title">5. デジタル・デトックスの科学的効果とその限界</h2>
+            <p class="content-paragraph">
+                「スマホから距離を置けば、すべて解決する」
+                そう言い切るのは少し単純すぎるかもしれません。
+            </p>
+            <p class="content-paragraph">
+                近年、「ソーシャルメディアを一定期間やめてみる」実験研究が増えています。
+                例えば、2週間のSNSデトックスを行った研究では、スマホ・SNS依存の自覚レベルや睡眠、ストレス、生活満足度などが改善したと報告されています。(MDPI)
+            </p>
+            <p class="content-paragraph">
+                一方で、複数の研究をまとめた最新のシステマティックレビューでは、「デジタル・デトックスの効果は一貫しておらず、メンタルヘルスへの影響は限定的か、まだ結論が出ていない」とする分析もあります。(Nature, PMC, ResearchGate)
+            </p>
+            <p class="content-paragraph">
+                短期的にSNSをやめたからといって、現実世界の人間関係やストレス源がすべて解決するわけではありません。
+                むしろ、「離れてみて初めて、依存していたことに気づく」程度の効果にとどまる場合もあるようです。
+            </p>
+            <p class="content-paragraph">
+                重要なのは、「デジタル・デトックスをすれば万能薬」という幻想を持たないこと。
+                同時に、それでも「一度距離を取ってみること」は、自分の使い方を見直すきっかけになりうる、という現実的な評価ではないでしょうか。
+            </p>
+        </section>
+
+        <section id="section6" class="content-section">
+            <h2 class="section-title">6. 依存から回復するためのステップと支援</h2>
+            <p class="content-paragraph">
+                では、実際に「やめたいのにやめられない」と感じたとき、どのようなステップが考えられるでしょうか。
+            </p>
+            <div class="solution-list">
+                <div class="solution-item">
+                    <div class="solution-title">まずは「見える化」</div>
+                    <div class="solution-description">
+                        1日のスクリーンタイムを確認するところから始める。想像より長い時間を使っていることに気づく人も多いと報告されています。(ウィキペディア)
+                    </div>
+                </div>
+                <div class="solution-item">
+                    <div class="solution-title">トリガーとなる行動を把握する</div>
+                    <div class="solution-description">
+                        暇だから見るのか、不安だから見るのか、勉強から逃げたいときに開いているのか。きっかけを具体的に言葉にしてみる。
+                    </div>
+                </div>
+                <div class="solution-item">
+                    <div class="solution-title">「時間」ではなく「場面」でルールを決める</div>
+                    <div class="solution-description">
+                        通学中はOKだが、食事中や就寝1時間前は見ない。勉強の休憩時間だけ短く見る。時間単位ではなく、シチュエーションごとにルールを作ると守りやすいと指摘されています。(サイエンスダイレクト)
+                    </div>
+                </div>
+                 <div class="solution-item">
+                    <div class="solution-title">一人で難しければ、周囲の人と一緒に試す</div>
+                    <div class="solution-description">
+                        友人と「○日間だけ通知を切るチャレンジ」をする。学校や家庭で「デジタルウェルビーイング」をテーマに話し合う。支え合いながら取り組んだ方が続きやすいです。
+                    </div>
+                </div>
+            </div>
+            <p class="content-paragraph">
+                それでも「学校や仕事に支障が出るレベルでやめられない」「気分の落ち込みや不安が強くなっている」と感じたときは、専門家の支援が必要なサインかもしれません。
+            </p>
+            <p class="content-paragraph">
+                各国で発達してきたインターネット依存・ゲーム依存の外来や相談窓口は、今後スマホ依存も含めた「行動嗜癖」の窓口として重要な役割を担っていくと考えられています。(PMC)
+            </p>
+        </section>
+        
+        <section id="section7" class="content-section">
+            <h2 class="section-title">7. WHO「ゲーム障害」認定が示すもの</h2>
+            <p class="content-paragraph">
+                2019年、世界保健機関（WHO）は、国際疾病分類ICD-11の中で「ゲーム障害（Gaming disorder）」を正式に疾病として認定しました。(サイエンスダイレクト, 世界保健機関)
+            </p>
+            <p class="content-paragraph">
+                診断の基準としては、
+            </p>
+            <ul>
+                <li>ゲームに対するコントロールの障害</li>
+                <li>他の日常活動よりもゲームを優先する行動パターン</li>
+                <li>学業・仕事・家族関係など、重要な機能に有意な支障が出ていること</li>
+                <li>通常12か月以上続いていること</li>
+            </ul>
+            <p class="content-paragraph">
+                などが挙げられています。
+            </p>
+            <p class="content-paragraph">
+                興味深いのは、「スマホ依存」や「SNS依存」といった診断名は、まだ公式には認められていない点です。現在のところ、スマホやSNSは、インターネット使用障害や特定のネット行動障害の一部として研究されている段階にあります。(ウィキペディア, サイエンスダイレクト, PMC)
+            </p>
+            <p class="content-paragraph">
+                「病気とラベリングするかどうか」は慎重に考える必要があります。ただ、少なくともWHOの認定は、「デジタルな行動が、現実生活に深刻な支障をきたしうる」ことを国際的に認めた動きだと言えるでしょう。
+            </p>
+        </section>
+
+        <section id="section8" class="content-section">
+            <h2 class="section-title">8. 本論への還元：自己と脳のあいだにあるもの</h2>
+            <p class="content-paragraph">
+                本論「自己」では、SNSが自己評価やアイデンティティの形成にどのような影響を与えるかを見てきました。
+            </p>
+            <ul>
+                <li>いいねの数に振り回される自己評価</li>
+                <li>他人のハイライトと自分の日常を比べ続ける疲労</li>
+                <li>「盛った自分」を演じ続けることによる摩耗</li>
+            </ul>
+            <p class="content-paragraph">
+                ここまで見てきた神経科学の視点を重ねると、こうした自己の揺らぎは、単なる「気の持ちよう」ではないのかもしれません。
+            </p>
+            <ul>
+                <li>ドーパミン報酬系に最適化されたアプリ設計</li>
+                <li>行動嗜癖としてのスマホ・SNSの使い方</li>
+                <li>睡眠・集中力・感情調整への長期的な影響</li>
+            </ul>
+            <p class="content-paragraph">
+                これらが重なった結果として、「自己」が不安定になっている。
+                そう考えると、本論で扱った自己の問題は、脳と技術と社会が交差する場所にある、と見えてきます。
+            </p>
+        </section>
+
+        <section id="section9" class="content-section">
+            <h2 class="section-title">9. 筆者の視点：それでもテクノロジーと付き合い続けるために</h2>
+            <p class="content-paragraph">
+                最後に、このテーマについて、筆者自身の考えを少し書いておきます。
+            </p>
+            <p class="content-paragraph">
+                正直に言えば、ここまで見てきたデータは、なかなか重たい現実です。
+                睡眠の質の低下。学習成績への影響。不安や抑うつとの関連。
+                さらに、脳の報酬系そのものに変化が起きている可能性。(Frontiers, MDPI)
+            </p>
+            <p class="content-paragraph">
+                それでも私は、スマホやSNSを「悪者」として切り捨てるだけでは足りないと感じています。
+                なぜなら、これらの技術は同時に、学びの機会や人とのつながりを広げてくれるツールでもあるからです。テスト勉強の解説動画、離れた友人とのチャット、創作物を発信できる場所。どれも、スマホがなければ得られなかった経験でしょう。
+            </p>
+            <p class="content-paragraph">
+                大事なのは、「便利だから全部受け入れる」ことでも、「危険だから全部やめる」ことでもなく、
+                自分の脳と心にとって「ちょうどよい距離」を探すプロセスではないでしょうか。
+            </p>
+            <p class="content-paragraph">
+                そのためには、少なくとも次の三つが必要だと考えています。
+            </p>
+            <ul>
+                <li>自分の使い方を「見える化」し、現状を直視すること。</li>
+                <li>脳のしくみやビジネスモデルを知り、「どこに仕掛けがあるか」を理解すること。</li>
+                <li>一人で抱え込まず、学校・家庭・友人・専門家とのあいだで「デジタルとの付き合い方」を話題にしていくこと。</li>
+</ul>
+            <div class="warning-box">
+                <div class="highlight-title">スタートラインは「自分を責めない」こと</div>
+                <p>「スマホに依存している自分はダメだ」と責めるだけでは、視野が狭くなってしまいます。
+                むしろ、「脳がそう設計されている」「サービスもそう設計されている」という前提を踏まえた上で、どうすれば自分なりのルールを作れるのか。</p>
+                <p>その問いこそが、デジタル・アディクションの時代を生きる私たちにとって、いちばん現実的で、そして誠実なスタートラインだと感じています。</p>
+                <p>本論「自己」で扱った問い――「SNS時代に、自分をどう守り、どうつくっていくか」。
+                デジタル依存の問題は、その問いに対する、もう一つの側面からの答えでもあります。
+                脳のしくみを知りつつ、テクノロジーとの距離を自分の手で調整していくこと。
+                それが、これからの時代に「自分らしさ」を守り抜くための、小さくて具体的な一歩だと考えています。</p>
+            </div>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <a href="page6.html" class="next-page-button">
+                    次ページ「資本」
+                </a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3 class="subsection-title">参考文献（一部）</h3>
+            <div class="references">
+                <p>Anbumalar, C., & Binu Sahayam, D. (2024). Brain and Smartphone Addiction: A Systematic Review. Human Behavior and Emerging Technologies.(Wiley Online Library)</p>
+                <p>Sohn, S. Y. et al. (2021). The Association Between Smartphone Addiction and Sleep. Frontiers in Psychiatry.(Frontiers, PMC)</p>
+                <p>Rathakrishnan, B. et al. (2021). Smartphone Addiction and Sleep Quality on Academic Performance of University Students. International Journal of Environmental Research and Public Health.(PubMed, MDPI)</p>
+                <p>Nikolić, A. et al. (2023). Smartphone addiction, sleep quality, depression, anxiety, and stress.(PMC)</p>
+                <p>World Health Organization (2020). Gaming disorder.(世界保健機関)</p>
+                <p>Ramadhan, R. N. et al. (2024). Impacts of digital social media detox for mental health: A systematic review and meta-analysis.(PMC, ResearchGate)</p>
+                <p>Coyne, P. et al. (2023). The Effects of Partaking in a Two-Week Social Media Detox.(MDPI)</p>
+                <p>Sean Parker interviews on Facebook and dopamine-driven feedback loops.(Business Insider, ガーディアン, Axios)</p>
+                <p>Fluid Focus (2025). Students ‘will spend 25 years on their mobiles’.(ザ・タイムズ)</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ナビゲーション制御 (Page4から流用)
+        let navTimer;
+        const navContainer = document.querySelector('.nav-container');
+        
+        function showNav() {
+            navContainer.classList.remove('hidden');
+            clearTimeout(navTimer);
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 7000);
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientY < 120) {
+                showNav();
+            }
+        });
+        
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(navTimer);
+        });
+        
+        navContainer.addEventListener('mouseleave', () => {
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 3000);
+        });
+        
+        showNav();
+
+        // スクロールアニメーション (Page4から流用)
+        function handleScroll() {
+            const sections = document.querySelectorAll('.content-section');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+
+            updateTOC();
+        }
+
+        // TOC制御 (Page4から流用)
+        function updateTOC() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 250) {
+                    currentSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            setTimeout(handleScroll, 100);
+            initializeCharts(); // Chart.jsの初期化呼び出し
+        });
+
+        // スムーススクロール (Page4から流用)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Chart.js初期化
+        function initializeCharts() {
+            const chartEl = document.getElementById('sleepQualityChart');
+            if (chartEl) {
+                const ctx = chartEl.getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            'スマホ依存ありの学生',
+                            'スマホ依存なしの学生'
+                        ],
+                        datasets: [{
+                            label: '「睡眠の質が悪い」と回答した割合（％）',
+                            // データ出典：
+                            // Sohn et al. (2021), The Association Between Smartphone Addiction and Sleep.
+                            // 依存あり：68.7％、依存なし：57.1％
+                            data: [68.7, 57.1],
+                            backgroundColor: [
+                                'rgba(239, 68, 68, 0.7)',  // 赤 (依存あり)
+                                'rgba(59, 130, 246, 0.7)' // 青 (依存なし)
+                            ],
+                            borderColor: [
+                                '#EF4444',
+                                '#3B82F6'
+                            ],
+                            borderWidth: 1,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false, // 50%あたりから始めると差が分かりやすいが、0からが誠実
+                                min: 50, // データの最小値に近い値から始める
+                                max: 75, // データの最大値より少し上
+                                title: {
+                                    display: true,
+                                    text: '％',
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                },
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    maxRotation: 0,
+                                    minRotation: 0,
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                padding: 16,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y + '％';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                handleScroll();
+            }, 250);
+        });
+    </script>
+</body>
+</html>
