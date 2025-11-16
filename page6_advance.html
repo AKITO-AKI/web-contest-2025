@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>発展論：労働 - デジタル・プロレタリアートの誕生</title>
+    <!-- Chart.jsライブラリの読み込み -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* Page5のテーマカラーを継承（仮） */
+        :root{
+            --primary-color: #2C1810;
+            --primary-light: #F5EBE0;
+            --primary-dark: #1A0F08;
+            --accent-color: #D4A574;
+            --warning-color: #E63946;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --solution: #3B82F6; 
+            --solution-light: #EFF6FF;
+        }
+    </style>
+        <style>
+        /* ページ固有: ナビゲーションのボーダー色 */
+        .navigation {
+            border-color: rgba(139, 115, 85, 0.2);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            box-shadow: 0 8px 24px rgba(139, 115, 85, 0.4);
+        }
+
+        /* Page5_advanceから継承するスタイル */
+
+        /* 引用ブロック */
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 24px;
+            margin: 32px 0;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            background-color: var(--primary-light);
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-right: 24px;
+            border-radius: 0 8px 8px 0;
+        }
+        blockquote footer {
+            margin-top: 12px;
+            font-style: normal;
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+            text-align: right;
+        }
+
+        /* 警告・ハイライトボックス */
+        .warning-box, .highlight-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .highlight-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary-dark);
+        }
+        .warning-box {
+            border-left: 4px solid var(--warning);
+        }
+        .warning-box .highlight-title {
+            color: var(--warning);
+        }
+
+        /* 参考文献 */
+        .references p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        /* グラフコンテナ */
+        .chart-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            height: 400px; /* グラフの高さ指定 */
+        }
+
+        /* リスト（対策など） */
+        .solution-list {
+            display: grid;
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .solution-item {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border-left: 4px solid var(--solution); /* 青色 */
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        .solution-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        .solution-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--solution); /* 青色 */
+            margin-bottom: 12px;
+        }
+        .solution-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+    </style>
+</head>
+<body>
+    <!-- ナビゲーション -->
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="page2.html" class="nav-link">序論</a></li>
+                <li><a href="page3.html" class="nav-link">系譜</a></li>
+                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
+                <li><a href="page4.html" class="nav-link">両義</a></li>
+                <li><a href="page4_advance.html" class="nav-link">偽装</a></li>
+                <li><a href="page5.html" class="nav-link">自己</a></li>
+                <li><a href="page5_advance.html" class="nav-link">依存</a></li>
+                <li><a href="page6.html" class="nav-link">資本</a></li>
+                <!-- Page6の発展論（労働）へのリンクを追加し、activeにする -->
+                <li><a href="page6_advance.html" class="nav-link active">労働</a></li>
+                <li><a href="page7.html" class="nav-link">記憶</a></li>
+                <li><a href="page8.html" class="nav-link">未来</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 目次サイドバー -->
+    <nav class="table-of-contents">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#section1" class="toc-link">2. 理論的背景 デジタル労働</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">3. ギグエコノミー</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">4. クリエイターエコノミー</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">5. データ労働者としての「私たち」</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">6. 新しい労働組合と抵抗</a></li>
+            <li class="toc-item"><a href="#section6" class="toc-link">7. ベーシックインカムとデータ配当</a></li>
+            <li class="toc-item"><a href="#section7" class="toc-link">8. 代替モデル</a></li>
+            <li class="toc-item"><a href="#section8" class="toc-link">9. 問題の深刻度と本論への還元</a></li>
+            <li class="toc-item"><a href="#section9" class="toc-link">10. 筆者の主張</a></li>
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- ページヘッダー (1. 導入) -->
+        <header class="page-header">
+            <div class="page-subtitle">Page 6 - 発展論</div>
+            <h1 class="page-title">労働</h1>
+            <p class="page-description">
+                スマホを開き、タイムラインを眺め、動画を再生し、いいねを押す。<br>
+                それはこれまで「暇つぶし」や「娯楽」として語られてきました。
+            </p>
+            <p class="content-paragraph">
+                では、その時間は本当に「休み」なのでしょうか。
+                私たちがSNS上で過ごす一瞬一瞬が、広告ビジネスのためのデータになり、
+                アルゴリズムを精密に調整するための燃料になっているとしたら――
+                その時間は、すでに「労働」と呼んでもよいのではないでしょうか。
+            </p>
+            <p class="content-paragraph">
+                本論「資本」では、SNS企業がどのようにデータを資本として蓄積し、
+                広告や課金モデルによって利益を得ているのかを整理しました。
+                この発展論では、その構造を「働く側」から見直します。
+            </p>
+            <p class="content-paragraph">
+                デジタル空間で価値を生み出しながら、
+                十分な対価も、権利も、可視性も与えられていない人びと。
+                ここでは彼らを、あえて「デジタル・プロレタリアート」と呼びます。
+            </p>
+        </header>
+
+        <!-- セクション1: 2. 理論的背景 -->
+        <section id="section1" class="content-section">
+            <h2 class="section-title">2. 理論的背景 デジタル労働という視点</h2>
+            <p class="content-paragraph">
+                マルクスは『資本論』で、資本主義社会を「労働」と「資本」の関係から分析しました。
+                労働者が自分の労働力を売り、賃金以上の価値（剰余価値）を生み出すことで、
+                資本家の利潤が生まれる、という枠組みです。
+            </p>
+            <p class="content-paragraph">
+                オーストリア出身の研究者クリスチャン・フックスは、
+                このマルクス主義的な分析をインターネットとSNSに適用し、
+                「デジタル労働（digital labour）」という概念を提起しました。(SpringerLink)
+            </p>
+            <p class="content-paragraph">
+                フックスによれば、SNSユーザーは
+                広告メッセージを運び、他者の注意を引きつける「輸送労働者」としての側面を持ちます。
+                投稿・視聴・コメント・シェアといった行為は、
+                プラットフォーム上の広告価値を高める「生産的な時間」であり、
+                その成果は株主や投資家の利益として回収される構造だとされます。(MR Online)
+            </p>
+            <p class="content-paragraph">
+                つまり、私たちが「遊んでいる」と思っている時間の一部は、
+                実際には企業にとっての労働時間として組み込まれている。
+                しかも、その多くは無償で、契約も、労働時間の上限も、
+                安全配慮義務も書かれていない「見えない労働」です。
+            </p>
+            <p class="content-paragraph">
+                さらに、近年は「データを労働として扱うべきか」という議論も進んでいます。
+                アリエタ＝イバラらは「データを労働として扱うべきか？」という論文で、
+                個人のデータ提供に対して報酬や集団的な交渉を認める「データ労働者」の発想を提起しました。
+                ジャロン・ラニアーとグレン・ウェイルは「データの尊厳（data dignity）」の観点から、
+                ユーザーがデータの「ただ働き」を強いられている現状を批判しています。(Future of Privacy Forum)
+            </p>
+            <p class="content-paragraph">
+                ここから見えてくるのは、
+                ギグワーカーやクリエイターだけでなく、
+                日常的にSNSを利用する私たち一人ひとりが、
+                「データ労働者」として組み込まれつつある社会の姿です。
+            </p>
+        </section>
+
+        <!-- セクション2: 3. ギグエコノミー -->
+        <section id="section2" class="content-section">
+            <h2 class="section-title">3. ギグエコノミー スマホの中にある低賃金労働</h2>
+            <p class="content-paragraph">
+                デジタル労働と聞いて、真っ先に思い浮かぶのは
+                Uberや出前アプリの配達員、クラウドソーシングのワーカーかもしれません。
+            </p>
+            <p class="content-paragraph">
+                国際労働機関（ILO）の報告によると、
+                デジタル労働プラットフォームの数は2010年以降で世界的に5倍に増加し、
+                タクシー配車アプリやフードデリバリー、オンライン業務の仲介が急速に広がりました。(International Labour Organization)
+            </p>
+            <p class="content-paragraph">
+                同じくILOの調査では、
+                アプリを通じたタクシー運転手の84％、
+                配達員の90％が、プラットフォームからの収入を主な生計手段としており、
+                オンラインのクラウドワークを行う人びとでも約3分の1が
+                「生活の柱」としてこの収入に依存していると報告されています。(International Labour Organization)
+            </p>
+            <p class="content-paragraph">
+                しかし、その働き方は安定とはほど遠い現実を抱えています。
+                交通事故やけがのリスク、アルゴリズムによる評価とランク付け、
+                一方的なアカウント停止、社会保険や労災補償の欠如。
+            </p>
+            <p class="content-paragraph">
+                2025年の研究では、ギグエコノミーの市場規模は
+                2018年の約2,040億ドルから2023年には約4,550億ドルに拡大し、
+                世界のギグワーカーは2025年に7,800万人を超えると予測されています。(ResearchGate)
+            </p>
+            <p class="content-paragraph">
+                巨大な市場規模と比べると、個々の労働者に分配される安全と保障は、
+                あまりに薄く、バラバラなまま置き去りにされていると言わざるをえません。
+            </p>
+            
+            <div class="highlight-box">
+                <div class="highlight-title" style="text-align: center;">グラフ：プラットフォーム収入への依存度</div>
+                <p class="content-paragraph" style="text-align: center; color: var(--text-light);">
+                    (本ページで用いるグラフでは、
+                    「プラットフォーム収入を主な生計手段とする労働者の割合」を
+                    タクシー配車アプリ、フードデリバリー、オンライン型プラットフォームで比較します。
+                    どの領域でも、多くの人が「サイドビジネス」ではなく「本業」として
+                    プラットフォームに依存せざるを得ない状況が可視化されます。)
+                </p>
+                <!-- Chart.jsのキャンバス -->
+                <div class="chart-container">
+                    <canvas id="chartPage6Advance"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション3: 4. クリエイターエコノミー -->
+        <section id="section3" class="content-section">
+            <h2 class="section-title">4. クリエイターエコノミー 華やかさの裏側</h2>
+            <p class="content-paragraph">
+                もう一つのデジタル労働の現場は、
+                YouTuberやインフルエンサーといった「クリエイターエコノミー」です。
+            </p>
+            <p class="content-paragraph">
+                YouTubeの広告収益分配モデルでは、
+                一般的に広告収入の約55％がクリエイターに支払われ、
+                残りの45％をプラットフォーム側が取得するとされています。(WooHelpDesk)
+                一見すると「半分以上もらえるなら公平」と感じるかもしれません。
+            </p>
+            <p class="content-paragraph">
+                しかし、実際には多くのクリエイターが
+                再生数や広告単価の変動、規約変更、動画の突然の広告停止（いわゆる「広告剥がし」）に
+                翻弄されており、安定した生計を立てられるのはごく一部だと指摘されています。(ガーディアン)
+            </p>
+            <p class="content-paragraph">
+                ドイツでは、こうした不透明な運営に対する抗議として
+                「YouTubers Union」と大手労組IG Metallが連携し、
+                FairTubeキャンペーンを立ち上げました。
+                このキャンペーンは、アルゴリズムや収益化ルールの透明性向上、
+                クリエイターの発言権の確保などをYouTubeに求めています。(Eurofound Apps)
+            </p>
+            <p class="content-paragraph">
+                ここで見えてくるのは、
+                「好きなことで生きていく」というキャッチコピーの裏で、
+                プラットフォームの規約一つで収入や職業的なアイデンティティが左右される、
+                非常に不安定な労働環境だという現実です。
+            </p>
+            <p class="content-paragraph">
+                視聴者の立場から見れば、
+                YouTubeを流し見しているだけに見えるかもしれません。
+                けれども、その一視聴が広告のインプレッションとなり、
+                レコメンドアルゴリズムの精度を高め、
+                プラットフォーム全体の価値を押し上げていることを忘れてはいけません。
+            </p>
+            <p class="content-paragraph">
+                「視聴すること」自体が、誰かの利益を支える労働になっている。
+                その構造が、クリエイターと視聴者のあいだに静かに横たわっています。
+            </p>
+        </section>
+
+        <!-- セクション4: 5. データ労働者としての「私たち」 -->
+        <section id="section4" class="content-section">
+            <h2 class="section-title">5. データ労働者としての「私たち」</h2>
+            <p class="content-paragraph">
+                ギグワーカーでも、人気クリエイターでもない。
+                ごく普通のSNSユーザーである私たちは、
+                それでもなお「データ労働者」と呼べるのでしょうか。
+            </p>
+            <p class="content-paragraph">
+                アリエタ＝イバラらは、
+                検索クエリの入力や投稿、レビュー、位置情報の提供などを
+                「データとしての労働」と捉え、
+                その価値配分がほぼすべて企業側に偏っている現状を批判しました。(Future of Privacy Forum)
+            </p>
+            <p class="content-paragraph">
+                ラニアーとウェイルは、ユーザーがデータの「ロイヤリティ」を受け取れる仕組みとして
+                「データユニオン」や「データ配当」の構想を提示しています。(Future of Privacy Forum)
+            </p>
+            <p class="content-paragraph">
+                一方で、データに値札をつけて売買する発想は、
+                プライバシーや不平等の観点から慎重に検討すべきだという批判もあります。(Nicholas Vincent)
+                データ配当が十分な額にならない可能性や、
+                経済的に弱い人ほどプライバシーを売らざるをえなくなる危険性も指摘されています。
+            </p>
+            <p class="content-paragraph">
+                それでも、この議論が浮かび上がらせた重要な問いはシンプルです。
+                私たちは、本当に「タダで」サービスを使っているのか。
+                それとも、データと時間というかたちで、すでに「支払って」いるのか。
+            </p>
+            <p class="content-paragraph">
+                この問いを意識すること自体が、
+                見えないデジタル労働を可視化する第一歩だと考えられています。
+            </p>
+        </section>
+
+        <!-- セクション5: 6. 新しい労働組合と抵抗のかたち -->
+        <section id="section5" class="content-section">
+            <h2 class="section-title">6. 新しい労働組合と抵抗のかたち</h2>
+            <p class="content-paragraph">
+                デジタル・プロレタリアートは、
+                従来型の「工場で働く労働者」とは姿を変えていますが、
+                抵抗や団結のかたちもまた変化しつつあります。
+            </p>
+            <p class="content-paragraph">
+                ILOの作業文書は、世界各地で行われている
+                プラットフォーム労働者の抗議行動を1,000件以上集計し、
+                その多くが低賃金や報酬カットへの不満から生じていることを示しました。
+                従来型の労組ではなく、労働者自身の自発的な組織化による運動も多いと報告されています。(Bollettino ADAPT)
+            </p>
+            <p class="content-paragraph">
+                アメリカでは2022年、ニューヨーク・スタテンアイランドの
+                Amazon倉庫「JFK8」で、Amazon Labor Union（ALU）が
+                同社初の公認労組として認められました。(ウィキペディア)
+                2024年には、全米の複数の倉庫でTeamsters（全米トラック運転手組合）と連携した
+                ストライキが行われ、「過去最大規模のAmazonへのスト」と報じられています。(Reuters)
+            </p>
+            <p class="content-paragraph">
+                YouTubeでは前述のYouTubers UnionとIG MetallによるFairTubeキャンペーンが、
+                クリエイターエコノミーにおける新しい集団的交渉の試みとして注目されています。(Eurofound Apps)
+            </p>
+            <p class="content-paragraph">
+                こうした動きは、
+                ・一箇所に集まらない
+                ・雇用契約が曖昧
+                ・国境をまたいで分散
+                というプラットフォーム労働の特徴の中でも、
+                労働者が新しい連帯の形を模索している証拠と言えるでしょう。
+            </p>
+        </section>
+        
+        <!-- セクション6: 7. ベーシックインカムとデータ配当という出口 -->
+        <section id="section6" class="content-section">
+            <h2 class="section-title">7. ベーシックインカムとデータ配当という出口</h2>
+            <p class="content-paragraph">
+                デジタル・プロレタリアートの問題は、
+                単なる「賃上げ」だけでは解決しきれないかもしれません。
+                そもそも、プラットフォーム労働は
+                景気やアルゴリズムの気まぐれに左右されやすく、
+                すべての人に安定したフルタイムの仕事を保証できるモデルではないからです。
+            </p>
+            <p class="content-paragraph">
+                その延長線上で議論されているのが、
+                ベーシックインカム（無条件の所得保障）や「データ配当」です。
+            </p>
+            <p class="content-paragraph">
+                アメリカ・カリフォルニア州のニューサム州知事は、
+                テック企業の利益の一部を住民に還元する「データ・ディヴィデンド（data dividend）」構想に言及し、
+                データ資本主義が生み出した富を市民と分かち合うアイデアとして脚光を浴びました。(Future of Privacy Forum)
+            </p>
+            <p class="content-paragraph">
+                一方で、データ配当の実際の金額はごく小さくなりかねないこと、
+                「お金をもらえるならデータを差し出してもいい」という
+                新たな不平等を生みうることも指摘されています。(Nicholas Vincent)
+            </p>
+            <p class="content-paragraph">
+                それでも、こうした議論が示しているのは、
+                デジタル・プロレタリアートの問題を
+                「個々の労働者の自己責任」ではなく、
+                社会全体でどのように支えるかという次元で考え直そうとする試みだといえます。
+            </p>
+        </section>
+
+        <!-- セクション7: 8. 代替モデルとしてのプラットフォーム・コーペラティブ -->
+        <section id="section7" class="content-section">
+            <h2 class="section-title">8. 代替モデルとしてのプラットフォーム・コーペラティブ</h2>
+            <p class="content-paragraph">
+                搾取的なプラットフォームに対するもう一つの応答として、
+                近年「プラットフォーム・コーペラティブ（platform cooperatives）」が注目されています。
+            </p>
+            <p class="content-paragraph">
+                これは、配車アプリやフードデリバリー、クラウドワークなどを
+                投資家ではなく、労働者や地域コミュニティが共同所有し、
+                民主的に運営しようとする試みです。
+            </p>
+            <p class="content-paragraph">
+                OECDの政策レポートは、
+                プラットフォーム・コーペラティブが
+                ・よりよい労働条件
+                ・透明なデータ管理
+                ・地域社会への貢献
+                などの点で可能性を持つ一方、
+                資金調達や規模の拡大といった課題に直面していると指摘しています。(OECD)
+            </p>
+            <p class="content-paragraph">
+                とはいえ、
+                すべてのプラットフォームを協同組合化するのは現実的ではないにしても、
+                少なくとも「所有とガバナンスのあり方」は
+                企業任せではなく、社会が選びうるものとして議論されるべきでしょう。
+            </p>
+        </section>
+        
+        <!-- セクション8: 9. 問題の深刻度と、本論への還元 -->
+        <section id="section8" class="content-section">
+            <h2 class="section-title">9. 問題の深刻度と、本論への還元</h2>
+            <p class="content-paragraph">
+                ここまで見てきたように、
+                デジタル・プロレタリアートの問題は複数の層で進行しています。
+            </p>
+            <ul>
+                <li>ギグワーカーの低賃金・無権利状態</li>
+                <li>クリエイターエコノミーの不透明な収益配分</li>
+                <li>一般ユーザーの「データ労働」が無償で搾取される構造</li>
+                <li>それに対抗しようとする労働組合や協同組合の、まだ小さな試み</li>
+            </ul>
+            <p class="content-paragraph">
+                本論「資本」では、SNSのビジネスモデルを
+                「データと注意を資本に変換する仕組み」として分析しました。
+                この発展論「労働」は、その裏側で
+                誰がその資本を支えているのか、
+                その負担とリスクがどのように配分されているのかを補完する位置づけです。
+            </p>
+            <p class="content-paragraph">
+                資本側から見れば「効率的なプラットフォーム」でも、
+                労働側から見れば
+                ・長時間労働
+                ・収入の不安定さ
+                ・アルゴリズムによる一方的な評価
+                ・交渉の場の欠如
+                といった問題が積み上がっています。
+            </p>
+            <p class="content-paragraph">
+                つまり、SNSとプラットフォーム経済は
+                単なる「便利なサービス」ではなく、
+                新しいかたちの階級構造を内包した社会インフラでもある。
+                それが、本論と発展論を合わせて浮かび上がらせたい全体像です。
+            </p>
+        </section>
+        
+        <!-- セクション9: 10. 筆者の主張 -->
+        <section id="section9" class="content-section">
+            <h2 class="section-title">10. 筆者の主張 「ただ働き」に慣れ切らないために</h2>
+            <p class="content-paragraph">
+                最後に、筆者としての考えを述べたいと思います。
+            </p>
+            <p class="content-paragraph">
+                正直に言えば、私自身もSNSを日常的に使い、
+                アルゴリズムに勧められるまま動画を見続けてしまうことがあります。
+                その時間が、どこかの企業の利益に変わっていることを意識する瞬間は、
+                まだ多くありません。
+            </p>
+            <p class="content-paragraph">
+                それでも、
+                「無料で便利なサービスなんだから、多少のことは仕方ない」
+                というあきらめ方だけは、危ういと感じています。
+            </p>
+            <p class="content-paragraph">
+                自分の時間と注意とデータが、
+                誰の利益のために、どのような条件で差し出されているのか。
+                それを知ったうえで利用を続けるのか、
+                別のサービスや設定（トラッキング制限、広告オプトアウトなど）を選ぶのか。
+            </p>
+            
+            <div class="warning-box">
+                <div class="highlight-title">スタートラインは「問い続ける」こと</div>
+                <p>
+                    選択肢そのものを持つことが、
+                    デジタル・プロレタリアートとしての「無自覚な従属」から
+                    一歩離れるためのスタートになるのではないでしょうか。
+                </p>
+                <p>
+                    また、ギグワーカーやクリエイターの労働条件について、
+                    「好きでやっているのだから自己責任」と切り捨てるのではなく、
+                    それを支える制度や交渉の場をどう整えるかという視点を
+                    社会全体で共有する必要があると考えています。
+                </p>
+                <p>
+                    SNSやプラットフォームを「やめる／やめない」の二択ではなく、
+                    ・どのような所有構造のサービスを支援したいのか
+                    ・どのようなルールが整えば参加しやすいのか
+                    ・自分の時間とデータに、どんな価値を認めたいのか
+                    そうした問いを、利用者として投げかけ続けること。
+                </p>
+                <p>
+                    それこそが、デジタル・プロレタリアートが
+                    「ただ働き」を強いられるだけの存在ではなく、
+                    ルールメイキングに参加する主体へと変わっていくための条件だと、私は考えています。
+                </p>
+            </div>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <a href="page7.html" class="next-page-button">
+                    次ページ「記憶」
+                </a>
+            </div>
+        </section>
+
+        <!-- 参考文献 -->
+        <section class="content-section">
+            <h3 class="subsection-title">参考文献・出典（本文中で参照した主なもの）</h3>
+            <div class="references">
+                <p>・Christian Fuchs, Digital Labour and Karl Marx, Routledge, 2014.(SpringerLink)</p>
+                <p>・Christian Fuchs, “Digital prosumption labour on social media in the context of the capitalist regime of time”, 2014.(MR Online)</p>
+                <p>・International Labour Organization, World Employment and Social Outlook 2021: The role of digital labour platforms in transforming the world of work, 2021.(International Labour Organization)</p>
+                <p>・International Labour Organization, A global analysis of worker protest in digital labour platforms, ILO Working Paper 70, 2022.(Bollettino ADAPT)</p>
+                <p>・International Journal of Research Publication and Reviews, “Risk Management in the Gig Economy: Protecting the Health and Safety of Gig Workers”, Vol. 6, Issue 3, 2025.(ResearchGate)</p>
+                <p>・“Can digital labour platforms create fair competition and decent jobs?”, ILO InfoStories, 2021.(International Labour Organization)</p>
+                <p>・“UK’s YouTube and TikTok content creators deserve more rights, say MPs”, The Guardian, 24 Sept 2025.(ガーディアン)</p>
+                <p>・Eurofound, “FairTube campaign – joint initiative of IG Metall and the Youtubers Union”, Platform Economy Repository.(Eurofound Apps)</p>
+                <p>・“Organizing YouTube – IG Metall negotiates better rights”, IndustriALL, 2020.(IndustriALL)</p>
+                <p>・“Amazon workers strike at seven US facilities ahead of Christmas rush”, Reuters, 19 Dec 2024.(Reuters)</p>
+                <p>・“Amazon Warehouse Workers Across US Strike Ahead of Holiday Rush”, WIRED, 2024.(WIRED)</p>
+                <p>・“Amazon Labor Union”, Wikipedia（最終閲覧日：2025年11月）(ウィキペディア)</p>
+                <p>・Imanol Arrieta-Ibarra et al., “Should We Treat Data as Labor?”, AEA Papers and Proceedings, 2018.(Future of Privacy Forum)</p>
+                <p>・Jaron Lanier & E. Glen Weyl, “A Blueprint for a Better Digital Society”, Harvard Business Review, 2018.(Future of Privacy Forum)</p>
+                <p>・Susan Ariel Aaronson, “Data Is Different: Why the World Needs a New Approach to Governing Cross-border Data Flows”, CIGI Papers No. 197, 2018.</p>
+                <p>・Trebor Scholz, “Platform Cooperativism: Challenging the Corporate Sharing Economy”, Rosa Luxemburg Stiftung, 2016.</p>
+                <p>・OECD, “Empowering communities with platform cooperatives”, 2023.(OECD)</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ナビゲーション制御 (Page4/5から流用)
+        let navTimer;
+        const navContainer = document.querySelector('.nav-container');
+        
+        function showNav() {
+            navContainer.classList.remove('hidden');
+            clearTimeout(navTimer);
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 7000);
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientY < 120) {
+                showNav();
+            }
+        });
+        
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(navTimer);
+        });
+        
+        navContainer.addEventListener('mouseleave', () => {
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 3000);
+        });
+        
+        showNav();
+
+        // スクロールアニメーション (Page4/5から流用)
+        function handleScroll() {
+            const sections = document.querySelectorAll('.content-section');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+
+            updateTOC();
+        }
+
+        // TOC制御 (Page4/5から流用)
+        function updateTOC() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 250) {
+                    currentSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            setTimeout(handleScroll, 100);
+            initializeCharts(); // Chart.jsの初期化呼び出し
+        });
+
+        // スムーススクロール (Page4/5から流用)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Chart.js初期化
+        function initializeCharts() {
+            // ギグワーカーがプラットフォーム収入を主な生計手段としている割合
+            const chartEl = document.getElementById('chartPage6Advance');
+            if (chartEl) {
+                const ctxPage6Advance = chartEl.getContext('2d');
+                // ILO “World Employment Social Outlook 2021” の
+                // 「Is platform work the main source of income?」に基づくデータ（タクシー84％、配達90％、オンライン約3分の1）
+                new Chart(ctxPage6Advance, {
+                    type: 'bar',
+                    data: {
+                        labels: ['タクシー配車アプリ', '配達アプリ', 'オンライン型プラットフォーム'],
+                        datasets: [
+                            {
+                                label: 'プラットフォーム収入を主な生計手段とする労働者の割合（％）',
+                                data: [84, 90, 33],
+                                backgroundColor: [
+                                    'rgba(239, 68, 68, 0.7)',  // 赤 (タクシー)
+                                    'rgba(245, 158, 11, 0.7)', // 黄 (配達)
+                                    'rgba(59, 130, 246, 0.7)' // 青 (オンライン)
+                                ],
+                                borderColor: [
+                                    '#EF4444',
+                                    '#F59E0B',
+                                    '#3B82F6'
+                                ],
+                                borderWidth: 1,
+                                borderRadius: 8
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                suggestedMin: 0,
+                                suggestedMax: 100,
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    stepSize: 20,
+                                    callback: function (value) {
+                                        return value + '%';
+                                    },
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                },
+                                title: {
+                                    display: true,
+                                    text: '割合（％）',
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'プラットフォームの種類',
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                },
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                padding: 16,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function (context) {
+                                        return context.parsed.y + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                handleScroll();
+            }, 250);
+        });
+    </script>
+</body>
+</html>
