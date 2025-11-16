@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>発展論：監視 - デジタル・パノプティコンの現実</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* Page6のテーマカラーを継承（仮） */
+        :root{
+            --primary-color: #8B7355; 
+            --primary-light: #F5F0E8;
+            --primary-dark: #6B5745;
+            --accent-color: #C9A961;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --solution: #3B82F6; 
+            --solution-light: #EFF6FF;
+        }
+    </style>
+        <style>
+        /* ページ固有: ナビゲーションのボーダー色 */
+        .navigation {
+            border-color: rgba(139, 115, 85, 0.2);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            box-shadow: 0 8px 24px rgba(139, 115, 85, 0.4);
+        }
+
+        /* Page6_advanceから継承するスタイル */
+
+        /* 引用ブロック */
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 24px;
+            margin: 32px 0;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            background-color: var(--primary-light);
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-right: 24px;
+            border-radius: 0 8px 8px 0;
+        }
+        blockquote footer {
+            margin-top: 12px;
+            font-style: normal;
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+            text-align: right;
+        }
+
+        /* 警告・ハイライトボックス */
+        .warning-box, .highlight-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .highlight-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary-dark);
+        }
+        .warning-box {
+            border-left: 4px solid var(--warning);
+        }
+        .warning-box .highlight-title {
+            color: var(--warning);
+        }
+
+        /* 参考文献 */
+        .references p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        /* グラフコンテナ */
+        .chart-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            height: 400px; /* グラフの高さ指定 */
+        }
+
+        /* リスト（対策など） */
+        .solution-list {
+            display: grid;
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .solution-item {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border-left: 4px solid var(--solution); /* 青色 */
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        .solution-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        .solution-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--solution); /* 青色 */
+            margin-bottom: 12px;
+        }
+        .solution-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="page2.html" class="nav-link">序論</a></li>
+                <li><a href="page3.html" class="nav-link">系譜</a></li>
+                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
+                <li><a href="page4.html" class="nav-link">両義</a></li>
+                <li><a href="page4_advance.html" class="nav-link">偽装</a></li>
+                <li><a href="page5.html" class="nav-link">自己</a></li>
+                <li><a href="page5_advance.html" class="nav-link">依存</a></li>
+                <li><a href="page6.html" class="nav-link">資本</a></li>
+                <li><a href="page6_advance.html" class="nav-link">労働</a></li>
+                <li><a href="page7.html" class="nav-link">記憶</a></li>
+                <li><a href="page7_advance.html" class="nav-link active">監視</a></li>
+                <li><a href="page8.html" class="nav-link">未来</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <nav class="table-of-contents">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#section1" class="toc-link">1. 理論的背景：パノプティコン</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">2. 監視資本主義</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">3. 中国の社会信用システム</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">4. Clearview AI</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">5. 日常空間に広がる顔認証</a></li>
+            <li class="toc-item"><a href="#section6" class="toc-link">6. 「隠すものがない」論への違和感</a></li>
+            <li class="toc-item"><a href="#section7" class="toc-link">7. テクノロジーによる対抗策</a></li>
+            <li class="toc-item"><a href="#section8" class="toc-link">8. 法整備の現在地</a></li>
+            <li class="toc-item"><a href="#section9" class="toc-link">9. 本論への還元</a></li>
+            <li class="toc-item"><a href="#section10" class="toc-link">10. 筆者の視点</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div class="page-subtitle">Page 7 - 発展論</div>
+            <h1 class="page-title">監視</h1>
+            <p class="page-description">
+                駅前のカメラ。
+                コンビニのレジ上。
+                スマホの位置情報。
+                検索履歴、購入履歴、移動履歴、閲覧履歴。
+            </p>
+            <p class="content-paragraph">
+                ふと、「ここまで記録されていて大丈夫なのだろうか」と不安になる瞬間があるかもしれません。
+                同時に、「でも別にやましいことはしていないし」と、自分を納得させる感覚もあるはずです。
+            </p>
+            <p class="content-paragraph">
+                本論「記憶」では、一度ネットにアップロードされた情報が、
+                「消えにくい記録」として半永久的に残りうることを見てきました。
+                この発展論では、その「記録」が、個人の自由や権利にどのような影響を与えるのかという、
+                もう一歩踏み込んだ問いを扱います。
+            </p>
+            <p class="content-paragraph">
+                キーワードは、パノプティコン。
+                そして、監視資本主義。
+                さらに、顔認証や社会信用システムといった、AI時代の監視インフラです。
+            </p>
+        </header>
+
+        <section id="section1" class="content-section">
+            <h2 class="section-title">1. 理論的背景：フーコーのパノプティコンが意味するもの</h2>
+            <p class="content-paragraph">
+                監視社会の議論で必ずといっていいほど登場するのが、ミシェル・フーコーの「パノプティコン」です。
+                もともとは哲学者ジェレミー・ベンサムが提案した円形監獄の設計案でした。中央に監視塔があり、塔からは各独房の中が見える。しかし囚人には、自分が今監視されているのかどうかが分からない構造になっています。(moyak.com)
+            </p>
+            <p class="content-paragraph">
+                フーコーは、この建築物を単なる刑務所の設計図としてではなく、
+                「近代社会の権力装置」のメタファーとして読み替えました。
+                重要なのは、「常に見られている」という事実そのものではなく、
+                「いつ見られているか分からない」という感覚が、
+                人々に自己検閲と自己規律を内面化させる点だとされています。(moyak.com)
+            </p>
+            <p class="content-paragraph">
+                現代のデジタル監視は、まさにこの構造に重なります。
+                監視カメラの存在。
+                アクセスログや位置情報の記録。
+                行動履歴にもとづくスコアリング。
+            </p>
+            <p class="content-paragraph">
+                「見られているかもしれない」という予感が、
+                振る舞いの範囲を静かに狭めていく。
+                このとき、監視は単なる「安全のための記録」ではなく、
+                権力を支える仕組みそのものになっていきます。
+            </p>
+        </section>
+
+        <section id="section2" class="content-section">
+            <h2 class="section-title">2. 監視資本主義：データを原料にする新しい経済</h2>
+            <p class="content-paragraph">
+                ハーバード大学の社会学者ショシャナ・ズボフは、
+                この20年ほどのテック企業のビジネスモデルを「監視資本主義」と呼びました。(Harvard Gazette)
+            </p>
+            <p class="content-paragraph">
+                彼女の定義によれば、監視資本主義とは
+                「人間の経験そのものを、無断でデータとして取り込み、
+                行動予測や行動操作のための商品へと変換する新しい経済の論理」です。(Harvard Gazette)
+            </p>
+            <p class="content-paragraph">
+                検索キーワード、位置情報、購買履歴、SNSでの反応。
+                こうした細かな行動データは、単なる「ログ」ではなく、
+                「私たちが次に何を買うか」「どんな広告に反応するか」
+                さらには「どんな政治メッセージに共感しやすいか」を予測する材料になっています。
+            </p>
+            <blockquote>
+                ズボフはこの構造を、
+                「自由意思に対する介入」であり、「人間の自律性への攻撃」だと批判しています。
+                <footer>(ガーディアン)</footer>
+            </blockquote>
+            <p class="content-paragraph">
+                ここでの監視は、国家による監視だけではありません。
+                企業による、巨大で精密な「行動の観察と記録」です。
+            </p>
+            <p class="content-paragraph">
+                本論「記憶」で扱った「忘れられないSNS」は、
+                監視資本主義の文脈では「次の行動を予測するための材料」として再解釈されます。
+                つまり、記憶と監視は、経済のレベルで密接に結びついているのです。
+            </p>
+        </section>
+
+        <section id="section3" class="content-section">
+            <h2 class="section-title">3. 中国の社会信用システム：スコア化される市民</h2>
+            <p class="content-paragraph">
+                監視社会の象徴としてよく挙げられるのが、中国の社会信用システムです。
+                これは、個人や企業の金融履歴、行政記録、違反歴などを統合し、
+                「信用スコア」として評価する枠組みとして構想されてきました。(bertelsmann-stiftung.de)
+            </p>
+            <p class="content-paragraph">
+                近年の分析によれば、このシステムは一枚岩ではなく、
+                複数の地域実験や業種ごとのスコアリングが並列して存在していると指摘されていますが、
+                いずれにせよ「行動を点数化して管理する」という発想が根底にあります。(orcasia.org)
+            </p>
+            <p class="content-paragraph">
+                この社会信用システムを支えているのが、膨大な監視インフラです。
+                中国国内では、2019年時点で2億台以上の監視カメラが稼働していると推計され、
+                世界の監視カメラの約半数が中国に設置されている、という試算もあります。(ウィキペディア)
+                顔認証や行動分析を組み合わせたシステムが、
+                公共空間や交通機関で広く活用されていると報じられています。(ウィキペディア)
+            </p>
+            <p class="content-paragraph">
+                こうした技術は、犯罪予防や行政効率化という名目で導入されます。
+                しかし同時に、政府への批判的な言動やマイノリティへの弾圧に使われる危険性も指摘されています。
+                新疆ウイグル自治区での大規模な監視と拘束に、AIやクラウド技術が利用されたことを示す調査も明らかになっています。(AP News)
+            </p>
+            <p class="content-paragraph">
+                ここでは、フーコーのいう「パノプティコン」が、
+                国家レベルの巨大システムとして現実化していると見ることもできるでしょう。
+            </p>
+        </section>
+
+        <section id="section4" class="content-section">
+            <h2 class="section-title">4. Clearview AI：グローバルな顔データベースの衝撃</h2>
+            <p class="content-paragraph">
+                もう一つ、国家ではなく企業が主導する監視の事例として、
+                顔認証企業Clearview AIのケースがあります。
+            </p>
+            <p class="content-paragraph">
+                Clearview AIは、SNSやウェブサイトから公開されている顔写真を無断で収集し、
+                数十億枚規模の顔画像データベースを構築してきました。
+                2025年の報道では、このデータベースに登録された画像は
+                世界で600億枚を超えるとされています。(Reuters)
+            </p>
+            <p class="content-paragraph">
+                アメリカでは、市民団体ACLUが提訴した結果、
+                同社は「多くの民間企業への販売をやめる」などの制限を受ける和解に合意しました。(American Civil Liberties Union)
+            </p>
+            <p class="content-paragraph">
+                イギリスの情報コミッショナー（ICO）は、Clearviewに対して約750万ポンドの罰金を科し、
+                英国居住者のデータ削除と新規収集の停止を命じています。(Pinsent Masons)
+            </p>
+            <p class="content-paragraph">
+                フランスやイタリア、オランダなどのデータ保護当局も、
+                GDPR違反として多額の制裁金を課しました。(欧州データ保護委員会)
+            </p>
+            <p class="content-paragraph">
+                それでもなお、同社は主に警察や治安機関向けにサービスを続け、
+                2025年にはオーストリアで刑事告発を受けるなど、
+                「越境する顔認証監視」をめぐる攻防が続いています。(Reuters)
+            </p>
+            <p class="content-paragraph">
+                問題は、ここで扱われているのが「パスワード」ではなく「顔」だという点です。
+                パスワードは変えられますが、顔は簡単には変えられません。
+                一度巨大なデータベースに取り込まれれば、
+                その影響は長期にわたって残り続ける可能性があります。
+            </p>
+        </section>
+        
+        <section id="section5" class="content-section">
+            <h2 class="section-title">5. 日常空間に広がる顔認証：街、店舗、学校</h2>
+            <p class="content-paragraph">
+                顔認証技術は、特定の国や企業だけの話ではありません。
+                ヨーロッパやアメリカ、日本でも、警察や民間企業による導入が進んでいます。
+            </p>
+            <p class="content-paragraph">
+                イングランドとウェールズでは、警察による「ライブ顔認証（Live Facial Recognition）」の活用が急増しており、
+                2024年には街頭などでスキャンされた顔の数が約470万件に達し、前年からほぼ倍増したと報じられています。(ガーディアン)
+            </p>
+            <p class="content-paragraph">
+                ロンドンでは、警察だけでなく小売店、ナイトクラブ、カジノ、学校など、
+                多様な民間施設が顔認証を導入し、店舗間で「要注意人物」の顔データを共有している実態が明らかになっています。(Le Monde.fr)
+            </p>
+            <p class="content-paragraph">
+                これらのシステムは、「万引き防止」や「安全確保」を理由に正当化されます。
+                しかし、
+                ・誰が「危険人物」として登録されるのか
+                ・誤認があった場合、どう救済されるのか
+                ・どの範囲の施設とデータが共有されているのか
+                といった点が、不透明なまま運用されているケースも少なくありません。(Le Monde.fr)
+            </p>
+            <p class="content-paragraph">
+                同時に、監視インフラを支える市場も急速に拡大しています。
+                市場調査によれば、顔認証市場は2023年の約63億ドルから、
+                2028年には約134億ドル規模にまで成長すると予測されています。(MarketsandMarkets)
+                ビデオ監視全体の市場も、2032年には1,000億ドルを超える見通しが示されています。(Spherical Insights)
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-title" style="text-align: center;">グラフ：顔認証市場の急速な成長予測</div>
+                <p class="content-paragraph" style="text-align: center; color: var(--text-light);">
+                    (このページのグラフでは、
+                    顔認証市場規模の「2023年」と「2028年」の伸びを棒グラフで表示し、
+                    監視技術が「将来有望な成長産業」として位置づけられている現状を可視化します。)
+                </p>
+                <div class="chart-container">
+                    <canvas id="facialRecognitionMarketChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="section6" class="content-section">
+            <h2 class="section-title">6. 「隠すものがなければ問題ない」論への違和感</h2>
+            <p class="content-paragraph">
+                監視や顔認証の話になると、
+                「別に悪いことをしていないなら、監視されても困らない」という意見がしばしば聞かれます。
+            </p>
+            <p class="content-paragraph">
+                一見もっともらしく感じられますが、
+                この考え方にはいくつかの問題があると指摘されています。
+            </p>
+            <p class="content-paragraph">
+                第一に、権力の非対称性です。
+                監視する側は、多数の人びとのデータを集約し分析できますが、
+                監視される側は、その全体像をほとんど知ることができません。
+                この「見える／見えない」の非対称性が、権利侵害や差別に結びつきやすいことが懸念されています。(LSEブログ)
+            </p>
+            <p class="content-paragraph">
+                第二に、「冷却効果（chilling effect）」と呼ばれる現象があります。
+                見られていると感じることで、人々が正当な政治的発言や抗議行動を避けるようになり、
+                民主主義に必要な批判や多様な意見が萎縮してしまうという指摘です。
+                人権団体は、「顔認証を公共空間から禁止すべきだ」とする強い声明を出しています。(人権監視団)
+            </p>
+            <p class="content-paragraph">
+                第三に、技術の誤認とバイアスの問題です。
+                顔認証システムは、特定の人種や性別、年齢層に対して誤認識率が高いケースが繰り返し報告されており、
+                ロンドンや他の都市では、無実の人が「要注意人物」として扱われる事例も問題になっています。(Le Monde.fr)
+            </p>
+            <p class="content-paragraph">
+                「隠すものがない人は困らない」という言い方は、
+                こうした権力の偏りや誤認のリスクを見えなくしてしまう、
+                危うい言葉だと言えるのではないでしょうか。
+            </p>
+        </section>
+
+        <section id="section7" class="content-section">
+            <h2 class="section-title">7. テクノロジーによる対抗策：暗号化・匿名化・データ最小化</h2>
+            <p class="content-paragraph">
+                監視社会に対して、個人に何ができるのか。
+                その一つの答えとして、技術的な対抗策があります。
+            </p>
+            <p class="content-paragraph">
+                メッセージアプリのエンド・ツー・エンド暗号化（E2EE）。
+                通信の経路を秘匿するTorのような匿名化ネットワーク。
+                通信内容を第三者から守るVPN。
+                位置情報やクッキーを最小限に抑えるブラウザ設定やプライバシーツール。
+            </p>
+            <p class="content-paragraph">
+                こうした技術は、犯罪者のためだけのものではありません。
+                ジャーナリストや人権活動家、権威主義的な政権下で暮らす市民にとって、
+                生存と表現の自由を守るためのライフラインになっている場合もあります。(AP News)
+            </p>
+            <p class="content-paragraph">
+                一方で、これらの手段だけで監視社会の構造が消えるわけではありません。
+                暗号化や匿名化は、個人レベルの「守り」を強化する手段にすぎません。
+                記録の設計やデータの扱い方そのものを変えるには、
+                やはり制度やルールのレベルでの変化が不可欠だと考えられています。
+            </p>
+        </section>
+
+        <section id="section8" class="content-section">
+            <h2 class="section-title">8. 法整備の現在地：AI時代の監視をどう線引きするか</h2>
+            <p class="content-paragraph">
+                近年、各国でAIと監視技術をめぐる法整備が進みつつあります。
+            </p>
+            <p class="content-paragraph">
+                EUでは、2025年から「AI法（AI Act）」の一部が施行され、
+                ・社会的スコアリング（ソーシャルスコア）
+                ・感情認識の乱用
+                ・リアルタイムの遠隔生体認証による監視（原則禁止、厳格な例外のみ許容）
+                などが「許されないAIの利用」として制限されました。(Le Monde.fr)
+            </p>
+            <p class="content-paragraph">
+                また、AI生成コンテンツやディープフェイクについては、
+                「AIが生成・改変したことを明示する」ことを義務づける透明性ルールが導入され、
+                スペインでは表示義務違反に対して最大3,500万ユーロ、売上の7％という重い罰則を課す法案も進んでいます。(EU人工知能法)
+            </p>
+            <p class="content-paragraph">
+                イタリアは2025年、EUで最初に包括的なAI規制法を成立させ、
+                有害なディープフェイクやAI犯罪に対して懲役刑を含む厳格な罰則を定めました。(ガーディアン)
+            </p>
+            <p class="content-paragraph">
+                一方で、警察によるライブ顔認証の扱いは国や地域によって大きく異なります。
+                EUのAI法は原則として公共空間でのリアルタイム顔認証を禁じつつ、
+                重大犯罪の捜査など限定的な例外を認める構造になっています。(EU人工知能法)
+            </p>
+            <p class="content-paragraph">
+                アメリカでは、市や州単位で禁止・モラトリアム・容認が混在しており、
+                ニューオーリンズのように一度禁止した顔認証を再び合法化しようとする動きも見られます。(techreg.org)
+            </p>
+            <p class="content-paragraph">
+                Clearview AIに対する各国の制裁や訴訟も、
+                「越境する監視」にどこまで介入できるかを試すケースとして注目されています。(American Civil Liberties Union)
+            </p>
+            <p class="content-paragraph">
+                法整備は一歩前進しつつも、
+                ・民間の防犯カメラや小売店での顔認証
+                ・私的な監視サービスの提供
+                ・国家間での技術輸出と人権問題
+                など、多くの領域が依然としてグレーゾーンに残されています。
+            </p>
+        </section>
+
+        <section id="section9" class="content-section">
+            <h2 class="section-title">9. 本論への還元：忘れない社会と「監視される記憶」</h2>
+            <p class="content-paragraph">
+                本論「記憶」では、SNSが「忘れにくいメディア」であること、
+                過去の発言や行動が延々と掘り返されるリスクを見てきました。
+            </p>
+            <p class="content-paragraph">
+                発展論「監視」で扱っているのは、その記憶が
+                「誰のものか」「どのような目的で使われるのか」という問題です。
+            </p>
+            <ul>
+                <li>国家によるスコアリングや監視</li>
+                <li>企業による行動予測とターゲティング広告</li>
+                <li>顔認証による常時トラッキング</li>
+                <li>データベース化された「過去の自分」が将来の機会に与える影響</li>
+            </ul>
+            <p class="content-paragraph">
+                これらをまとめて考えると、
+                私たちは「忘れられにくいだけでなく、常に評価される社会」に住んでいる、
+                と言えるのかもしれません。
+            </p>
+            <p class="content-paragraph">
+                問題の深刻さは、単に「プライバシーがちょっと減る」レベルではありません。
+                監視と記録が結びつくことで、
+                ・何を検索するか
+                ・どこに行くか
+                ・誰と話すか
+                ・どのような意見を表明するか
+                といった日常的な選択にまで、「見られているかもしれない」という影響が入り込んできます。
+            </p>
+            <p class="content-paragraph">
+                これは、民主主義や少数派の権利、創造性にとって、
+                長期的に大きなダメージになりうると考えられています。(LSEブログ)
+            </p>
+            <p class="content-paragraph">
+                本論と合わせると、
+                SNSとAIは「記憶を強化する技術」であると同時に、
+                「その記憶を通じて人を管理する技術」でもある、
+                という二重の顔を持っていることが見えてきます。
+            </p>
+        </section>
+
+        <section id="section10" class="content-section">
+            <h2 class="section-title">10. 筆者の視点：それでも「見えない場所」を守りたい</h2>
+            <p class="content-paragraph">
+                最後に、このテーマについて筆者自身の考えを書いておきます。
+            </p>
+            <p class="content-paragraph">
+                正直に言えば、ここまで見てきた事実は、なかなか重たいものです。
+                巨大な監視インフラ。
+                越境する顔認証企業。
+                加速する監視市場と、そこに追いつかない法整備。
+            </p>
+            <p class="content-paragraph">
+                一方で、私たちの日常は、監視だけでできているわけではありません。
+                オフラインで友だちと雑談をする時間。
+                ノートにだけ残すメモ。
+                誰にも見せないドラフトや、心の中だけの感情。
+            </p>
+            <p class="content-paragraph">
+                こうした「半分だけ見えているもの」「誰にも見せていないもの」が、
+                人間の自由や創造性を支えている部分も大きいのではないでしょうか。
+            </p>
+            <div class="warning-box">
+                <div class="highlight-title">二択に閉じ込められないために</div>
+                <p>
+                    だからこそ私は、
+                    監視技術をすべて否定するか、
+                    逆に「便利だから仕方ない」と全面的に受け入れてしまうか、
+                    という二択に閉じ込められたくないと感じています。
+                </p>
+                <ul>
+                    <li>監視カメラが本当に必要な場所はどこか</li>
+                    <li>顔認証を使ってはいけない場所はどこか</li>
+                    <li>どこまでのログを、どれくらいの期間保存してよいのか</li>
+                    <li>その決定に、市民がどのように関わるべきか</li>
+                </ul>
+                <p>
+                    こうした問いを、技術者だけでなく、利用する私たち自身が考え続けること。
+                    「誰が、誰を、どの目的で見ているのか」を問うことをやめないこと。
+                </p>
+                <p>
+                    それが、パノプティコンのような「見えない監獄」に閉じ込められないための、
+                    ささやかだけれど大事な抵抗だと感じています。
+                </p>
+                <p>
+                    本論「記憶」で見たように、
+                    デジタルな記録は簡単には消えません。
+                    だからこそ、その記録が「監視のためだけに使われない」社会をどう作るか。
+                    AIと監視技術の時代に生きる私たち一人ひとりにとって、
+                    それはもう、専門家だけに任せておけるテーマではないのだと思います。
+                </p>
+            </div>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <a href="page8.html" class="next-page-button">
+                    次ページ「未来」
+                </a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3 class="subsection-title">参考文献（一部）</h3>
+            <div class="references">
+                <p>Michel Foucault, Discipline and Punish: The Birth of the Prison, 1975.(moyak.com)</p>
+                <p>Shoshana Zuboff, The Age of Surveillance Capitalism, 2019.(Harvard Gazette)</p>
+                <p>Mass surveillance in China, Wikipedia（最終閲覧日：2025年11月）(ウィキペディア)</p>
+                <p>Bertelsmann Stiftung, China’s Social Credit System, 2017.(bertelsmann-stiftung.de)</p>
+                <p>Horizons, China Social Credit System Explained, 2024.(Horizons)</p>
+                <p>Associated Press, Silicon Valley enabled brutal mass detention and surveillance in China, 2025.(AP News)</p>
+                <p>MarketsandMarkets, Facial Recognition Market – Global Forecast to 2028.(MarketsandMarkets)</p>
+                <p>Spherical Insights, Video Surveillance Market Size, Forecast, 2023–2032.(Spherical Insights)</p>
+                <p>The Guardian, Live facial recognition cameras may become ‘commonplace’ as police use soars, 2025.(ガーディアン)</p>
+                <p>Le Monde, London’s use of facial recognition is surging, despite technology’s flaws, 2025.(Le Monde.fr)</p>
+                <p>ACLU, “Big Win: Settlement Ensures Clearview AI Complies With Groundbreaking Illinois Law”, 2022.(American Civil Liberties Union)</p>
+                <p>Reuters, US judge approves ‘novel’ Clearview AI class action settlement, 2025.(Reuters)</p>
+                <p>ICO / Pinsent Masons, ICO wins appeal over Clearview AI jurisdiction ruling, 2025.(Pinsent Masons)</p>
+                <p>Data Privacy Manager, 20 biggest GDPR fines so far, 2025.(The Paypers)</p>
+                <p>European Commission, EU AI Act and relatedガイドライン, 2025.(EU人工知能法)</p>
+                <p>Spain AI deepfake labelling law, Reuters, 2025.(dedep.eu)</p>
+                <p>Italy AI regulation law, The Guardian, 2025.(ガーディアン)</p>
+                <p>Human Rights Watch, “Time to Ban Facial Recognition from Public Spaces and Borders”, 2023.(人権監視団)</p>
+                <p>Privacy International, “Toward Regulation: Addressing the Legal Void in Facial Recognition Technology”, 2025.(インターネットポリシーレビュー)</p>
+                <p>Washington Post, New Orleans pushes to legalize police use of “facial surveillance”, 2025.(techreg.org)</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ナビゲーション制御 (Page4/5/6から流用)
+        let navTimer;
+        const navContainer = document.querySelector('.nav-container');
+        
+        function showNav() {
+            navContainer.classList.remove('hidden');
+            clearTimeout(navTimer);
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 7000);
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientY < 120) {
+                showNav();
+            }
+        });
+        
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(navTimer);
+        });
+        
+        navContainer.addEventListener('mouseleave', () => {
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 3000);
+        });
+        
+        showNav();
+
+        // スクロールアニメーション (Page4/5/6から流用)
+        function handleScroll() {
+            const sections = document.querySelectorAll('.content-section');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+
+            updateTOC();
+        }
+
+        // TOC制御 (Page4/5/6から流用)
+        function updateTOC() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 250) {
+                    currentSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            setTimeout(handleScroll, 100);
+            initializeCharts(); // Chart.jsの初期化呼び出し
+        });
+
+        // スムーススクロール (Page4/5/6から流用)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Chart.js初期化
+        function initializeCharts() {
+            // 顔認証市場の成長を示すシンプルな棒グラフ
+            const chartEl = document.getElementById('facialRecognitionMarketChart');
+            if (chartEl) {
+                const ctx = chartEl.getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['2023年', '2028年（予測）'],
+                        datasets: [{
+                            label: '顔認証市場規模（十億ドル）',
+                            // データ出典：
+                            // MarketsandMarkets, Facial Recognition Market – Global Forecast to 2028
+                            // 2023年：6.3B USD, 2028年：13.4B USD
+                            data: [6.3, 13.4],
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.7)',  // 青 (2023)
+                                'rgba(239, 68, 68, 0.7)'   // 赤 (2028)
+                            ],
+                            borderColor: [
+                                '#3B82F6',
+                                '#EF4444'
+                            ],
+                            borderWidth: 1,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                suggestedMax: 15,
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                title: {
+                                    display: true,
+                                    text: '市場規模（十億ドル）',
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '年',
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                },
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                padding: 16,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function (context) {
+                                        return '約 ' + context.parsed.y + ' 十億ドル';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                handleScroll();
+            }, 250);
+        });
+    </script>
+</body>
+</html>
