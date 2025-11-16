@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>発展論：偽造 - ディープフェイク時代の真実とAI倫理</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* Page4から継承する基本スタイル */
+        :root{
+            --primary-color: #8B7355;
+            --primary-light: #F5F0E8;
+            --primary-dark: #6B5745;
+            --accent-color: #C9A961;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --solution: #3B82F6; 
+            --solution-light: #EFF6FF;
+        }
+    </style>
+        <style>
+        /* ページ固有: ナビゲーションのボーダー色 */
+        .navigation {
+            border-color: rgba(139, 115, 85, 0.2);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            box-shadow: 0 8px 24px rgba(139, 115, 85, 0.4);
+        }
+
+        /* Page4や前回の発展論から継承するスタイル */
+
+        /* 引用ブロック */
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 24px;
+            margin: 32px 0;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            background-color: var(--primary-light);
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-right: 24px;
+            border-radius: 0 8px 8px 0;
+        }
+        blockquote footer {
+            margin-top: 12px;
+            font-style: normal;
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+            text-align: right;
+        }
+
+        /* 警告・ハイライトボックス */
+        .warning-box, .highlight-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 32px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .highlight-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary-dark);
+        }
+        .warning-box {
+            border-left: 4px solid var(--warning);
+        }
+        .warning-box .highlight-title {
+            color: var(--warning);
+        }
+
+        /* 参考文献 */
+        .references p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        /* グラフコンテナ */
+        .chart-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            height: 450px; /* グラフの高さ指定 */
+        }
+
+        /* リスト（対策など） */
+        .solution-list {
+            display: grid;
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .solution-item {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border-left: 4px solid var(--solution); /* 青色 */
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        .solution-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        .solution-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--solution); /* 青色 */
+            margin-bottom: 12px;
+        }
+        .solution-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="page2.html" class="nav-link">序論</a></li>
+                <li><a href="page3.html" class="nav-link">系譜</a></li>
+                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
+                <li><a href="page4.html" class="nav-link">両義</a></li>
+                <li><a href="page4_advance.html" class="nav-link active">偽造</a></li>
+                <li><a href="page5.html" class="nav-link">自己</a></li>
+                <li><a href="page6.html" class="nav-link">資本</a></li>
+                <li><a href="page7.html" class="nav-link">記憶</a></li>
+                <li><a href="page8.html" class="nav-link">未来</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <nav class="table-of-contents">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li class="toc-item"><a href="#section1" class="toc-link">1. ディープフェイクとは何か</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">2. 民主主義とプライバシーの危機</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">3. 見抜けない人間、追いつかない技術</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">4. 法整備の現在地</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">5. クリエイターの権利と著作権</a></li>
+            <li class="toc-item"><a href="#section6" class="toc-link">6. 「信頼できる情報源」の再定義</a></li>
+            <li class="toc-item"><a href="#section7" class="toc-link">7. 筆者の視点</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div class="page-subtitle">Page 4 - 発展論</div>
+            <h1 class="page-title">偽装</h1>
+            <p class="page-description">
+                「この動画、本当に本物かな？」
+            </p>
+            <p class="content-paragraph">
+                SNSのタイムラインを流れてくる映像や音声に対して、そんな疑いを抱く場面が増えてきました。本論「両義」では、SNSが真実と虚構のあいだを揺らし、フェイクニュースや認知バイアスによって私たちの判断を歪めていく構造を見てきました。
+            </p>
+            <p class="content-paragraph">
+                その延長線上にあるのが、この発展論で扱う「ディープフェイク」です。AIによって生成された「本物そっくりの偽の映像・音声」は、もはや専門家でさえ一見して見抜くことが難しい段階にまで達しています。2024年の世界経済フォーラムの「グローバル・リスク報告書」では、AIによる偽情報・誤情報が「最も深刻な短期的リスク」として挙げられました。([AP News][1])
+            </p>
+            <p class="content-paragraph">
+                ここでは、本論で扱った「情報の両義性」を、ディープフェイクという最新の技術的・政治的課題に引きつけながら掘り下げていきます。技術の仕組み、政治的悪用の実例、検証技術と法整備の限界、そして「信頼できる情報源とは何か」をあらためて問い直してみます。
+            </p>
+        </header>
+
+        <section id="section1" class="content-section">
+            <h2 class="section-title">1. ディープフェイクとは何か：本物らしさを作る技術</h2>
+            
+            <h3 class="subsection-title">1-1. 画像・映像・声が「学習される」仕組み</h3>
+            <p class="content-paragraph">
+                ディープフェイクは、もともとディープラーニング（深層学習）を用いた合成画像・動画の総称として使われてきました。初期にはGAN（Generative Adversarial Networks）という「生成するAI」と「見破ろうとするAI」を競わせる枠組みが主流でしたが、現在は拡散モデルなど、より高精度な手法が一般化しています。
+            </p>
+            <p class="content-paragraph">
+                顔のディープフェイクでは、大量の顔画像や動画をAIに学習させ、「この人ならこう笑う」「こういう角度で顔が動く」というパターンを抽象的に捉えさせます。その上で、別人の顔や身体に「貼り付ける」ことで、あたかもその人が実際に喋ったり動いたりしているかのような映像を作り出します。声のディープフェイクも同様で、数十秒～数分の音声サンプルから話者の声質・抑揚・癖を学習し、任意の文章を「その人の声」で読み上げることができます。
+            </p>
+            <p class="content-paragraph">
+                かつては高度なプログラミングスキルと計算資源が必要でしたが、今ではブラウザ上で使えるサービスや低価格のアプリが普及し、「専門家でなくても短時間で作れる」段階に入っています。([aiasiapacific.org][2])
+            </p>
+
+            <h3 class="subsection-title">1-2. 数字で見る「爆発的な増加」</h3>
+            <p class="content-paragraph">
+                ディープフェイクの量は、ここ数年で急増しています。ある調査によれば、オンライン上で確認されたディープフェイク動画は2019年から2023年の間に約550％増加し、2023年時点で約9万5千本に達したと推計されています。([Spiralytics][3])
+            </p>
+            <p class="content-paragraph">
+                また、企業の不正検知レポートでは、2022年から2023年の1年で、業界全体で検出されたディープフェイクによる不正が「10倍」に増えたと報告されています。([aiasiapacific.org][2]) これらの数字は、ディープフェイクが一部のマニアの遊びではなく、犯罪や詐欺、情報操作の手段として現実に使われ始めていることを示しています。
+            </p>
+        </section>
+
+        <section id="section2" class="content-section">
+            <h2 class="section-title">2. 民主主義とプライバシーを揺るがす具体例</h2>
+
+            <h3 class="subsection-title">2-1. 選挙を狙う「偽の声」：バイデン大統領ロボコール事件</h3>
+            <p class="content-paragraph">
+                2024年1月、アメリカ・ニューハンプシャー州の予備選挙を前に、有権者の元に「投票に行かないよう呼びかける」ロボコールが届きました。電話の音声は、アメリカ大統領ジョー・バイデン氏に極めてよく似た声で、有権者に投票を控えるよう促す内容でした。しかし後に、これはAIで生成された偽の音声であることが判明し、関与した政治コンサルタントは連邦通信委員会から高額の罰金を科されることになります。([AP News][4])
+            </p>
+            <p class="content-paragraph">
+                この事件は、ディープフェイクが「投票する／しない」という個々人の行動に直接介入し得ることを示しました。本論「両義」で扱ったフェイクニュースは、主にテキストや画像による印象操作でしたが、ディープフェイク音声は「本人からのメッセージ」のように装い、人々の判断により直接的な影響を与えます。
+            </p>
+
+            <h3 class="subsection-title">2-2. 選挙結果そのものへの不信感：スロバキアの事例</h3>
+            <p class="content-paragraph">
+                2023年のスロバキア総選挙では、投票直前に「ある政治家が選挙不正を話しているように聞こえるディープフェイク音声」がSNSで拡散されました。後に偽物と判明したものの、拡散のタイミングや内容から、選挙の公正性への疑念が広がったと報じられています。([Misinformation Review][5])
+            </p>
+            <p class="content-paragraph">
+                ここで重要なのは、実際にディープフェイクが結果をどれほど動かしたかではなく、「本物かどうか分からない」という不信感そのものが民主主義の基盤を揺るがす、という点です。
+            </p>
+
+            <h3 class="subsection-title">2-3. 非同意ポルノと若者への被害</h3>
+            <p class="content-paragraph">
+                ディープフェイクは政治だけでなく、個人の尊厳を深く傷つける形でも使われています。オランダの調査会社Sensityは2019年の段階で、オンライン上のディープフェイク動画の約96％が女性を標的とした性的な内容であると報告しました。([Facebook][6])
+            </p>
+            <p class="content-paragraph">
+                さらに、子どもの権利団体Thornが2025年に発表した調査では、10代の約8人に1人が「ディープフェイクのヌード画像の被害に遭った、もしくはそうした被害に遭った友人を知っている」と回答しています。([Thorn][7])
+            </p>
+            <p class="content-paragraph">
+                これらの被害は、多くの場合、SNSに投稿された日常の写真が勝手に利用される形で起こります。一度ネット上に拡散された画像や動画は完全に消すことが難しく、被害者は長期にわたって不安と恐怖にさらされることになります。
+            </p>
+        </section>
+
+        <section id="section3" class="content-section">
+            <h2 class="section-title">3. 見抜けない人間、追いつかない検証技術</h2>
+
+            <h3 class="subsection-title">3-1. 「自分は見抜ける」という自信と現実のギャップ</h3>
+            <p class="content-paragraph">
+                興味深いのは、人々の「自信」と現実とのずれです。2025年の調査では、「自分はディープフェイクを見抜けると思う」と答えた人が約6割に達している一方で、実際に高品質なディープフェイク動画を見抜けた人は、平均して24.5％にとどまることが報告されています。([Keepnet Labs][8])
+            </p>
+            <p class="content-paragraph">
+                さらに、実験条件が整った環境であっても、ディープフェイク画像全体に対する人間の平均判別精度は約55.5％、動画の「高品質ディープフェイク」に限定すると、正解率は24.5％まで落ち込むという研究結果もあります。([サイエンスダイレクト][9], [Keepnet Labs][8]などに基づく再構成)
+            </p>
+            
+            <div class="highlight-box">
+                <div class="highlight-title" style="text-align: center;">グラフ：ディープフェイク判別における「自信」と「現実」</div>
+                <p class="content-paragraph" style="text-align: center; color: var(--text-light);">（この章では、上記のデータをもとに「自信」と「実際の正解率」の差を示す棒グラフをChart.jsで表示します）</p>
+                <div class="chart-container">
+                    <canvas id="deepfakeConfidenceChart"></canvas>
+                </div>
+            </div>
+
+            <p class="content-paragraph">
+                このギャップは、「自分は騙されない」という過信が、かえって偽情報への脆弱性を高めてしまう危険を示しています。本論「両義」で扱った認知バイアス――とくに「自分だけは正しく判断できる」という思い込み――が、ディープフェイク時代にはさらに致命的な弱点になり得ます。
+            </p>
+
+            <h3 class="subsection-title">3-2. AI検出ツールの限界</h3>
+            <p class="content-paragraph">
+                もちろん、ディープフェイクを検出するためのAIツールも急速に開発されています。研究レポートによれば、実験室レベルでは検出AIが高い精度を示す一方、実際のネット空間に出てくる新種のディープフェイクに対しては、精度が半分程度まで落ちることも報告されています。([Keepnet Labs][8])
+            </p>
+            <p class="content-paragraph">
+                つまり、「人間の目」と「検出AI」のどちらか一方に頼るだけでは十分ではなく、技術と運用ルール、そして社会全体のリテラシーを組み合わせた多層的な対策が必要になります。
+            </p>
+        </section>
+
+        <section id="section4" class="content-section">
+            <h2 class="section-title">4. 法整備の現在地：各国はどこまで追いついているか</h2>
+
+            <h3 class="subsection-title">4-1. EU：AI法とディープフェイク表示義務</h3>
+            <p class="content-paragraph">
+                欧州連合（EU）は、AI全般を対象とした包括的な「AI法（AI Act）」を採択し、その中でディープフェイクを含むAI生成コンテンツに対して「AIによる生成・改変であることを明示する義務」を課しています。([EU人工知能法][10])
+            </p>
+            <p class="content-paragraph">
+                2026年以降、EU域内でサービスを提供するプラットフォームやAI事業者は、AI生成コンテンツにラベルを付けるなど、一定の透明性措置を取らなければなりません。スペインでは、こうした義務に違反した企業に対して、最大3,500万ユーロまたは年間売上の7％という高額の罰金を科す法案も準備されています。([Reuters][11])
+            </p>
+
+            <h3 class="subsection-title">4-2. 中国：ディープシンセシス規制</h3>
+            <p class="content-paragraph">
+                中国では、2023年に「インターネット情報サービスのディープシンセシス管理規定」が施行され、AIによる合成コンテンツを提供する事業者に対して、利用者の同意取得、ラベリング、違法利用の監視などを義務づけています。([A&O Shearman][12])
+            </p>
+            <p class="content-paragraph">
+                これらの規制は、偽情報だけでなく、詐欺や名誉毀損、プライバシー侵害を防ぐことを目的としていますが、一方で表現の自由や政治的表現への影響についても議論が続いています。
+            </p>
+
+            <h3 class="subsection-title">4-3. アメリカ：パッチワーク型の規制</h3>
+            <p class="content-paragraph">
+                アメリカでは、連邦レベル・州レベルでさまざまな法案が並行して進んでいます。性的なディープフェイクに関しては、被害者が民事訴訟を起こせるようにするDEFIANCE法案や、非同意の親密画像を削除させることを目的とした「Take It Down Act」などが議論され、2025年には非同意の親密画像（AI生成を含む）を対象とした連邦法が成立しています。([Thomson Reuters][13])
+            </p>
+            <p class="content-paragraph">
+                一方で、選挙広告や政治的ディープフェイクを規制する法律は州ごとにばらつきがあり、表現の自由との線引きが難しい状況が続いています。
+            </p>
+
+            <h3 class="subsection-title">4-4. 日本：非同意画像とガイドライン中心の対応</h3>
+            <p class="content-paragraph">
+                日本では、もともと「リベンジポルノ防止法」など、非同意の性的画像の公開を規制する法制度が整備されてきました。近年は、AIによる偽画像もこれらの枠組みで摘発されるようになり、2025年には女性芸能人の顔を無断で合成したディープフェイク画像の作成・拡散で逮捕者が出ました。([リアリティディフェンダー][14])
+            </p>
+            <p class="content-paragraph">
+                さらに2025年には、政府がAI利用に関する新たなガイドライン案を公表し、官民でディープフェイク対策やAIリテラシー向上に取り組む方針が示されています。ただし、EUのような明確なラベリング義務や包括的なAI規制法はまだ議論の途上にあります。([Anadolu Ajansı][15])
+            </p>
+        </section>
+
+        <section id="section5" class="content-section">
+            <h2 class="section-title">5. クリエイターの権利と著作権：AI時代の「盗まれる声と顔」</h2>
+
+            <h3 class="subsection-title">5-1. 顔と声は「データ」なのか「人格」なのか</h3>
+            <p class="content-paragraph">
+                俳優や声優、アーティストの顔や声が、本人の許可なくAIの学習データとして使われるケースが問題になっています。著作権法は、作品（映画・音源・イラストなど）を保護する枠組みを提供しますが、「特定の人の声質」や「顔の特徴」そのものは、必ずしも明確に保護されているわけではありません。
+            </p>
+            <p class="content-paragraph">
+                このため、本人の出演していないCMや映像が「AIによって勝手に生成される」状況が現れつつあり、欧米では俳優組合がストライキで使用条件の明確化を求めるなど、新たな交渉が始まっています。([MDPI][16])
+            </p>
+
+            <h3 class="subsection-title">5-2. 著作権と学習データの問題</h3>
+            <p class="content-paragraph">
+                生成AI全般に共通する問題として、「著作権で保護された作品を学習させてよいのか」「学習済みモデルの出力は二次的著作物と言えるのか」といった論点があります。これについては各国で議論が続いており、一律の答えは出ていません。
+            </p>
+            <p class="content-paragraph">
+                ディープフェイクの場合はさらに、肖像権やパブリシティ権、名誉毀損など、複数の法領域が交差します。単に「技術的に可能だからやってよい」という問題ではなく、「人の顔や声をどう扱うか」という倫理的な問いが中心にあるべきだと言えるでしょう。([Misinformation Review][5])
+            </p>
+        </section>
+
+        <section id="section6" class="content-section">
+            <h2 class="section-title">6. 「信頼できる情報源」を再定義する</h2>
+
+            <h3 class="subsection-title">6-1. 「本物っぽさ」から「検証可能性」へ</h3>
+            <p class="content-paragraph">
+                ディープフェイク時代に、「信頼できる情報源」をどう捉え直すべきでしょうか。重要なのは、「どれだけ本物っぽく見えるか」ではなく、「どれだけ検証可能か」という基準です。
+            </p>
+            <p class="content-paragraph">
+                具体的には、以下のような観点が考えられます。
+            </p>
+            <ul>
+                <li><strong>発信主体の透明性：</strong>誰が、どの立場から発信しているのかが明示されているか</li>
+                <li><strong>検証プロセスの存在：</strong>ニュースメディアであれば、編集部による事実確認プロセスが機能しているか</li>
+                <li><strong>訂正文化：</strong>誤りがあったときに、訂正や謝罪がきちんと公表されるか</li>
+                <li><strong>コンテクストの提示：</strong>切り取られた映像や発言だけでなく、前後の文脈が示されているか</li>
+            </ul>
+            <p class="content-paragraph">
+                Reuters Instituteのデジタルニュース・レポートによれば、多くの国で「AIによるニュース生成」への不信感が高まっている一方で、「信頼できるニュースブランド」を選んで情報を取ろうとする動きも見られます。([Reuters][17])
+            </p>
+
+            <h3 class="subsection-title">6-2. 個人にできる具体的な対策</h3>
+            <p class="content-paragraph">
+                個人レベルでも、いくつかのシンプルな行動でリスクを減らすことができます。
+            </p>
+
+            <div class="solution-list">
+                <div class="solution-item">
+                    <div class="solution-title">1. 感情が強く揺さぶられたときほど一呼吸おく</div>
+                    <div class="solution-description">
+                        怒り・不安・驚きが強く湧いたときほど、「シェアする前にいったん止まる」ことを習慣にする。
+                    </div>
+                </div>
+                <div class="solution-item">
+                    <div class="solution-title">2. 発信元と二次情報の区別を意識する</div>
+                    <div class="solution-description">
+                        まとめサイトや切り抜き動画ではなく、元の発言・元の映像にさかのぼって確認する。
+                    </div>
+                </div>
+                <div class="solution-item">
+                    <div class="solution-title">3. ファクトチェック機関や信頼できるメディアをブックマークしておく</div>
+                    <div class="solution-description">
+                        自分なりの「確認用ルート」をあらかじめ用意しておくことで、「気になったときに調べやすい」状態を作る。
+                    </div>
+                </div>
+                <div class="solution-item">
+                    <div class="solution-title">4. 自分や友人の画像の扱いに注意する</div>
+                    <div class="solution-description">
+                        公開範囲を絞る、顔がはっきり分かる写真をむやみに公開しない、といった基本的なセルフプロテクションも、ディープフェイク被害のリスクを下げる一助になります。([欧州議会][18])
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="section7" class="content-section">
+            <h2 class="section-title">7. 筆者の視点：それでも「真実をあきらめない」ために</h2>
+            
+            <p class="content-paragraph">
+                最後に、このテーマについての筆者自身の考えをまとめておきます。
+            </p>
+            <p class="content-paragraph">
+                正直に言えば、ここまで見てきた状況はかなり重たいものです。技術のスピードに法制度も教育も追いつかず、「何が本当か分からない」という空気が社会全体に広がれば、民主主義も日常の人間関係も、ゆっくりと信頼を失っていくかもしれません。
+            </p>
+            <p class="content-paragraph">
+                それでも私は、「真実」という言葉を簡単にあきらめるべきではないと思っています。
+            </p>
+            <p class="content-paragraph">
+                ディープフェイクは、確かに「目で見たもの＝真実」という前提を壊しました。しかし、それは同時に、これまで当然視してきた「信じ方」を問い直すチャンスでもあります。私たちは、映像や音声のリアルさだけに頼らず、「誰が、どんな背景で、どんな目的で発信しているのか」をセットで考える習慣を身につける必要があります。
+            </p>
+            <p class="content-paragraph">
+                本論「両義」で扱ったように、SNSはもともと光と影を併せ持つメディアでした。ディープフェイクは、その「影」の部分を極端な形で可視化化しただけかもしれません。だからこそ、技術を一方的に恐れるのではなく、
+            </p>
+            <ul>
+                <li>技術の中身を知ること</li>
+                <li>被害に遭った人の声に耳を傾けること</li>
+                <li>法制度やプラットフォームのあり方に市民として関心を持ち、必要ならば改善を求めること</li>
+            </ul>
+            <p class="content-paragraph">
+                こうした地道な積み重ねで、「偽装」に対して社会全体の免疫を少しずつ高めていくことが大切だと考えています。
+            </p>
+
+            <div class="warning-box">
+                <div class="highlight-title">「何を信じるか」を他人任せにしない</div>
+                <p>ディープフェイクの時代に、「何を信じるか」を完全に他人任せにすることはできません。私たち一人ひとりが、「疑い続ける」ことと「信頼を作り直す」こと、その両方を手放さない姿勢が求められているのだと思います。</p>
+            </div>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <a href="page5.html" class="next-page-button">
+                    次ページ「自己」
+                </a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h3 class="subsection-title">参考文献</h3>
+            <div class="references">
+                <p>Chesney, R., & Citron, D. (2019). Deepfakes and the new disinformation war: The coming age of post-truth geopolitics. *Foreign Affairs*. ([Misinformation Review][5])</p>
+                <p>Spiralytics (2024). *70 Deepfake Statistics You Need To Know*. ([Spiralytics][3])</p>
+                <p>Views4You (2025). *Deepfake Statistical Data (2023–2025)*. ([Views4You][19])</p>
+                <p>Somoray, K. et al. (2023). Providing detection strategies to improve human ability to identify deepfakes. ([サイエンスダイレクト][9])</p>
+                <p>Keepnet Labs (2025). *Deepfake Statistics & Trends 2025*. ([Keepnet Labs][8])</p>
+                <p>Reuters Institute for the Study of Journalism (2024). *Digital News Report 2024*. ([Other News - Voices against the tide][20])</p>
+                <p>World Economic Forum (2024). *Global Risks Report 2024*. ([AP News][1])</p>
+                <p>European Union (2024–2025). AI Act, Article 50 and Code of Practice on AI-generated content. ([EU人工知能法][10])</p>
+                <p>Cyberspace Administration of China (2023). *Provisions on the Administration of Deep Synthesis of Internet Information Services*. ([A&O Shearman][12])</p>
+                <p>Thorn (2025). *Deepfake Nudes & Young People*. ([Thorn][7])</p>
+                <p>Thomson Reuters Practical Law (2024). *Deepfakes: Federal and state regulation aims to curb a growing threat*. ([Thomson Reuters][13])</p>
+                <p>Reality Defender (2025). *The State of Deepfake Regulations in 2025*. ([リアリティディフェンダー][14])</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ナビゲーション制御 (Page4から流用)
+        let navTimer;
+        const navContainer = document.querySelector('.nav-container');
+        
+        function showNav() {
+            navContainer.classList.remove('hidden');
+            clearTimeout(navTimer);
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 7000);
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (e.clientY < 120) {
+                showNav();
+            }
+        });
+        
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(navTimer);
+        });
+        
+        navContainer.addEventListener('mouseleave', () => {
+            navTimer = setTimeout(() => {
+                navContainer.classList.add('hidden');
+            }, 3000);
+        });
+        
+        showNav();
+
+        // スクロールアニメーション (Page4から流用)
+        function handleScroll() {
+            const sections = document.querySelectorAll('.content-section');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+
+            updateTOC();
+        }
+
+        // TOC制御 (Page4から流用)
+        function updateTOC() {
+            const sections = document.querySelectorAll('.content-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 250) {
+                    currentSection = section.id;
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', () => {
+            setTimeout(handleScroll, 100);
+            initializeCharts(); // Chart.jsの初期化呼び出し
+        });
+
+        // スムーススクロール (Page4から流用)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Chart.js初期化
+        function initializeCharts() {
+            // ディープフェイクの「自信」と「実際の正解率」のギャップを示すグラフ
+            // データ出典：Keepnet Labs (2025), eftsure (2025), 各種実験研究より再構成
+            const chartEl = document.getElementById('deepfakeConfidenceChart');
+            if (chartEl) {
+                const ctx = chartEl.getContext('2d');
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            '自分は見抜けると思う人の割合',
+                            '高品質ディープフェイク動画の実際の正解率',
+                            'ディープフェイク画像全体の平均正解率'
+                        ],
+                        datasets: [{
+                            label: '割合（％）',
+                            data: [60, 24.5, 55.5],
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.7)', // 青 (自信)
+                                'rgba(239, 68, 68, 0.7)',  // 赤 (動画正解率)
+                                'rgba(245, 158, 11, 0.7)'  // 黄 (画像正解率)
+                            ],
+                            borderColor: [
+                                '#3B82F6',
+                                '#EF4444',
+                                '#F59E0B'
+                            ],
+                            borderWidth: 1,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: '％',
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                },
+                                grid: { color: 'rgba(0, 0, 0, 0.06)' },
+                                ticks: {
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    maxRotation: 0,
+                                    minRotation: 0,
+                                    font: { size: 12 },
+                                    color: '#718096'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                                padding: 16,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y + '％';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                handleScroll();
+                // 必要であればグラフの再描画処理をここに追加
+            }, 250);
+        });
+    </script>
+</body>
+</html>
