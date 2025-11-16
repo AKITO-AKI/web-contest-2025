@@ -102,6 +102,8 @@ body {
 		--card-color-1: #10B981;
 		--card-color-2: #059669;
 }
+
+
 /* ヘッダー個別カラー設定 */
 .nav-link:hover[data-theme="normal"][data-page="intro"] {
 		--primary-color: #667eea;
