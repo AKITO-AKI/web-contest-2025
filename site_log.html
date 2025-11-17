@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>@IronY 制作ログ / Workshop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-top: #f7fafc;
+      --bg-bottom: #dde7f6;
+      --ink: #111827;
+      --muted: #6b7280;
+
+      --primary: #0ea5e9;
+      --primary-soft: rgba(14, 165, 233, 0.12);
+      --accent-line: rgba(15, 23, 42, 0.06);
+
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-border: rgba(15, 23, 42, 0.06);
+
+      --radius-xl: 24px;
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.12);
+      --timing-snappy: cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro JP", "Yu Gothic", "Hiragino Sans", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at top, #ffffff 0%, var(--bg-top) 40%, var(--bg-bottom) 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .log-shell {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    /* 背景：クイズページと同系統の高次元グリッド */
+
+    .log-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .log-bg::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -140px;
+      width: 180vw;
+      height: 180vh;
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.16) 1px, transparent 1px),
+        linear-gradient(to top, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+      background-size: 80px 80px;
+      transform-origin: center top;
+      transform: perspective(1200px) rotateX(74deg) translateX(-50%) translateY(10px) scale(0.98);
+      opacity: 0;
+      animation:
+        grid-build 1.4s var(--timing-snappy) forwards,
+        grid-drift 26s linear 1.4s infinite alternate;
+    }
+
+    .log-bg::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 60px;
+      width: 520px;
+      height: 520px;
+      transform: translateX(-50%);
+      background:
+        radial-gradient(circle at center,
+          rgba(14, 165, 233, 0.18) 0,
+          rgba(14, 165, 233, 0.0) 60%);
+      filter: blur(2px);
+      opacity: 0;
+      animation: halo-pulse 2.8s ease-out 0.8s forwards infinite alternate;
+    }
+
+    @keyframes grid-build {
+      0% {
+        opacity: 0;
+        transform: perspective(1200px) rotateX(80deg) translateX(-50%) translateY(40px) scale(0.9);
+      }
+      60% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0.92;
+        transform: perspective(1200px) rotateX(74deg) translateX(-50%) translateY(10px) scale(0.98);
+      }
+    }
+
+    @keyframes grid-drift {
+      0% {
+        transform: perspective(1200px) rotateX(74deg) translateX(-50%) translateY(10px) scale(0.98);
+      }
+      100% {
+        transform: perspective(1200px) rotateX(74deg) translateX(-52%) translateY(-4px) scale(1.02);
+      }
+    }
+
+    @keyframes halo-pulse {
+      0% {
+        opacity: 0.0;
+        transform: translateX(-50%) scale(0.9);
+      }
+      100% {
+        opacity: 0.75;
+        transform: translateX(-50%) scale(1.05);
+      }
+    }
+
+    /* コンテンツレイヤー */
+
+    .log-layer {
+      position: relative;
+      z-index: 1;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 80px 24px 112px;
+    }
+
+    .log-header {
+      max-width: 720px;
+      margin-bottom: 40px;
+    }
+
+    .log-eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .log-title {
+      font-size: 2.2rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    .log-lead {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .log-main {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    /* フィルタ（タグ） */
+
+    .log-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .log-filter-chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .log-filter-chip:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+    }
+
+    .log-filter-chip.is-active {
+      background: radial-gradient(circle at top left, var(--primary-soft), #ffffff);
+      border-color: var(--primary);
+      color: var(--ink);
+    }
+
+    /* 記事一覧（左） */
+
+    .log-list {
+      max-height: 640px;
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148, 163, 184, 0.7) transparent;
+    }
+
+    .log-list::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .log-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .log-list::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.7);
+      border-radius: 999px;
+    }
+
+    .log-item {
+      position: relative;
+      padding: 14px 14px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      transition:
+        border-color 0.22s ease,
+        box-shadow 0.22s ease,
+        transform 0.22s ease,
+        background 0.22s ease;
+      margin-bottom: 10px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .log-item-thumbnail {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.1), rgba(148, 163, 184, 0.3));
+    }
+
+    .log-item-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .log-item-main {
+      min-width: 0;
+    }
+
+    .log-item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+      align-items: center;
+    }
+
+    .log-item-date {
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .log-item-author {
+      opacity: 0.9;
+    }
+
+    .log-item-tag-badge {
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .log-item-title {
+      font-size: 0.95rem;
+      margin: 0 0 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .log-item-excerpt {
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .log-item-badge-new {
+      position: absolute;
+      top: 9px;
+      right: 12px;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+
+    .log-item::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid transparent;
+      pointer-events: none;
+      transition: border-color 0.25s ease;
+    }
+
+    .log-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary-soft);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.98), rgba(226, 232, 240, 0.9));
+    }
+
+    .log-item.is-active {
+      border-color: var(--primary);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.2);
+      background: linear-gradient(120deg, rgba(14, 165, 233, 0.08), rgba(255, 255, 255, 0.98));
+    }
+
+    /* 詳細（右） */
+
+    .log-detail {
+      padding: 22px 24px 22px;
+      border-radius: var(--radius-xl);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow-soft);
+      min-height: 260px;
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .log-detail-inner {
+      opacity: 0;
+      transform: translateY(8px);
+      animation: detail-in 0.45s var(--timing-snappy) forwards;
+    }
+
+    @keyframes detail-in {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .log-detail-placeholder {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .log-detail-meta-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px 14px;
+      margin-bottom: 8px;
+    }
+
+    .log-detail-date {
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .log-detail-author {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .log-detail-role {
+      font-size: 0.75rem;
+      color: var(--muted);
+      opacity: 0.9;
+    }
+
+    .log-detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+      margin-bottom: 8px;
+    }
+
+    .log-detail-tag {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .log-detail-title {
+      font-size: 1.25rem;
+      margin: 0 0 10px;
+    }
+
+    .log-detail-thumbnail {
+      margin-bottom: 14px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.04), rgba(148, 163, 184, 0.18));
+    }
+
+    .log-detail-body {
+      font-size: 0.95rem;
+      line-height: 1.9;
+      color: var(--ink);
+    }
+
+    .log-detail-body p {
+      margin: 0 0 0.9em;
+    }
+
+    .log-detail-body ul,
+    .log-detail-body ol {
+      margin: 0 0 0.9em 1.2em;
+      padding: 0;
+    }
+
+    .log-detail-body li {
+      margin-bottom: 0.4em;
+    }
+
+    .log-detail-body em {
+      font-style: normal;
+      background: linear-gradient(120deg, rgba(14, 165, 233, 0.16), rgba(255, 255, 255, 0));
+      padding: 0 2px;
+      border-radius: 4px;
+    }
+
+    .log-detail-footer-note {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .log-detail-footer-note span {
+      opacity: 0.85;
+    }
+
+    @media (max-width: 960px) {
+      .log-main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .log-list {
+        max-height: none;
+        margin-bottom: 18px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .log-layer {
+        padding-top: 64px;
+        padding-bottom: 80px;
+      }
+
+      .log-title {
+        font-size: 1.7rem;
+      }
+
+      .log-detail {
+        padding: 18px 18px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="log-shell">
+    <div class="log-bg"></div>
+
+    <div class="log-layer">
+      <header class="log-header">
+        <p class="log-eyebrow">@IronY Workshop</p>
+        <h1 class="log-title">制作ログ</h1>
+        <p class="log-lead">
+          このページでは、@IronY をかたちづくる過程で生まれたこだわりや迷い、小さな発見を、制作チーム自身の言葉で記録していきます。<br>
+          本編とは少し違うテンポで、「つくり手」の人間らしさをのぞいてみてください。
+        </p>
+      </header>
+
+      <main class="log-main">
+        <aside>
+          <div class="log-filters" id="log-filters">
+            <!-- JSでタグフィルタ生成（All / Art / Code / Writing / Team 等） -->
+          </div>
+
+          <div class="log-list" id="log-list">
+            <!-- JSで記事カード生成 -->
+          </div>
+        </aside>
+
+        <article class="log-detail" id="log-detail">
+          <p class="log-detail-placeholder">
+            左の制作ログから、気になるカードを選んでください。<br>
+            ここに、制作の裏側のストーリーが表示されます。
+          </p>
+        </article>
+      </main>
+    </div>
+  </section>
+
+  <script>
+    // ここに記事データを書き足していけば更新できるゾーン♡
+    // date は "YYYY-MM-DD" 形式にしておくと自動で新しい順にソートされます。
+
+    const posts = [
+      {
+        id: "001",
+        title: "サイトマップに込めた「視え方」のデザイン",
+        author: "タカクラ",
+        role: "Design / Code",
+        date: "2025-11-10",
+        tags: ["Art", "Code"],
+        thumbnail: "images/log/polyhedron-preview.webp", // 画像がなければ null か "" に
+        imageAlt: "多面体サイトマップのワイヤーフレーム",
+        body: `
+          <p>
+            サイトマップはいわばこのサイトの脳を司る重要な部分であり、デザインの領域を任せてもらった私にとってはこの上なくワクワクし、同時に大きな責任を感じるタスクでした。
+            本編のテーマである「SNS上の情報空間の構造」ですが、私はこれを<em>「大きな一つのオブジェクト」</em>としてビジュアル化できないかと考えました。
+            SNSとは何かチームメンバーと議論を重ねていく中で、「情報は一つの物事を見る角度によって変容していく」という重要な観点に目をつけました。
+            これこそが単純でありながら、情報というものの本質的な性質を捉えていると感じたのです。
+            しかし、この「見る角度によって変わる」という性質を、どのようにしてサイトマップに落とし込むかが大きな課題でした。
+          </p>
+          <p>
+            最初は立方体や球体も試しましたが、<em>「どの面も同じに見えてしまう」</em>という問題がありました。
+            本編には「序論／系譜／両義／自己／資本／記憶」という6つの軸があり、それぞれが対等でありながら、微妙に重さや距離感が違います。
+            内容も全く異なるかと思えば、その全ては地続きで一つの大きなテーマを形作っている。
+            まさしくそれって「多面体」の性質そのものだと思いましたね。
+          </p>
+          <p>
+            そこで採用したのが、<em>面の数が多く、見る角度によって関係性が変わって見える多面体</em>です。
+            面の選択に連動してカメラがふわっと寄るのは、「その章の本質を覗いていく」感覚を出したかったからなんですね。
+            また、背景のグリッドをゆっくりドリフトさせることで、この多面体が「静止していない情報空間」に浮かんでいるというニュアンスも込めています。
+          </p>
+          <p>
+            今までWebデザインやCGなど様々な分野を横断してきましたが、「かっこよさ」を理論立てて追及したのは今回が初めてでした。
+            皆さんにとってはこのサイトマップは、単なるナビゲーションであり、交差点でしょう。
+            しかし僕にとってここは私の集合知であり、アートの本質とは何か、@IronYが、そしてSNSという情報群が何であるかを私なりに表現した一枚のキャンパスでもあります。
+          </p>
+        `
+      },
+      {
+        id: "002",
+        title: "僕たちの「@IronY」",
+        author: "ショウジ",
+        role: "Writing / Concept",
+        date: "2025-07-26",
+        tags: ["Concept", "Naming"],
+        thumbnail: "",
+        imageAlt: "",
+        body: `
+          <p>
+            エンジニアとして、そしてこのプロジェクトのリーダーとして、最初の仕事とも言えるのが「サイト名の決定」でした。
+            サイト名は、そのプロジェクト全員の想いを背負うものであり、これからの方向性を示すコンパスにもなると考えてます。
+            だからこそ、安直な名前にはしたくありませんでした。
+            ここだけの話、去年も何人か共通のメンバーでこの全国中高生webコンテストに参加していました。しかし結果は振るわずにTOP50止まり。
+            納得がいった結果、と僕は胸を張って言えませんでした。メンバー間でのモチベーションの差や、企画のブレなど、いくつかの要因がありましたが、そのどれもが致命的で、そのことに気づいた時にはあまりにも手遅れだったことを今でも鮮明に覚えています。
+            その悔しさが、尚の事サイト名を悩ませました。僕たちはどうあるべきなんだろう、そう己に問いかけてはディスプレイと睨めっこし、次第に夜が明ける事もありました。
+            何十枚ものルーズリーフを破り、何度もメンバーと議論を重ね、ようやくたどり着いたのが「@IronY」です。
+          </p>
+          <p>
+            @Ironyという単語には、<em>「Irony=皮肉・逆説」</em>という意味があります。
+            私たちは毎日 SNS を使いながら、その裏側にあるビジネスや感情の動き、アルゴリズムの偏りをなんとなく感じ取っています。でも、それを言語化できている人は多くありません。
+            同時に、SNSは僕たちの体の一部のようになってしまっています。
+          </p>
+          <p>
+            そこで、「Irony（皮肉）」という言葉の中に、自分たち自身を埋め込んでみることにしました。
+            I（私たち） と Y（あなた/You）が、Irony に挟まれている──
+            @IronY という綴りには、そんなイメージが込められています。
+            また、<em>「@」</em>はSNSのハンドルネームを連想させる記号であり、それを名前の最初に置くことで、<em>「SNSの中にいる自分たち」</em>というニュアンスも表現しています。
+          </p>
+          <p>
+            SNS は便利で楽しい。でも、その便利さの裏側について考え始めるとき、たぶんそこにはいつも、少しだけ「皮肉」を含んだ視線がある。
+            でもそういう視点が、本当に健全な僕たちのコミュニケーションを築いていく第一歩なんじゃないかなと思っています。
+            冷えた目線だけが皮肉ではありません。僕たちの皮と肉の下に隠れた暖かな心のぬくもりに耳を傾けるために、まずは日々の当たり前を疑っていくべきなんじゃないでしょうか。
+            このサイト名が、その視線の出発点になればいいなと思っています。
+          </p>
+        `
+      },
+      {
+        id: "003",
+        title: "クイズページのアニメーションに込めた「遊び」と「品のバランス」",
+        author: "タカクラ",
+        role: "Design / Code",
+        date: "2025-11-12",
+        tags: ["Code", "Art", "UX"],
+        thumbnail: "images/log/quiz-preview.webp",
+        imageAlt: "クイズページのUIプレビュー",
+        body: `
+          <p>
+            いよいよWeb制作も大詰め、クイズページのUIデザインと実装に取りかかりました。
+            学術的な内容を扱うこのサイトにおいて、クイズは唯一の「遊び」の要素です。
+            だからこそ、<em>「真面目すぎず、でも軽すぎない」</em>絶妙なバランスを目指しました。
+            正直な話、私は遊び心こそがデザインの本質・そして人間の好奇心の本質だと考えています。
+            だからこそ、シンプルでありながらも、どこかに「遊び」の要素を忍ばせたかったのです。
+          </p>
+          <p>
+            中央のクイズカードが静かに浮かび、正解すると背景にシアンのパルスが広がります。
+            これは「情報の重力圏に、正しく着地できた瞬間」をイメージしたものです。
+            逆に不正解のときは、うっすら赤みを帯びた波紋が広がりますが、あえて強い色にはせず、<em>「間違いを責めないUI」</em> になるようにトーンを調整しました。
+            何度でも挑戦できるように、軽やかで前向きなフィードバックを心がけています。
+          </p>
+          <p>
+            ページを開いたとき、最初に現れるイントロカードも同じ発想です。
+            いきなり問題を出すのではなく、「ここは何をする空間なのか」を一度ことばで共有してから進んでもらうことで、ただのミニゲームではなく、学習プロセスの一部としてクイズを位置づけています。
+            ここは遊び心と、クイズの教育的な役割の両立を意識した部分でしたね。
+          </p>
+          <p>
+            「動かしすぎると安っぽくなる」「でも、静かすぎるとつまらない」。
+            そのあいだを行き来しながら、何度もアニメーションの強さを調整したのが、このページの裏側です。
+            余談ですが、こういうクイズタイプのjavascript実装は初めてだったので、とにかく試行錯誤の連続でした。
+            でも、そのぶん完成したときの喜びもひとしおで、個人的にはこのサイトの中でいちばん好きなパートの一つになりました。
+            ぜひ満点を目指してくれると、製作者冥利に尽きます。
+          </p>
+        `
+      },
+      {
+        id: "004",
+        title: "執筆チームの挑戦と苦悩の記録",
+        author: "ヌカガ",
+        role: "Writing / Research",
+        date: "2025-08-19",
+        tags: ["Writing", "Team"],
+        thumbnail: "",
+        imageAlt: "",
+        body: `
+          <p>
+            自分は執筆チームとして主にこのプロジェクトではリサーチと文章の翻訳・要約を担当しました。
+            文章を書くにあたって最も苦労したのは、<em>「専門的な概念を、できるだけ正確に、かつわかりやすく伝えること」</em>だったんですが、兎にも角にも扱う内容が非常に難しく、何度やめようと思ったか。
+            当然自分一人で完成させたわけではないのですが、一つの文章を仕立てるのに途轍もない労力と時間がかかり、寝る間も惜しんだのがまだ昨日のようです。
+            リサーチ、翻訳、要約、リサーチ、翻訳、要約、チーム内レビュー、リサーチ、翻訳、要約……。
+            そんな無限ループを何度も繰り返しながら、ようやく納得のいく文章が出来上がったのかなとは思っています。
+            今回膨大な情報をまとめるにあたってAIも活用したのですが、どの観点から情報を嚙み砕かせるべきなのか、AIが出力した文章をどう扱うべきなのか、という新たな課題が生まれたりもしましたね。
+            </p>
+          <p>
+            そこで私たちは、まず「自分たち自身が本当にわかるまで噛み砕く」ことをルールにしました。
+            引用文をノートに書き写し、日常の例えに置き換え、それでも意味がずれていないかを何度も確認する。
+            その作業は、まさに<em>「翻訳」</em>というより、いったん崩してもう一度組み立て直す
+            「リライト」に近い感覚でした。
+          </p>
+          <p>
+            その過程で気づいたのは、「難しい言葉」自体が悪いわけではないということです。
+            むしろ、きちんと定義された言葉は、世界を精密に捉えるための道具になります。
+            大事なのは、その言葉がどこから来て、どんな前提のもとに使われているのかを、
+            できるだけ正直に伝えることだと考えるようになりました。
+          </p>
+          <p>
+            思い出深いのはメンバーとの議論（喧嘩）ですね。
+            何せ高校生には中々咀嚼しずらい内容ばかりで、長すぎる文章に疲弊しきった自分たちは、食い違った意見に対して感情的になることも多々ありました。
+            でも自分はこれを悪いことだと思うばかりか、むしろどこかこの状況を嬉しく思う自分は居ましたね。
+            「自分たちは今、本気で討論しているんだ」蝉の声が響く夏の図書室で、僕たちは人知れず散らした火花で、確かに成長していたのだと思います。
+            まあ、最終的には和解しましたけどね。
+            いい思い出です。
+            もう一回やりたいかと言われれば、二度とやりたくはないんですけどね。
+            コーディングの皆さんも大変そうだったので、あまり偉そうなことは言えないんですけど。
+          </p>
+        `
+      },
+      {
+        id: "005",
+        title: "まさかの取材！？SNS企業インタビューの舞台裏",
+        author: "タナカ",
+        role: "director / research",
+        date: "2025-11-11",
+        tags: ["interview", "writing"],
+        thumbnail: "images/log/polyhedron-preview.webp", // 画像がなければ null か "" に
+        imageAlt: "実際のインタビューの様子",
+        body: `
+          <p>
+            
+          </p>
+          <p>
+            
+          </p>
+          <p>
+            
+          </p>
+          <p>
+            
+          </p>
+        `
+      },
+      {
+        id: "006",
+        title: "メインメニューに吹き込んだ「情報の重力圏」という魂",
+        author: "タカクラ",
+        role: "director / research",
+        date: "2025-10-10",
+        tags: ["Art", "Code"],
+        thumbnail: "images/log/polyhedron-preview.webp", // 画像がなければ null か "" に
+        imageAlt: "メインメニューのUIプレビュー",
+        body: `
+          <p>
+            サイトの魂はメインメニューに宿る。そんな思いで私は、デザインと実装に取りかかりました。
+            しかし初期段階のメインページはお世辞にも魅力的には見えず、文字に少し動く背景だけ。私はこの時、デザインにおけるコンセプトとは一体何なのかを再認識しました。
+            コンセプトとはデザインの核であり、魂。私は気づきました。私が今行っているのは、単なるコーディングなどではなく、果てしなく長い新たな自分への挑戦の旅路なのだと。
+          </p>
+          <p>
+            何から着手していけばいいか分からない私は、まずこのサイトのテーマである「SNS上の情報空間の構造」を深く理解することから始めました。
+            チームメンバーと議論を重ね、SNSとは何か、情報とは何かを徹底的に考え抜きました。
+            情報は拡散し、離散し、変容し、歪み、時に消失する。
+            それはまるで、<em>「重力圏の中で絶えず動き続ける小さな天体」</em>のようでした。
+            そこで私は、この「情報の重力圏」というコンセプトをメインメニューに吹き込むことに決めました。
+          </p>
+          <p>
+            javascriptのライブラリを模索し、元より自分が持ち合わせていたCGの技術を最大限に生かせるP5.jsを採用。
+            P5.jsはProcessingをベースにしたライブラリで、クリエイティブコーディングに特化しており、私の理想とする動きを実現するのに最適でした。
+            しかし、少し触って何となくで行けそうだな、と甘んじた当時の私を、P5.jsは容赦なく打ち砕きました。
+            P5.jsは確かに強力なライブラリでしたが、私が望む動きを実現するには、相応の知識と経験が必要でした。
+            パーティクルの動き、制御、カメラワーク、ライティング、マテリアル設定など、学ぶべきことは山積みでした。
+            後に分かりますが、私がこの開発に着手してから完成するまでに要した時間は、実に<em>3週間</em>にも及びました。
+            思い返しても、記事作成と天秤に並ぶハードなタスクだったなと思っています。
+          </p>
+          <p>
+            少しおかしなことを言いますが、p5.jsが時折生きているように感じるようになりました。
+            思うように動かず、バグが起きては描画が止まり、何度も心が折れそうになります。
+            しかし、そんな時に限って不思議と閃きが舞い降りてきたり、解決策が見つかったりしました。
+          </p>
+          <p>
+            そしてその数多の試行錯誤の屍の上に、パーティクルを情報の粒子と捉えた一つのアニメーションアートを考案しました。
+            情報の粒子が重力圏の中で絶えず動き続ける様子を表現するために、パーティクル同士が引き合い、時に衝突し、また離れていく様子をシミュレートしました。
+            さらに、一定時間が経過すると<CHAOSモード>に移行。粒子が赤く輝きランダムに暴走していく様子を表現しました。
+            これは、情報が拡散し、変容し、時に消失する様子を象徴しています。
+          </p>
+          <p>
+            結果このメインメニューは、サイトのテーマである「SNS上の情報空間の構造」を視覚的に表現することに成功しました。
+            そして何より、私自身がこのプロジェクトを通じて大きく成長できたことが、何よりの収穫でした。
+            デザインとは単なる見た目の美しさではなく、<em>「コンセプトを如何にして形にするか」</em>という挑戦であることを、私は身をもって学びました。
+            本当に泣きそうな毎日でしたが、チームメンバーの支えもあり、最後までやり遂げることができました。
+            今では、このメインメニューを見るたびに、あの苦労の日々と達成感が蘇ります。
+            ありがとうp5.js。そして、ありがとう皆。
+          </p>
+        `
+      },
+    ];
+
+    // ==========================================
+    // ここから下は基本的に触らなくてOKなゾーン
+    // （見た目や挙動を変えたいときだけ調整してね）
+    // ==========================================
+
+    const TAG_LABELS = {
+      All: "All",
+      Art: "Art / Visual",
+      Code: "Code / System",
+      Writing: "Writing / Concept / interview",
+      Team: "Team & Process",
+      UX: "UX"
+    };
+
+    const filtersContainer = document.getElementById("log-filters");
+    const listContainer = document.getElementById("log-list");
+    const detailContainer = document.getElementById("log-detail");
+
+    let activeTag = "All";
+    let activePostId = null;
+
+    function formatDate(dateStr) {
+      // "YYYY-MM-DD" → "2025.11.17" みたいな表記に
+      if (!dateStr) return "";
+      const d = new Date(dateStr);
+      if (Number.isNaN(d.getTime())) return dateStr;
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}.${m}.${day}`;
+    }
+
+    function stripHtml(html) {
+      const tmp = document.createElement("div");
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || "";
+    }
+
+    function buildFilters() {
+      // タグ一覧を抽出
+      const tagSet = new Set();
+      posts.forEach((p) => (p.tags || []).forEach(t => tagSet.add(t)));
+
+      const tags = ["All", ...Array.from(tagSet)];
+
+      filtersContainer.innerHTML = "";
+      tags.forEach(tag => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "log-filter-chip" + (tag === activeTag ? " is-active" : "");
+        btn.dataset.tag = tag;
+        btn.textContent = TAG_LABELS[tag] || tag;
+        btn.addEventListener("click", () => {
+          activeTag = tag;
+          activePostId = null;
+          buildFilters();
+          buildList();
+          // フィルタ変更時は右側をプレースホルダに戻す
+          detailContainer.innerHTML =
+            '<p class="log-detail-placeholder">' +
+            '左の制作ログから、気になるカードを選んでください。<br>' +
+            'ここに、制作の裏側のストーリーが表示されます。' +
+            '</p>';
+        });
+        filtersContainer.appendChild(btn);
+      });
+    }
+
+    function buildList() {
+      // 日付の新しい順にソート
+      const sorted = posts.slice().sort((a, b) => {
+        const da = new Date(a.date);
+        const db = new Date(b.date);
+        return db - da;
+      });
+
+      const now = new Date();
+      // 「NEW」判定（例：7日以内）
+      const NEW_DAYS = 7;
+
+      const filtered = sorted.filter(post => {
+        if (activeTag === "All") return true;
+        return (post.tags || []).includes(activeTag);
+      });
+
+      listContainer.innerHTML = "";
+
+      filtered.forEach((post, index) => {
+        const item = document.createElement("article");
+        item.className = "log-item";
+        item.dataset.id = post.id;
+
+        if (post.id === activePostId) {
+          item.classList.add("is-active");
+        }
+
+        const main = document.createElement("div");
+        main.className = "log-item-main";
+
+        // メタ
+        const meta = document.createElement("div");
+        meta.className = "log-item-meta";
+
+        const dateSpan = document.createElement("span");
+        dateSpan.className = "log-item-date";
+        dateSpan.textContent = formatDate(post.date);
+
+        const authorSpan = document.createElement("span");
+        authorSpan.className = "log-item-author";
+        authorSpan.textContent = `By ${post.author}`;
+
+        meta.appendChild(dateSpan);
+        meta.appendChild(authorSpan);
+
+        const firstTag = (post.tags && post.tags[0]) || "";
+        if (firstTag) {
+          const tagBadge = document.createElement("span");
+          tagBadge.className = "log-item-tag-badge";
+          tagBadge.textContent = firstTag;
+          meta.appendChild(tagBadge);
+        }
+
+        // タイトル・抜粋
+        const titleEl = document.createElement("h2");
+        titleEl.className = "log-item-title";
+        titleEl.textContent = post.title;
+
+        const excerptEl = document.createElement("p");
+        excerptEl.className = "log-item-excerpt";
+        const plain = stripHtml(post.body || "");
+        excerptEl.textContent = plain.length > 60 ? plain.slice(0, 60) + "…" : plain;
+
+        main.appendChild(meta);
+        main.appendChild(titleEl);
+        main.appendChild(excerptEl);
+
+        // サムネイル（あれば）
+        if (post.thumbnail) {
+          const thumbWrapper = document.createElement("div");
+          thumbWrapper.className = "log-item-thumbnail";
+          const img = document.createElement("img");
+          img.src = post.thumbnail;
+          img.alt = post.imageAlt || "";
+          thumbWrapper.appendChild(img);
+          item.appendChild(thumbWrapper);
+          item.appendChild(main);
+        } else {
+          // サムネなしのときはメインだけ
+          item.appendChild(main);
+        }
+
+        // NEWバッジ
+        if (post.date) {
+          const d = new Date(post.date);
+          const diffMs = now - d;
+          const diffDays = diffMs / (1000 * 60 * 60 * 24);
+          if (diffDays <= NEW_DAYS && index === 0) {
+            const badge = document.createElement("span");
+            badge.className = "log-item-badge-new";
+            badge.textContent = "NEW";
+            item.appendChild(badge);
+          }
+        }
+
+        item.addEventListener("click", () => {
+          activePostId = post.id;
+          // アクティブ状態更新
+          listContainer.querySelectorAll(".log-item").forEach(el => {
+            el.classList.toggle("is-active", el.dataset.id === activePostId);
+          });
+          renderDetail(post);
+        });
+
+        listContainer.appendChild(item);
+      });
+
+      // フィルタかけたあと、何も選択されていなければ先頭を自動表示
+      if (!activePostId && filtered.length > 0) {
+        activePostId = filtered[0].id;
+        const first = filtered[0];
+        // アクティブクラス付与
+        const firstEl = listContainer.querySelector(`[data-id="${first.id}"]`);
+        if (firstEl) firstEl.classList.add("is-active");
+        renderDetail(first);
+      }
+    }
+
+    function renderDetail(post) {
+      if (!post) return;
+      detailContainer.innerHTML = "";
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "log-detail-inner";
+
+      const metaLine = document.createElement("div");
+      metaLine.className = "log-detail-meta-line";
+
+      const dateEl = document.createElement("span");
+      dateEl.className = "log-detail-date";
+      dateEl.textContent = formatDate(post.date);
+
+      const authorEl = document.createElement("span");
+      authorEl.className = "log-detail-author";
+      authorEl.textContent = `By ${post.author}`;
+
+      metaLine.appendChild(dateEl);
+      metaLine.appendChild(authorEl);
+
+      if (post.role) {
+        const roleEl = document.createElement("span");
+        roleEl.className = "log-detail-role";
+        roleEl.textContent = post.role;
+        metaLine.appendChild(roleEl);
+      }
+
+      wrapper.appendChild(metaLine);
+
+      const titleEl = document.createElement("h2");
+      titleEl.className = "log-detail-title";
+      titleEl.textContent = post.title;
+      wrapper.appendChild(titleEl);
+
+      if (post.tags && post.tags.length > 0) {
+        const tagsWrapper = document.createElement("div");
+        tagsWrapper.className = "log-detail-tags";
+        post.tags.forEach(tag => {
+          const chip = document.createElement("span");
+          chip.className = "log-detail-tag";
+          chip.textContent = tag;
+          tagsWrapper.appendChild(chip);
+        });
+        wrapper.appendChild(tagsWrapper);
+      }
+
+      if (post.thumbnail) {
+        const thumbWrap = document.createElement("div");
+        thumbWrap.className = "log-detail-thumbnail";
+        const img = document.createElement("img");
+        img.src = post.thumbnail;
+        img.alt = post.imageAlt || "";
+        thumbWrap.appendChild(img);
+        wrapper.appendChild(thumbWrap);
+      }
+
+      const bodyEl = document.createElement("div");
+      bodyEl.className = "log-detail-body";
+      bodyEl.innerHTML = post.body || "";
+      wrapper.appendChild(bodyEl);
+
+      const footerNote = document.createElement("p");
+      footerNote.className = "log-detail-footer-note";
+      footerNote.innerHTML = '<span>※ 記事の内容や肩書きは掲載当時のものです。</span>';
+      wrapper.appendChild(footerNote);
+
+      detailContainer.appendChild(wrapper);
+    }
+
+    window.addEventListener("load", () => {
+      buildFilters();
+      buildList();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>@IronY 知識クイズ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-top: #f7fafc;
+      --bg-bottom: #dde7f6;
+      --ink: #111827;
+      --muted: #6b7280;
+
+      --primary: #0ea5e9; /* シアン寄り */
+      --primary-soft: rgba(14, 165, 233, 0.16);
+      --accent-line: rgba(15, 23, 42, 0.06);
+
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-border: rgba(15, 23, 42, 0.06);
+
+      --radius-xl: 24px;
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.12);
+      --timing-snappy: cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro JP", "Yu Gothic", "Hiragino Sans", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at top, #ffffff 0%, var(--bg-top) 40%, var(--bg-bottom) 100%);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .quiz-shell {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      color: var(--ink);
+      isolation: isolate;
+    }
+
+    /* 背景の高次元グリッド */
+    .quiz-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .quiz-bg::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -120px;
+      width: 160vw;
+      height: 160vh;
+      background-image:
+        linear-gradient(to right, rgba(56, 189, 248, 0.28) 1px, transparent 1px),
+        linear-gradient(to top, rgba(14, 165, 233, 0.20) 1px, transparent 1px);
+      background-size: 80px 80px;
+      transform-origin: center top;
+      transform: perspective(1200px) rotateX(80deg) translateX(-50%) translateY(40px) scale(0.9);
+      opacity: 0;
+      animation:
+        grid-build 1.6s var(--timing-snappy) forwards,
+        grid-drift 22s linear 1.6s infinite alternate;
+    }
+
+    .quiz-bg::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 40px;
+      width: 520px;
+      height: 520px;
+      transform: translateX(-50%);
+      background:
+        radial-gradient(circle at center,
+          rgba(255,255,255,0.85) 0%,
+          rgba(14,165,233,0.55) 18%,
+          rgba(14,165,233,0.22) 36%,
+          rgba(14,165,233,0.0) 62%);
+      filter: blur(6px);
+      mix-blend-mode: screen;
+      opacity: 0;
+      animation: halo-pulse 2.4s ease-out 0.8s forwards infinite alternate;
+    }
+
+    @keyframes grid-build {
+      0% {
+        opacity: 0;
+        transform: perspective(1200px) rotateX(80deg) translateX(-50%) translateY(40px) scale(0.9);
+      }
+      60% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0.92;
+        transform: perspective(1200px) rotateX(72deg) translateX(-50%) translateY(0) scale(1);
+      }
+    }
+
+    @keyframes grid-drift {
+      0% {
+        transform: perspective(1200px) rotateX(72deg) translateX(-50%) translateY(0) scale(1);
+      }
+      100% {
+        transform: perspective(1200px) rotateX(72deg) translateX(-52%) translateY(-10px) scale(1.03);
+      }
+    }
+
+    @keyframes halo-pulse {
+      0% {
+        opacity: 0.0;
+        transform: translateX(-50%) scale(0.88);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.12);
+      }
+    }
+
+    /* 正解/不正解時のパルス */
+    .quiz-shell.correct-pulse::after,
+    .quiz-shell.wrong-pulse::after {
+      content: "";
+      position: fixed;
+      inset: -40%;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at center,
+          rgba(34, 197, 94, 0.22) 0,
+          transparent 56%);
+      opacity: 0;
+      animation: pulse-wave 0.7s ease-out forwards;
+      mix-blend-mode: screen;
+      z-index: 0;
+    }
+
+    .quiz-shell.wrong-pulse::after {
+      background:
+        radial-gradient(circle at center,
+          rgba(248, 113, 113, 0.28) 0,
+          transparent 58%);
+    }
+
+    @keyframes pulse-wave {
+      0% {
+        opacity: 0.0;
+        transform: scale(0.85);
+      }
+      35% {
+        opacity: 0.8;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.15);
+      }
+    }
+
+    /* コンテンツレイヤー */
+
+    .quiz-layer {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 88px 24px 120px;
+    }
+
+    .quiz-header {
+      max-width: 640px;
+      margin-bottom: 40px;
+    }
+
+    .quiz-eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .quiz-title {
+      font-size: 2.1rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    .quiz-lead {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .quiz-main {
+      display: flex;
+      align-items: stretch;
+      gap: 32px;
+    }
+
+    .quiz-center {
+      flex: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .quiz-progress {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .quiz-progress-bar {
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.35);
+      overflow: hidden;
+    }
+
+    .quiz-progress-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(14,165,233,0.55) 0%, #0ea5e9 40%, #60a5fa 100%);
+      transition: width 0.6s var(--timing-snappy);
+    }
+
+    .quiz-progress-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .question-card {
+      position: relative;
+      padding: 24px 24px 20px;
+      border-radius: var(--radius-xl);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+      transform-origin: center;
+      animation: card-in 0.7s var(--timing-snappy);
+      min-height: 220px;
+    }
+
+    @keyframes card-in {
+      0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .question-tag {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--primary-soft);
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--muted);
+    }
+
+    .question-id {
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(55, 65, 81, 0.8);
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .question-options {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .question-option {
+      position: relative;
+      border-radius: 16px;
+      padding: 12px 14px;
+      border: 1px solid var(--accent-line);
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      cursor: pointer;
+      transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .question-option-label {
+      font-size: 0.82rem;
+      font-feature-settings: "palt" 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(107, 114, 128, 0.9);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .question-option-text {
+      font-size: 0.95rem;
+    }
+
+    .question-option:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary-soft);
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.10);
+    }
+
+    .question-option.selected {
+      border-color: var(--primary);
+      background:
+        radial-gradient(100% 100% at 0% 0%, rgba(14,165,233,0.18) 0%, rgba(255,255,255,0.96) 60%),
+        linear-gradient(120deg, rgba(14, 165, 233, 0.16), rgba(255, 255, 255, 0.96));
+      box-shadow:
+        inset 0 0 0 2px rgba(14,165,233,0.25),
+        0 18px 40px rgba(14, 165, 233, 0.18),
+        0 18px 40px rgba(15, 23, 42, 0.18);
+    }
+
+    .question-option.correct {
+      border-color: rgba(34, 197, 94, 0.8);
+    }
+
+    .question-option.wrong {
+      border-color: rgba(220, 38, 38, 0.9);
+    }
+
+    .question-option.disabled {
+      pointer-events: none;
+    }
+
+    /* 右側の解説パネル */
+
+    .answer-panel {
+      flex: 2;
+      max-width: 320px;
+      align-self: stretch;
+      border-radius: 24px;
+      padding: 20px 18px 18px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 18px 46px rgba(15, 23, 42, 0.18);
+      backdrop-filter: blur(10px);
+      transform: translateX(40px);
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        transform 0.55s var(--timing-snappy),
+        opacity 0.55s var(--timing-snappy);
+    }
+
+    .answer-panel.visible {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .answer-status {
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .answer-status.correct {
+      color: rgba(22, 163, 74, 1);
+    }
+
+    .answer-status.wrong {
+      color: rgba(220, 38, 38, 1);
+    }
+
+    .answer-body {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .answer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--primary);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(14, 165, 233, 0.4);
+      padding-bottom: 1px;
+    }
+
+    .answer-next-btn {
+      display: inline-flex;
+      margin-top: 4px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: #fff;
+      cursor: pointer;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .answer-next-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.4);
+    }
+
+    /* 結果表示カード */
+
+    .result-card {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .result-heading {
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .result-main {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .result-score {
+      font-size: 2.6rem;
+      font-weight: 600;
+    }
+
+    .result-total {
+      font-size: 1.1rem;
+      color: var(--muted);
+    }
+
+    .result-message {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .result-recommend {
+      border-top: 1px solid rgba(148, 163, 184, 0.35);
+      padding-top: 12px;
+    }
+
+    .result-recommend-title {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .result-recommend-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .result-recommend-item a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      text-decoration: none;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .result-recommend-item span.badge {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .result-perfect {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    /* イントロカード（クイズ説明） */
+
+    .intro-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      background: radial-gradient(circle at top, rgba(255, 255, 255, 0.98), rgba(241, 245, 249, 0.98));
+      backdrop-filter: blur(18px);
+      transition:
+        opacity 0.55s var(--timing-snappy),
+        transform 0.55s var(--timing-snappy);
+    }
+
+    .intro-overlay.hidden {
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+    }
+
+    .intro-card {
+      max-width: 520px;
+      width: calc(100% - 48px);
+      padding: 24px 24px 20px;
+      border-radius: var(--radius-xl);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow-soft);
+      animation: intro-pop 0.55s var(--timing-snappy) backwards;
+    }
+
+    @keyframes intro-pop {
+      0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.97);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .intro-eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .intro-title {
+      font-size: 1.45rem;
+      margin: 0 0 10px;
+    }
+
+    .intro-text {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--muted);
+      margin: 0 0 12px;
+    }
+
+    .intro-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .intro-list li {
+      position: relative;
+      padding-left: 1.2em;
+      margin-bottom: 4px;
+    }
+
+    .intro-list li::before {
+      content: "・";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--primary);
+    }
+
+    .intro-start-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: #fff;
+      cursor: pointer;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .intro-start-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 38px rgba(15, 23, 42, 0.4);
+    }
+
+    .intro-note {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* ホワイトアウトフェード */
+    .white-fade {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 45%,
+          rgba(14,165,233,0.22) 0%,
+          rgba(14,165,233,0.12) 32%,
+          rgba(255,255,255,0.95) 52%,
+          #ffffff 70%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 100; /* イントロやカードより上、パルスより上 */
+    }
+    .white-fade.active {
+      animation: whiteout 700ms ease-out both;
+    }
+    @keyframes whiteout {
+      0% { opacity: 0; }
+      35% { opacity: 1; }
+      65% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @media (max-width: 880px) {
+      .quiz-layer {
+        padding-top: 64px;
+        padding-bottom: 80px;
+      }
+
+      .quiz-main {
+        flex-direction: column;
+      }
+
+      .answer-panel {
+        max-width: none;
+        transform: translateY(16px);
+      }
+
+      .answer-panel.visible {
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .quiz-title {
+        font-size: 1.7rem;
+      }
+
+      .intro-card {
+        padding: 20px 18px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="quiz-shell">
+    <div class="quiz-bg"></div>
+    <!-- ホワイトフェードレイヤー -->
+    <div class="white-fade" id="white-fade" aria-hidden="true"></div>
+
+    <div class="quiz-layer">
+      <header class="quiz-header">
+        <p class="quiz-eyebrow">QUIZ / SELF CHECK</p>
+        <h1 class="quiz-title">@IronY 知識クイズ</h1>
+        <p class="quiz-lead">
+          本編で扱ったトピックから、いくつかの問いをランダムに出題します。<br>
+          10問解き終えたあと、あなたのスコアと「復習したい章」が表示されます。
+        </p>
+      </header>
+
+      <!-- クイズ説明カード -->
+      <div class="intro-overlay" id="intro-overlay">
+        <div class="intro-card">
+          <p class="intro-eyebrow">ABOUT THIS PAGE</p>
+          <h2 class="intro-title">このページについて</h2>
+          <p class="intro-text">
+            このクイズは、@IronY 本編の内容を「どれくらい自分のものにできているか」を確かめるためのセルフチェックです。
+          </p>
+          <ul class="intro-list">
+            <li>序論〜記憶までの6章から、ランダムに10問を出題します。</li>
+            <li>各問題のあとで、関連する章へのリンクと短い解説が表示されます。</li>
+            <li>最後に、あなたのスコアと「復習におすすめのページ」がまとめて表示されます。</li>
+          </ul>
+          <button class="intro-start-btn" id="intro-start">
+            クイズを開始する
+          </button>
+          <p class="intro-note">所要時間の目安：3〜5分</p>
+        </div>
+      </div>
+
+      <main class="quiz-main">
+        <div class="quiz-center">
+          <div class="quiz-progress">
+            <div class="quiz-progress-bar">
+              <div class="quiz-progress-fill"></div>
+            </div>
+            <span class="quiz-progress-label">
+              <span id="quiz-current">1</span> / <span id="quiz-total">10</span>
+            </span>
+          </div>
+
+          <!-- 問題カード -->
+          <article class="question-card" id="question-card">
+            <div class="question-meta">
+              <span class="question-tag" id="question-tag">序論</span>
+              <span class="question-id" id="question-id">Q1</span>
+            </div>
+            <h2 class="question-text" id="question-text">
+              クイズを開始すると、ここに第1問が表示されます。
+            </h2>
+
+            <ul class="question-options" id="question-options">
+              <!-- JSで選択肢を埋め込み -->
+            </ul>
+          </article>
+
+          <!-- 結果カード（最初は非表示） -->
+          <article class="question-card result-card hidden" id="result-card">
+            <!-- JSで結果内容を埋め込み -->
+          </article>
+        </div>
+
+        <aside class="answer-panel" id="answer-panel" aria-hidden="true">
+          <div class="answer-status" id="answer-status"></div>
+          <div class="answer-body">
+            <p class="answer-text" id="answer-text"></p>
+            <a href="#" class="answer-link" id="answer-link">
+              関連ページで詳しく読む
+            </a>
+          </div>
+          <button class="answer-next-btn" id="answer-next">
+            次の問題へ
+          </button>
+        </aside>
+      </main>
+    </div>
+  </section>
+
+  <script>
+    // 章情報（復習リンク用）
+    const PAGE_INFO = {
+      foundation: {
+        label: "序論：SNSの立ち位置",
+        href: "page1_foundation.html"
+      },
+      evolution: {
+        label: "系譜：インターネットとSNSの歴史",
+        href: "page2_evolution.html"
+      },
+      duality: {
+        label: "両義：光と影の二面性",
+        href: "page3_duality.html"
+      },
+      identity: {
+        label: "自己：メンタルヘルスと依存",
+        href: "page4_identity.html"
+      },
+      capitalism: {
+        label: "資本：監視資本主義と広告モデル",
+        href: "page5_capitalism.html"
+      },
+      memory: {
+        label: "記憶：忘れないインターネット",
+        href: "page6_memory.html"
+      }
+    };
+
+    // 問題プール（各ページ 2〜3問）
+    const QUIZ_POOL = [
+      // 序論 foundation
+      {
+        id: "F1",
+        tag: "序論",
+        pageKey: "foundation",
+        chapter: "page1_foundation.html",
+        question: "本サイトで扱うSNS（ソーシャル・ネットワーキング・サービス）の日本語として、本文の説明に最も近いものはどれでしょうか？",
+        choices: [
+          "社会的なつながりを提供するサービス",
+          "インターネットで商品を販売するサービス",
+          "動画をライブ配信するサービス",
+          "ニュース記事だけを配信するサービス"
+        ],
+        answerIndex: 0,
+        explanation: "本文では、SNSは「ソーシャル（社会的な）ネットワーキング（繋がり）を提供するサービス」として説明されています。"
+      },
+      {
+        id: "F2",
+        tag: "序論",
+        pageKey: "foundation",
+        chapter: "page1_foundation.html",
+        question: "本文の説明に沿う「ボトムアップ型」の文化の特徴として最も適切なものはどれでしょうか？",
+        choices: [
+          "テレビ局など限られた発信者から一方向に流行が広がる文化",
+          "一人のインフルエンサーだけがミームを作り続ける文化",
+          "多数のユーザーがアレンジや再投稿を通じて、下から文化を作っていくあり方",
+          "国家が公式に認めた情報だけが共有される文化"
+        ],
+        answerIndex: 2,
+        explanation: "本文では、ミームの拡散のように、多くの利用者がアレンジや再投稿を重ねて文化が形成されていく様子を「ボトムアップ」の文化として説明しています。"
+      },
+      {
+        id: "F3",
+        tag: "序論",
+        pageKey: "foundation",
+        chapter: "page1_foundation.html",
+        question: "レイ・オルデンバーグのサードプレイスの考え方と関連して、SNSが担う役割として本文で強調されているものはどれでしょうか？",
+        choices: [
+          "仕事の成果を評価する場としての役割",
+          "家庭や職場とは異なる、自由で対等な居場所を与える場としての役割",
+          "政府の公式発表を一括で配信する場としての役割",
+          "税金の支払いなど行政手続きを完了する場としての役割"
+        ],
+        answerIndex: 1,
+        explanation: "サードプレイスは、家庭や職場とは異なる「第三の居場所」を指します。本文では、SNSが人々に役割と居場所を与える新しいサードプレイスとして描かれています。"
+      },
+
+      // 系譜 evolution
+      {
+        id: "E1",
+        tag: "系譜",
+        pageKey: "evolution",
+        chapter: "page2_evolution.html",
+        question: "本文によると、世界初のパケット通信ネットワーク「ARPANET」が稼働したのはいつでしょうか？",
+        choices: [
+          "1959年",
+          "1969年",
+          "1979年",
+          "1989年"
+        ],
+        answerIndex: 1,
+        explanation: "1969年にアメリカ国防総省の高等研究計画局（ARPA）が「ARPANET」を稼働させたと説明されています。これはインターネットの源流となりました。"
+      },
+      {
+        id: "E2",
+        tag: "系譜",
+        pageKey: "evolution",
+        chapter: "page2_evolution.html",
+        question: "ティム・バーナーズ＝リーがCERNでWWW（World Wide Web）を提案したのは何年とされていますか？",
+        choices: [
+          "1979年",
+          "1984年",
+          "1989年",
+          "1995年"
+        ],
+        answerIndex: 2,
+        explanation: "本文では、1989年にティム・バーナーズ＝リーがCERNでWWWを提案し、画像や動画を含む情報を視覚的に表示できるようになったと説明されています。"
+      },
+      {
+        id: "E3",
+        tag: "系譜",
+        pageKey: "evolution",
+        chapter: "page2_evolution.html",
+        question: "本文で「世界初のSNSと言われる」と紹介されているサービスはどれでしょうか？",
+        choices: [
+          "MySpace",
+          "SixDegrees.com",
+          "mixi",
+          "Friendster"
+        ],
+        answerIndex: 1,
+        explanation: "1997年に登場した「SixDegrees.com」が、世界初のSNSと言われるサービスとして本文で紹介されています。"
+      },
+
+      // 両義 duality
+      {
+        id: "D1",
+        tag: "両義",
+        pageKey: "duality",
+        chapter: "page3_duality.html",
+        question: "本文で説明されるように、SNSの「光の側面」として最も適切なものはどれでしょうか？",
+        choices: [
+          "特定の企業だけが情報を発信できる環境を作ること",
+          "情報発信の民主化により、これまで声を上げられなかった人にも発信の場を与えること",
+          "フェイクニュースを素早く拡散すること",
+          "利用者の行動を完全に監視すること"
+        ],
+        answerIndex: 1,
+        explanation: "SNSは情報発信の民主化をもたらし、災害時の安否確認や社会的不正の告発など、「声なき人」にもプラットフォームを与えた点が光の側面として描かれています。"
+      },
+      {
+        id: "D2",
+        tag: "両義",
+        pageKey: "duality",
+        chapter: "page3_duality.html",
+        question: "本文で紹介される、SNS上で同じ意見ばかりが表示されることで異なる意見から隔離されてしまう現象を指す用語はどれでしょうか？",
+        choices: [
+          "アテンション・エコノミー",
+          "フィルターバブル",
+          "ソーシャルキャピタル",
+          "ネットワーク効果"
+        ],
+        answerIndex: 1,
+        explanation: "イーライ・パリサーが指摘した「フィルターバブル」は、アルゴリズムにより自分と似た価値観の情報ばかりが表示され、異なる意見から隔離されてしまう現象です。"
+      },
+      {
+        id: "D3",
+        tag: "両義",
+        pageKey: "duality",
+        chapter: "page3_duality.html",
+        question: "本文で引用されている研究によれば、SNSにおける虚偽の情報は真実の情報に比べてどのくらい速く拡散されるとされていますか？",
+        choices: [
+          "約2倍",
+          "約3倍",
+          "約6倍",
+          "ほとんど変わらない"
+        ],
+        answerIndex: 2,
+        explanation: "本文では、SNSにおける虚偽の情報は真実の情報よりも感情的な要素が強く、その結果として「6倍も速く拡散される」とする研究結果が紹介されています。"
+      },
+
+      // 自己 identity
+      {
+        id: "I1",
+        tag: "自己",
+        pageKey: "identity",
+        chapter: "page4_identity.html",
+        question: "米国ピュー・リサーチ・センターの2023年調査として本文で紹介されている、13〜17歳でSNSを利用している割合はどれでしょうか？",
+        choices: [
+          "65％",
+          "75％",
+          "85％",
+          "95％"
+        ],
+        answerIndex: 3,
+        explanation: "本文では、13〜17歳の95％がSNSプラットフォームを利用していると紹介されています。"
+      },
+      {
+        id: "I2",
+        tag: "自己",
+        pageKey: "identity",
+        chapter: "page4_identity.html",
+        question: "総務省の2024年情報通信白書として本文で示されている、10代の平日平均SNS利用時間はおよそどのくらいでしょうか？",
+        choices: [
+          "約1時間",
+          "約2時間",
+          "約3時間",
+          "約5時間"
+        ],
+        answerIndex: 2,
+        explanation: "日本の総務省のデータとして、10代の平日平均SNS利用時間が3時間を超えると本文で説明されています。"
+      },
+      {
+        id: "I3",
+        tag: "自己",
+        pageKey: "identity",
+        chapter: "page4_identity.html",
+        question: "本文で説明される「間欠強化」に最も近い説明はどれでしょうか？",
+        choices: [
+          "常に一定間隔で報酬を与えることで行動を安定させる仕組み",
+          "ランダムなタイミングで報酬が返ってくることで、行動が強化されやすくなる仕組み",
+          "報酬を完全になくして行動を止める仕組み",
+          "一度だけ極端に大きな報酬を与える仕組み"
+        ],
+        answerIndex: 1,
+        explanation: "SNSの通知や「いいね」が不規則なタイミングで返ってくることによって、チェック行動が強まりやすくなる――これが本文で説明される「間欠強化」です。"
+      },
+
+      // 資本 capitalism
+      {
+        id: "C1",
+        tag: "資本",
+        pageKey: "capitalism",
+        chapter: "page5_capitalism.html",
+        question: "本文によると、Meta（旧Facebook）の2024年年間収益はおよそいくらと紹介されているでしょうか？",
+        choices: [
+          "約2.5兆円",
+          "約10兆円",
+          "約25兆円",
+          "約50兆円"
+        ],
+        answerIndex: 2,
+        explanation: "本文では、Metaの2024年年間収益は「25兆円」で、日本の国家予算のおよそ4分の1に相当すると説明されています。"
+      },
+      {
+        id: "C2",
+        tag: "資本",
+        pageKey: "capitalism",
+        chapter: "page5_capitalism.html",
+        question: "本文で示されている、Metaの収益のうち広告が占める割合として最も近いものはどれでしょうか？",
+        choices: [
+          "約20％",
+          "約50％",
+          "約80％以上",
+          "約100％"
+        ],
+        answerIndex: 2,
+        explanation: "Metaの収益構造について、本文では「収益の80％以上が広告によるもの」と説明されています。"
+      },
+      {
+        id: "C3",
+        tag: "資本",
+        pageKey: "capitalism",
+        chapter: "page5_capitalism.html",
+        question: "ショシャナ・ズボフが「監視資本主義」という概念で指摘していることとして、本文の説明に最も近いものはどれでしょうか？",
+        choices: [
+          "自然環境の破壊によって利益を上げる仕組み",
+          "個人データを広範囲に収集・商品化し、人の行動を予測・操作する経済システム",
+          "国家がすべての産業を管理する経済システム",
+          "利用者から直接利用料を取るだけのシンプルな経済システム"
+        ],
+        answerIndex: 1,
+        explanation: "監視資本主義は、企業が個人データを広範囲に収集・分析し、それを用いて行動を予測・操作することで利益を上げる新しい経済システムとして説明されています。"
+      },
+
+      // 記憶 memory
+      {
+        id: "M1",
+        tag: "記憶",
+        pageKey: "memory",
+        chapter: "page6_memory.html",
+        question: "本文によると、Wayback Machineに現在保存されているウェブページ数として紹介されているオーダーはどれでしょうか？",
+        choices: [
+          "数百万ページ",
+          "数千万ページ",
+          "数十億ページ",
+          "9000億を超えるページ"
+        ],
+        answerIndex: 3,
+        explanation: "本文では、Wayback Machineには「9000億を超えるウェブページ」が保存されていると紹介されています。"
+      },
+      {
+        id: "M2",
+        tag: "記憶",
+        pageKey: "memory",
+        chapter: "page6_memory.html",
+        question: "本文では、人間の記憶と比べたデジタル記憶の特徴として最も強調されている点はどれでしょうか？",
+        choices: [
+          "デジタル記録は人の記憶よりも早く自然に薄れる",
+          "デジタル記録は、意図的に消さない限り基本そのまま残る",
+          "デジタル記録は時間とともに自動的に加工される",
+          "デジタル記録には感情が保存されない"
+        ],
+        answerIndex: 1,
+        explanation: "本文では、人の記憶は時間とともに薄れていくのに対し、デジタル記録は意図的に消さない限りそのまま残る点が大きな違いとして説明されています。"
+      },
+      {
+        id: "M3",
+        tag: "記憶",
+        pageKey: "memory",
+        chapter: "page6_memory.html",
+        question: "2014年のGoogle Spain判決について、本文で説明されている内容として正しいものはどれでしょうか？",
+        choices: [
+          "SNS企業にユーザーアカウントの強制削除を求めた判決",
+          "検索エンジン事業者に対し、個人の要求に応じて検索結果から特定リンクを削除する責任を認めた判決",
+          "インターネットアーカイブの運営を全面的に禁止した判決",
+          "すべてのウェブサイトに閲覧履歴の保存を義務づけた判決"
+        ],
+        answerIndex: 1,
+        explanation: "Google Spain判決では、検索エンジン事業者が個人の要求に応じて、その人の名前で検索した結果からリンクを削除する責任があると判断され、「忘れられる権利」をめぐる重要な判例となりました。"
+      }
+    ];
+
+    // シャッフル関数
+    function shuffle(array) {
+      const arr = array.slice();
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // DOM参照
+    const shell = document.querySelector(".quiz-shell");
+    const questionCard = document.getElementById("question-card");
+    const resultCard = document.getElementById("result-card");
+    const optionsContainer = document.getElementById("question-options");
+    const tagEl = document.getElementById("question-tag");
+    const idEl = document.getElementById("question-id");
+    const textEl = document.getElementById("question-text");
+    const answerPanel = document.getElementById("answer-panel");
+    const answerStatus = document.getElementById("answer-status");
+    const answerText = document.getElementById("answer-text");
+    const answerLink = document.getElementById("answer-link");
+    const nextBtn = document.getElementById("answer-next");
+    const currentEl = document.getElementById("quiz-current");
+    const totalEl = document.getElementById("quiz-total");
+    const progressFill = document.querySelector(".quiz-progress-fill");
+    const introOverlay = document.getElementById("intro-overlay");
+    const introStartBtn = document.getElementById("intro-start");
+    // ホワイトフェード参照
+    const whiteFade = document.getElementById("white-fade");
+
+    let questions = [];
+    let currentIndex = 0;
+    let locked = false;
+    let correctCount = 0;
+    let wrongPages = new Set();
+    let quizCompleted = false;
+
+    function initQuiz() {
+      const shuffled = shuffle(QUIZ_POOL);
+      questions = shuffled.slice(0, 10); // 毎回ランダムに10問
+      currentIndex = 0;
+      locked = false;
+      correctCount = 0;
+      wrongPages.clear();
+      quizCompleted = false;
+
+      totalEl.textContent = questions.length;
+      currentEl.textContent = 1;
+      progressFill.style.width = "0%";
+
+      answerPanel.classList.remove("visible");
+      answerPanel.setAttribute("aria-hidden", "true");
+
+      // 表示状態リセット
+      questionCard.classList.remove("hidden");
+      resultCard.classList.add("hidden");
+      resultCard.innerHTML = "";
+
+      renderQuestion(currentIndex);
+    }
+
+    function renderQuestion(index) {
+      const q = questions[index];
+      locked = false;
+
+      currentEl.textContent = index + 1;
+      tagEl.textContent = q.tag;
+      idEl.textContent = q.id;
+      textEl.textContent = q.question;
+
+      optionsContainer.innerHTML = "";
+
+      q.choices.forEach((choice, i) => {
+        const li = document.createElement("li");
+        li.className = "question-option";
+        li.dataset.index = i;
+
+        const label = document.createElement("span");
+        label.className = "question-option-label";
+        label.textContent = String.fromCharCode(65 + i); // A,B,C...
+
+        const text = document.createElement("span");
+        text.className = "question-option-text";
+        text.textContent = choice;
+
+        li.appendChild(label);
+        li.appendChild(text);
+
+        li.addEventListener("click", () => handleAnswer(i));
+        optionsContainer.appendChild(li);
+      });
+
+      answerPanel.classList.remove("visible");
+      answerPanel.setAttribute("aria-hidden", "true");
+    }
+
+    function handleAnswer(selectedIndex) {
+      if (locked || quizCompleted) return;
+      locked = true;
+
+      const q = questions[currentIndex];
+      const isCorrect = selectedIndex === q.answerIndex;
+
+      const optionEls = optionsContainer.querySelectorAll(".question-option");
+      optionEls.forEach((el, i) => {
+        el.classList.add("disabled");
+        el.classList.remove("selected", "correct", "wrong");
+        if (i === selectedIndex) {
+          el.classList.add("selected");
+          el.classList.add(isCorrect ? "correct" : "wrong");
+        } else if (i === q.answerIndex) {
+          el.classList.add("correct");
+        }
+      });
+
+      if (isCorrect) {
+        correctCount++;
+      } else {
+        wrongPages.add(q.pageKey);
+      }
+
+      triggerPulse(isCorrect);
+
+      answerStatus.textContent = isCorrect ? "CORRECT" : "WRONG";
+      answerStatus.className = "answer-status " + (isCorrect ? "correct" : "wrong");
+      answerText.textContent = q.explanation;
+      answerLink.href = q.chapter;
+      answerPanel.classList.add("visible");
+      answerPanel.setAttribute("aria-hidden", "false");
+
+      const total = questions.length;
+      progressFill.style.width = ((currentIndex + 1) / total) * 100 + "%";
+
+      if (currentIndex === questions.length - 1) {
+        nextBtn.textContent = "結果を見る";
+      } else {
+        nextBtn.textContent = "次の問題へ";
+      }
+    }
+
+    function triggerPulse(isCorrect) {
+      const cls = isCorrect ? "correct-pulse" : "wrong-pulse";
+      shell.classList.add(cls);
+      setTimeout(() => shell.classList.remove(cls), 700);
+    }
+
+    // ホワイトアウトで切替するユーティリティ
+    function whiteoutTransition(step) {
+      if (!whiteFade) {
+        step?.();
+        return;
+      }
+      whiteFade.classList.remove("active"); // 念のため
+      // 中間の白い時間でコンテンツを入れ替える
+      const midTimer = setTimeout(() => {
+        try { step?.(); } catch (_) {}
+      }, 260); // 700ms中、白が乗っている間に実行
+      whiteFade.addEventListener("animationend", () => {
+        clearTimeout(midTimer);
+        whiteFade.classList.remove("active");
+      }, { once: true });
+      // 起動
+      whiteFade.classList.add("active");
+    }
+
+    function showResult() {
+      quizCompleted = true;
+      answerPanel.classList.remove("visible");
+      answerPanel.setAttribute("aria-hidden", "true");
+
+      const total = questions.length;
+      const score = correctCount;
+      const ratio = score / total;
+
+      let title;
+      let message;
+
+      if (ratio >= 0.8) {
+        title = "Excellent";
+        message = "かなり高い精度で本編の内容を掴めています。この調子で、応用トピックや「未来」のページも読み進めてみてください。";
+      } else if (ratio >= 0.5) {
+        title = "Good";
+        message = "全体像はしっかり捉えられていますが、いくつかの章は復習すると理解がよりクリアになります。";
+      } else {
+        title = "Warm up";
+        message = "数字や概念が少し曖昧なところがあるかもしれません。下のおすすめから、気になる章をもう一度読み直してみましょう。";
+      }
+
+      const wrongKeys = Array.from(wrongPages);
+
+      let recommendHtml = "";
+      if (wrongKeys.length > 0) {
+        recommendHtml += '<div class="result-recommend">';
+        recommendHtml += '<h3 class="result-recommend-title">復習におすすめのページ</h3>';
+        recommendHtml += '<ul class="result-recommend-list">';
+        wrongKeys.forEach((key) => {
+          const info = PAGE_INFO[key];
+          if (!info) return;
+          const [labelHead, labelTail] = info.label.split("：");
+          recommendHtml += '<li class="result-recommend-item">';
+          recommendHtml += '<a href="' + info.href + '">';
+          recommendHtml += '<span class="badge">' + (labelHead || "") + '</span>';
+          recommendHtml += '<span>' + (labelTail || "") + '</span>';
+          recommendHtml += '</a>';
+          recommendHtml += '</li>';
+        });
+        recommendHtml += '</ul>';
+        recommendHtml += '</div>';
+      } else {
+        recommendHtml += '<p class="result-perfect">すべて正解でした。@IronYの各章をかなり精密に理解できている状態です。</p>';
+      }
+
+      resultCard.innerHTML =
+        '<p class="result-heading">RESULT</p>' +
+        '<div class="result-main">' +
+        '  <span class="result-score">' + score + '</span>' +
+        '  <span class="result-total">/ ' + total + '</span>' +
+        '</div>' +
+        '<p class="result-message"><strong>' + title + '</strong><br>' + message + '</p>' +
+        recommendHtml;
+
+      questionCard.classList.add("hidden");
+      resultCard.classList.remove("hidden");
+
+      currentEl.textContent = total;
+      progressFill.style.width = "100%";
+      nextBtn.textContent = "最初からもう一度";
+    }
+
+    nextBtn.addEventListener("click", () => {
+      if (quizCompleted) {
+        // リスタートも白フェード経由
+        whiteoutTransition(() => {
+          initQuiz();
+        });
+        return;
+      }
+
+      if (!locked) {
+        // 未回答のまま「次へ」押されたら無視
+        return;
+      }
+
+      if (currentIndex < questions.length - 1) {
+        whiteoutTransition(() => {
+          currentIndex++;
+          renderQuestion(currentIndex);
+        });
+      } else {
+        whiteoutTransition(() => {
+          showResult();
+        });
+      }
+    });
+
+    // イントロカードからクイズ開始（白フェードを挟む）
+    introStartBtn.addEventListener("click", () => {
+      whiteoutTransition(() => {
+        introOverlay.classList.add("hidden");
+        initQuiz();
+      });
+    });
+
+    window.addEventListener("load", () => {
+      // 初期表示ではクイズはまだ始まらず、イントロカードのみ
+    });
+  </script>
+</body>
+</html>
