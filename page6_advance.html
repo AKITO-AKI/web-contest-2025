@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>発展論：労働 - デジタル・プロレタリアートの誕生</title>
-    <!-- Chart.jsライブラリの読み込み -->
+    <title>発展論：監視 - デジタル・パノプティコンの現実</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <link rel="stylesheet" href="css/common.css">
     <style>
-        /* Page5のテーマカラーを継承（仮） */
+        /* Page6のテーマカラーを継承（仮） */
         :root{
-            --primary-color: #2C1810;
-            --primary-light: #F5EBE0;
-            --primary-dark: #1A0F08;
-            --accent-color: #D4A574;
-            --warning-color: #E63946;
+            --primary-color: #8B7355; 
+            --primary-light: #F5F0E8;
+            --primary-dark: #6B5745;
+            --accent-color: #C9A961;
             --text-primary: #1a202c;
             --text-secondary: #4a5568;
             --text-light: #718096;
@@ -39,7 +37,7 @@
             box-shadow: 0 8px 24px rgba(139, 115, 85, 0.4);
         }
 
-        /* Page5_advanceから継承するスタイル */
+        /* Page6_advanceから継承するスタイル */
 
         /* 引用ブロック */
         blockquote {
@@ -138,7 +136,6 @@
     </style>
 </head>
 <body>
-    <!-- ナビゲーション -->
     <div class="nav-container">
         <nav class="navigation">
             <ul class="nav-menu">
@@ -151,446 +148,458 @@
                 <li><a href="page5.html" class="nav-link">自己</a></li>
                 <li><a href="page5_advance.html" class="nav-link">依存</a></li>
                 <li><a href="page6.html" class="nav-link">資本</a></li>
-                <!-- Page6の発展論（労働）へのリンクを追加し、activeにする -->
-                <li><a href="page6_advance.html" class="nav-link active">労働</a></li>
+                <li><a href="page6_advance.html" class="nav-link">労働</a></li>
                 <li><a href="page7.html" class="nav-link">記憶</a></li>
+                <li><a href="page7_advance.html" class="nav-link active">監視</a></li>
                 <li><a href="page8.html" class="nav-link">未来</a></li>
             </ul>
         </nav>
     </div>
 
-    <!-- 目次サイドバー -->
     <nav class="table-of-contents">
         <div class="toc-title">Contents</div>
         <ul class="toc-list">
-            <li class="toc-item"><a href="#section1" class="toc-link">2. 理論的背景 デジタル労働</a></li>
-            <li class="toc-item"><a href="#section2" class="toc-link">3. ギグエコノミー</a></li>
-            <li class="toc-item"><a href="#section3" class="toc-link">4. クリエイターエコノミー</a></li>
-            <li class="toc-item"><a href="#section4" class="toc-link">5. データ労働者としての「私たち」</a></li>
-            <li class="toc-item"><a href="#section5" class="toc-link">6. 新しい労働組合と抵抗</a></li>
-            <li class="toc-item"><a href="#section6" class="toc-link">7. ベーシックインカムとデータ配当</a></li>
-            <li class="toc-item"><a href="#section7" class="toc-link">8. 代替モデル</a></li>
-            <li class="toc-item"><a href="#section8" class="toc-link">9. 問題の深刻度と本論への還元</a></li>
-            <li class="toc-item"><a href="#section9" class="toc-link">10. 筆者の主張</a></li>
+            <li class="toc-item"><a href="#section1" class="toc-link">1. 理論的背景：パノプティコン</a></li>
+            <li class="toc-item"><a href="#section2" class="toc-link">2. 監視資本主義</a></li>
+            <li class="toc-item"><a href="#section3" class="toc-link">3. 中国の社会信用システム</a></li>
+            <li class="toc-item"><a href="#section4" class="toc-link">4. Clearview AI</a></li>
+            <li class="toc-item"><a href="#section5" class="toc-link">5. 日常空間に広がる顔認証</a></li>
+            <li class="toc-item"><a href="#section6" class="toc-link">6. 「隠すものがない」論への違和感</a></li>
+            <li class="toc-item"><a href="#section7" class="toc-link">7. テクノロジーによる対抗策</a></li>
+            <li class="toc-item"><a href="#section8" class="toc-link">8. 法整備の現在地</a></li>
+            <li class="toc-item"><a href="#section9" class="toc-link">9. 本論への還元</a></li>
+            <li class="toc-item"><a href="#section10" class="toc-link">10. 筆者の視点</a></li>
         </ul>
     </nav>
 
-    <!-- メインコンテンツ -->
     <main class="main-content">
-        <!-- ページヘッダー (1. 導入) -->
         <header class="page-header">
-            <div class="page-subtitle">Page 6 - 発展論</div>
-            <h1 class="page-title">労働</h1>
+            <div class="page-subtitle">Page 7 - 発展論</div>
+            <h1 class="page-title">監視</h1>
             <p class="page-description">
-                スマホを開き、タイムラインを眺め、動画を再生し、いいねを押す。<br>
-                それはこれまで「暇つぶし」や「娯楽」として語られてきました。
+                駅前のカメラ。
+                コンビニのレジ上。
+                スマホの位置情報。
+                検索履歴、購入履歴、移動履歴、閲覧履歴。
             </p>
             <p class="content-paragraph">
-                では、その時間は本当に「休み」なのでしょうか。
-                私たちがSNS上で過ごす一瞬一瞬が、広告ビジネスのためのデータになり、
-                アルゴリズムを精密に調整するための燃料になっているとしたら――
-                その時間は、すでに「労働」と呼んでもよいのではないでしょうか。
+                ふと、「ここまで記録されていて大丈夫なのだろうか」と不安になる瞬間があるかもしれません。
+                同時に、「でも別にやましいことはしていないし」と、自分を納得させる感覚もあるはずです。
             </p>
             <p class="content-paragraph">
-                本論「資本」では、SNS企業がどのようにデータを資本として蓄積し、
-                広告や課金モデルによって利益を得ているのかを整理しました。
-                この発展論では、その構造を「働く側」から見直します。
+                本論「記憶」では、一度ネットにアップロードされた情報が、
+                「消えにくい記録」として半永久的に残りうることを見てきました。
+                この発展論では、その「記録」が、個人の自由や権利にどのような影響を与えるのかという、
+                もう一歩踏み込んだ問いを扱います。
             </p>
             <p class="content-paragraph">
-                デジタル空間で価値を生み出しながら、
-                十分な対価も、権利も、可視性も与えられていない人びと。
-                ここでは彼らを、あえて「デジタル・プロレタリアート」と呼びます。
+                キーワードは、パノプティコン。
+                そして、監視資本主義。
+                さらに、顔認証や社会信用システムといった、AI時代の監視インフラです。
             </p>
         </header>
 
-        <!-- セクション1: 2. 理論的背景 -->
         <section id="section1" class="content-section">
-            <h2 class="section-title">2. 理論的背景 デジタル労働という視点</h2>
+            <h2 class="section-title">1. 理論的背景：フーコーのパノプティコンが意味するもの</h2>
             <p class="content-paragraph">
-                マルクスは『資本論』で、資本主義社会を「労働」と「資本」の関係から分析しました。
-                労働者が自分の労働力を売り、賃金以上の価値（剰余価値）を生み出すことで、
-                資本家の利潤が生まれる、という枠組みです。
+                監視社会の議論で必ずといっていいほど登場するのが、ミシェル・フーコーの「パノプティコン」です。
+                もともとは哲学者ジェレミー・ベンサムが提案した円形監獄の設計案でした。中央に監視塔があり、塔からは各独房の中が見える。しかし囚人には、自分が今監視されているのかどうかが分からない構造になっています。(moyak.com)
             </p>
             <p class="content-paragraph">
-                オーストリア出身の研究者クリスチャン・フックスは、
-                このマルクス主義的な分析をインターネットとSNSに適用し、
-                「デジタル労働（digital labour）」という概念を提起しました。(SpringerLink)
+                フーコーは、この建築物を単なる刑務所の設計図としてではなく、
+                「近代社会の権力装置」のメタファーとして読み替えました。
+                重要なのは、「常に見られている」という事実そのものではなく、
+                「いつ見られているか分からない」という感覚が、
+                人々に自己検閲と自己規律を内面化させる点だとされています。(moyak.com)
             </p>
             <p class="content-paragraph">
-                フックスによれば、SNSユーザーは
-                広告メッセージを運び、他者の注意を引きつける「輸送労働者」としての側面を持ちます。
-                投稿・視聴・コメント・シェアといった行為は、
-                プラットフォーム上の広告価値を高める「生産的な時間」であり、
-                その成果は株主や投資家の利益として回収される構造だとされます。(MR Online)
+                現代のデジタル監視は、まさにこの構造に重なります。
+                監視カメラの存在。
+                アクセスログや位置情報の記録。
+                行動履歴にもとづくスコアリング。
             </p>
             <p class="content-paragraph">
-                つまり、私たちが「遊んでいる」と思っている時間の一部は、
-                実際には企業にとっての労働時間として組み込まれている。
-                しかも、その多くは無償で、契約も、労働時間の上限も、
-                安全配慮義務も書かれていない「見えない労働」です。
-            </p>
-            <p class="content-paragraph">
-                さらに、近年は「データを労働として扱うべきか」という議論も進んでいます。
-                アリエタ＝イバラらは「データを労働として扱うべきか？」という論文で、
-                個人のデータ提供に対して報酬や集団的な交渉を認める「データ労働者」の発想を提起しました。
-                ジャロン・ラニアーとグレン・ウェイルは「データの尊厳（data dignity）」の観点から、
-                ユーザーがデータの「ただ働き」を強いられている現状を批判しています。(Future of Privacy Forum)
-            </p>
-            <p class="content-paragraph">
-                ここから見えてくるのは、
-                ギグワーカーやクリエイターだけでなく、
-                日常的にSNSを利用する私たち一人ひとりが、
-                「データ労働者」として組み込まれつつある社会の姿です。
+                「見られているかもしれない」という予感が、
+                振る舞いの範囲を静かに狭めていく。
+                このとき、監視は単なる「安全のための記録」ではなく、
+                権力を支える仕組みそのものになっていきます。
             </p>
         </section>
 
-        <!-- セクション2: 3. ギグエコノミー -->
         <section id="section2" class="content-section">
-            <h2 class="section-title">3. ギグエコノミー スマホの中にある低賃金労働</h2>
+            <h2 class="section-title">2. 監視資本主義：データを原料にする新しい経済</h2>
             <p class="content-paragraph">
-                デジタル労働と聞いて、真っ先に思い浮かぶのは
-                Uberや出前アプリの配達員、クラウドソーシングのワーカーかもしれません。
+                ハーバード大学の社会学者ショシャナ・ズボフは、
+                この20年ほどのテック企業のビジネスモデルを「監視資本主義」と呼びました。(Harvard Gazette)
             </p>
             <p class="content-paragraph">
-                国際労働機関（ILO）の報告によると、
-                デジタル労働プラットフォームの数は2010年以降で世界的に5倍に増加し、
-                タクシー配車アプリやフードデリバリー、オンライン業務の仲介が急速に広がりました。(International Labour Organization)
+                彼女の定義によれば、監視資本主義とは
+                「人間の経験そのものを、無断でデータとして取り込み、
+                行動予測や行動操作のための商品へと変換する新しい経済の論理」です。(Harvard Gazette)
             </p>
             <p class="content-paragraph">
-                同じくILOの調査では、
-                アプリを通じたタクシー運転手の84％、
-                配達員の90％が、プラットフォームからの収入を主な生計手段としており、
-                オンラインのクラウドワークを行う人びとでも約3分の1が
-                「生活の柱」としてこの収入に依存していると報告されています。(International Labour Organization)
+                検索キーワード、位置情報、購買履歴、SNSでの反応。
+                こうした細かな行動データは、単なる「ログ」ではなく、
+                「私たちが次に何を買うか」「どんな広告に反応するか」
+                さらには「どんな政治メッセージに共感しやすいか」を予測する材料になっています。
+            </p>
+            <blockquote>
+                ズボフはこの構造を、
+                「自由意思に対する介入」であり、「人間の自律性への攻撃」だと批判しています。
+                <footer>(ガーディアン)</footer>
+            </blockquote>
+            <p class="content-paragraph">
+                ここでの監視は、国家による監視だけではありません。
+                企業による、巨大で精密な「行動の観察と記録」です。
             </p>
             <p class="content-paragraph">
-                しかし、その働き方は安定とはほど遠い現実を抱えています。
-                交通事故やけがのリスク、アルゴリズムによる評価とランク付け、
-                一方的なアカウント停止、社会保険や労災補償の欠如。
+                本論「記憶」で扱った「忘れられないSNS」は、
+                監視資本主義の文脈では「次の行動を予測するための材料」として再解釈されます。
+                つまり、記憶と監視は、経済のレベルで密接に結びついているのです。
+            </p>
+        </section>
+
+        <section id="section3" class="content-section">
+            <h2 class="section-title">3. 中国の社会信用システム：スコア化される市民</h2>
+            <p class="content-paragraph">
+                監視社会の象徴としてよく挙げられるのが、中国の社会信用システムです。
+                これは、個人や企業の金融履歴、行政記録、違反歴などを統合し、
+                「信用スコア」として評価する枠組みとして構想されてきました。(bertelsmann-stiftung.de)
             </p>
             <p class="content-paragraph">
-                2025年の研究では、ギグエコノミーの市場規模は
-                2018年の約2,040億ドルから2023年には約4,550億ドルに拡大し、
-                世界のギグワーカーは2025年に7,800万人を超えると予測されています。(ResearchGate)
+                近年の分析によれば、このシステムは一枚岩ではなく、
+                複数の地域実験や業種ごとのスコアリングが並列して存在していると指摘されていますが、
+                いずれにせよ「行動を点数化して管理する」という発想が根底にあります。(orcasia.org)
             </p>
             <p class="content-paragraph">
-                巨大な市場規模と比べると、個々の労働者に分配される安全と保障は、
-                あまりに薄く、バラバラなまま置き去りにされていると言わざるをえません。
+                この社会信用システムを支えているのが、膨大な監視インフラです。
+                中国国内では、2019年時点で2億台以上の監視カメラが稼働していると推計され、
+                世界の監視カメラの約半数が中国に設置されている、という試算もあります。(ウィキペディア)
+                顔認証や行動分析を組み合わせたシステムが、
+                公共空間や交通機関で広く活用されていると報じられています。(ウィキペディア)
             </p>
-            
+            <p class="content-paragraph">
+                こうした技術は、犯罪予防や行政効率化という名目で導入されます。
+                しかし同時に、政府への批判的な言動やマイノリティへの弾圧に使われる危険性も指摘されています。
+                新疆ウイグル自治区での大規模な監視と拘束に、AIやクラウド技術が利用されたことを示す調査も明らかになっています。(AP News)
+            </p>
+            <p class="content-paragraph">
+                ここでは、フーコーのいう「パノプティコン」が、
+                国家レベルの巨大システムとして現実化していると見ることもできるでしょう。
+            </p>
+        </section>
+
+        <section id="section4" class="content-section">
+            <h2 class="section-title">4. Clearview AI：グローバルな顔データベースの衝撃</h2>
+            <p class="content-paragraph">
+                もう一つ、国家ではなく企業が主導する監視の事例として、
+                顔認証企業Clearview AIのケースがあります。
+            </p>
+            <p class="content-paragraph">
+                Clearview AIは、SNSやウェブサイトから公開されている顔写真を無断で収集し、
+                数十億枚規模の顔画像データベースを構築してきました。
+                2025年の報道では、このデータベースに登録された画像は
+                世界で600億枚を超えるとされています。(Reuters)
+            </p>
+            <p class="content-paragraph">
+                アメリカでは、市民団体ACLUが提訴した結果、
+                同社は「多くの民間企業への販売をやめる」などの制限を受ける和解に合意しました。(American Civil Liberties Union)
+            </p>
+            <p class="content-paragraph">
+                イギリスの情報コミッショナー（ICO）は、Clearviewに対して約750万ポンドの罰金を科し、
+                英国居住者のデータ削除と新規収集の停止を命じています。(Pinsent Masons)
+            </p>
+            <p class="content-paragraph">
+                フランスやイタリア、オランダなどのデータ保護当局も、
+                GDPR違反として多額の制裁金を課しました。(欧州データ保護委員会)
+            </p>
+            <p class="content-paragraph">
+                それでもなお、同社は主に警察や治安機関向けにサービスを続け、
+                2025年にはオーストリアで刑事告発を受けるなど、
+                「越境する顔認証監視」をめぐる攻防が続いています。(Reuters)
+            </p>
+            <p class="content-paragraph">
+                問題は、ここで扱われているのが「パスワード」ではなく「顔」だという点です。
+                パスワードは変えられますが、顔は簡単には変えられません。
+                一度巨大なデータベースに取り込まれれば、
+                その影響は長期にわたって残り続ける可能性があります。
+            </p>
+        </section>
+        
+        <section id="section5" class="content-section">
+            <h2 class="section-title">5. 日常空間に広がる顔認証：街、店舗、学校</h2>
+            <p class="content-paragraph">
+                顔認証技術は、特定の国や企業だけの話ではありません。
+                ヨーロッパやアメリカ、日本でも、警察や民間企業による導入が進んでいます。
+            </p>
+            <p class="content-paragraph">
+                イングランドとウェールズでは、警察による「ライブ顔認証（Live Facial Recognition）」の活用が急増しており、
+                2024年には街頭などでスキャンされた顔の数が約470万件に達し、前年からほぼ倍増したと報じられています。(ガーディアン)
+            </p>
+            <p class="content-paragraph">
+                ロンドンでは、警察だけでなく小売店、ナイトクラブ、カジノ、学校など、
+                多様な民間施設が顔認証を導入し、店舗間で「要注意人物」の顔データを共有している実態が明らかになっています。(Le Monde.fr)
+            </p>
+            <p class="content-paragraph">
+                これらのシステムは、「万引き防止」や「安全確保」を理由に正当化されます。
+                しかし、
+                ・誰が「危険人物」として登録されるのか
+                ・誤認があった場合、どう救済されるのか
+                ・どの範囲の施設とデータが共有されているのか
+                といった点が、不透明なまま運用されているケースも少なくありません。(Le Monde.fr)
+            </p>
+            <p class="content-paragraph">
+                同時に、監視インフラを支える市場も急速に拡大しています。
+                市場調査によれば、顔認証市場は2023年の約63億ドルから、
+                2028年には約134億ドル規模にまで成長すると予測されています。(MarketsandMarkets)
+                ビデオ監視全体の市場も、2032年には1,000億ドルを超える見通しが示されています。(Spherical Insights)
+            </p>
+
             <div class="highlight-box">
-                <div class="highlight-title" style="text-align: center;">グラフ：プラットフォーム収入への依存度</div>
+                <div class="highlight-title" style="text-align: center;">グラフ：顔認証市場の急速な成長予測</div>
                 <p class="content-paragraph" style="text-align: center; color: var(--text-light);">
-                    (本ページで用いるグラフでは、
-                    「プラットフォーム収入を主な生計手段とする労働者の割合」を
-                    タクシー配車アプリ、フードデリバリー、オンライン型プラットフォームで比較します。
-                    どの領域でも、多くの人が「サイドビジネス」ではなく「本業」として
-                    プラットフォームに依存せざるを得ない状況が可視化されます。)
+                    (このページのグラフでは、
+                    顔認証市場規模の「2023年」と「2028年」の伸びを棒グラフで表示し、
+                    監視技術が「将来有望な成長産業」として位置づけられている現状を可視化します。)
                 </p>
-                <!-- Chart.jsのキャンバス -->
                 <div class="chart-container">
-                    <canvas id="chartPage6Advance"></canvas>
+                    <canvas id="facialRecognitionMarketChart"></canvas>
                 </div>
             </div>
         </section>
 
-        <!-- セクション3: 4. クリエイターエコノミー -->
-        <section id="section3" class="content-section">
-            <h2 class="section-title">4. クリエイターエコノミー 華やかさの裏側</h2>
-            <p class="content-paragraph">
-                もう一つのデジタル労働の現場は、
-                YouTuberやインフルエンサーといった「クリエイターエコノミー」です。
-            </p>
-            <p class="content-paragraph">
-                YouTubeの広告収益分配モデルでは、
-                一般的に広告収入の約55％がクリエイターに支払われ、
-                残りの45％をプラットフォーム側が取得するとされています。(WooHelpDesk)
-                一見すると「半分以上もらえるなら公平」と感じるかもしれません。
-            </p>
-            <p class="content-paragraph">
-                しかし、実際には多くのクリエイターが
-                再生数や広告単価の変動、規約変更、動画の突然の広告停止（いわゆる「広告剥がし」）に
-                翻弄されており、安定した生計を立てられるのはごく一部だと指摘されています。(ガーディアン)
-            </p>
-            <p class="content-paragraph">
-                ドイツでは、こうした不透明な運営に対する抗議として
-                「YouTubers Union」と大手労組IG Metallが連携し、
-                FairTubeキャンペーンを立ち上げました。
-                このキャンペーンは、アルゴリズムや収益化ルールの透明性向上、
-                クリエイターの発言権の確保などをYouTubeに求めています。(Eurofound Apps)
-            </p>
-            <p class="content-paragraph">
-                ここで見えてくるのは、
-                「好きなことで生きていく」というキャッチコピーの裏で、
-                プラットフォームの規約一つで収入や職業的なアイデンティティが左右される、
-                非常に不安定な労働環境だという現実です。
-            </p>
-            <p class="content-paragraph">
-                視聴者の立場から見れば、
-                YouTubeを流し見しているだけに見えるかもしれません。
-                けれども、その一視聴が広告のインプレッションとなり、
-                レコメンドアルゴリズムの精度を高め、
-                プラットフォーム全体の価値を押し上げていることを忘れてはいけません。
-            </p>
-            <p class="content-paragraph">
-                「視聴すること」自体が、誰かの利益を支える労働になっている。
-                その構造が、クリエイターと視聴者のあいだに静かに横たわっています。
-            </p>
-        </section>
-
-        <!-- セクション4: 5. データ労働者としての「私たち」 -->
-        <section id="section4" class="content-section">
-            <h2 class="section-title">5. データ労働者としての「私たち」</h2>
-            <p class="content-paragraph">
-                ギグワーカーでも、人気クリエイターでもない。
-                ごく普通のSNSユーザーである私たちは、
-                それでもなお「データ労働者」と呼べるのでしょうか。
-            </p>
-            <p class="content-paragraph">
-                アリエタ＝イバラらは、
-                検索クエリの入力や投稿、レビュー、位置情報の提供などを
-                「データとしての労働」と捉え、
-                その価値配分がほぼすべて企業側に偏っている現状を批判しました。(Future of Privacy Forum)
-            </p>
-            <p class="content-paragraph">
-                ラニアーとウェイルは、ユーザーがデータの「ロイヤリティ」を受け取れる仕組みとして
-                「データユニオン」や「データ配当」の構想を提示しています。(Future of Privacy Forum)
-            </p>
-            <p class="content-paragraph">
-                一方で、データに値札をつけて売買する発想は、
-                プライバシーや不平等の観点から慎重に検討すべきだという批判もあります。(Nicholas Vincent)
-                データ配当が十分な額にならない可能性や、
-                経済的に弱い人ほどプライバシーを売らざるをえなくなる危険性も指摘されています。
-            </p>
-            <p class="content-paragraph">
-                それでも、この議論が浮かび上がらせた重要な問いはシンプルです。
-                私たちは、本当に「タダで」サービスを使っているのか。
-                それとも、データと時間というかたちで、すでに「支払って」いるのか。
-            </p>
-            <p class="content-paragraph">
-                この問いを意識すること自体が、
-                見えないデジタル労働を可視化する第一歩だと考えられています。
-            </p>
-        </section>
-
-        <!-- セクション5: 6. 新しい労働組合と抵抗のかたち -->
-        <section id="section5" class="content-section">
-            <h2 class="section-title">6. 新しい労働組合と抵抗のかたち</h2>
-            <p class="content-paragraph">
-                デジタル・プロレタリアートは、
-                従来型の「工場で働く労働者」とは姿を変えていますが、
-                抵抗や団結のかたちもまた変化しつつあります。
-            </p>
-            <p class="content-paragraph">
-                ILOの作業文書は、世界各地で行われている
-                プラットフォーム労働者の抗議行動を1,000件以上集計し、
-                その多くが低賃金や報酬カットへの不満から生じていることを示しました。
-                従来型の労組ではなく、労働者自身の自発的な組織化による運動も多いと報告されています。(Bollettino ADAPT)
-            </p>
-            <p class="content-paragraph">
-                アメリカでは2022年、ニューヨーク・スタテンアイランドの
-                Amazon倉庫「JFK8」で、Amazon Labor Union（ALU）が
-                同社初の公認労組として認められました。(ウィキペディア)
-                2024年には、全米の複数の倉庫でTeamsters（全米トラック運転手組合）と連携した
-                ストライキが行われ、「過去最大規模のAmazonへのスト」と報じられています。(Reuters)
-            </p>
-            <p class="content-paragraph">
-                YouTubeでは前述のYouTubers UnionとIG MetallによるFairTubeキャンペーンが、
-                クリエイターエコノミーにおける新しい集団的交渉の試みとして注目されています。(Eurofound Apps)
-            </p>
-            <p class="content-paragraph">
-                こうした動きは、
-                ・一箇所に集まらない
-                ・雇用契約が曖昧
-                ・国境をまたいで分散
-                というプラットフォーム労働の特徴の中でも、
-                労働者が新しい連帯の形を模索している証拠と言えるでしょう。
-            </p>
-        </section>
-        
-        <!-- セクション6: 7. ベーシックインカムとデータ配当という出口 -->
         <section id="section6" class="content-section">
-            <h2 class="section-title">7. ベーシックインカムとデータ配当という出口</h2>
+            <h2 class="section-title">6. 「隠すものがなければ問題ない」論への違和感</h2>
             <p class="content-paragraph">
-                デジタル・プロレタリアートの問題は、
-                単なる「賃上げ」だけでは解決しきれないかもしれません。
-                そもそも、プラットフォーム労働は
-                景気やアルゴリズムの気まぐれに左右されやすく、
-                すべての人に安定したフルタイムの仕事を保証できるモデルではないからです。
+                監視や顔認証の話になると、
+                「別に悪いことをしていないなら、監視されても困らない」という意見がしばしば聞かれます。
             </p>
             <p class="content-paragraph">
-                その延長線上で議論されているのが、
-                ベーシックインカム（無条件の所得保障）や「データ配当」です。
+                一見もっともらしく感じられますが、
+                この考え方にはいくつかの問題があると指摘されています。
             </p>
             <p class="content-paragraph">
-                アメリカ・カリフォルニア州のニューサム州知事は、
-                テック企業の利益の一部を住民に還元する「データ・ディヴィデンド（data dividend）」構想に言及し、
-                データ資本主義が生み出した富を市民と分かち合うアイデアとして脚光を浴びました。(Future of Privacy Forum)
+                第一に、権力の非対称性です。
+                監視する側は、多数の人びとのデータを集約し分析できますが、
+                監視される側は、その全体像をほとんど知ることができません。
+                この「見える／見えない」の非対称性が、権利侵害や差別に結びつきやすいことが懸念されています。(LSEブログ)
             </p>
             <p class="content-paragraph">
-                一方で、データ配当の実際の金額はごく小さくなりかねないこと、
-                「お金をもらえるならデータを差し出してもいい」という
-                新たな不平等を生みうることも指摘されています。(Nicholas Vincent)
+                第二に、「冷却効果（chilling effect）」と呼ばれる現象があります。
+                見られていると感じることで、人々が正当な政治的発言や抗議行動を避けるようになり、
+                民主主義に必要な批判や多様な意見が萎縮してしまうという指摘です。
+                人権団体は、「顔認証を公共空間から禁止すべきだ」とする強い声明を出しています。(人権監視団)
             </p>
             <p class="content-paragraph">
-                それでも、こうした議論が示しているのは、
-                デジタル・プロレタリアートの問題を
-                「個々の労働者の自己責任」ではなく、
-                社会全体でどのように支えるかという次元で考え直そうとする試みだといえます。
+                第三に、技術の誤認とバイアスの問題です。
+                顔認証システムは、特定の人種や性別、年齢層に対して誤認識率が高いケースが繰り返し報告されており、
+                ロンドンや他の都市では、無実の人が「要注意人物」として扱われる事例も問題になっています。(Le Monde.fr)
+            </p>
+            <p class="content-paragraph">
+                「隠すものがない人は困らない」という言い方は、
+                こうした権力の偏りや誤認のリスクを見えなくしてしまう、
+                危うい言葉だと言えるのではないでしょうか。
             </p>
         </section>
 
-        <!-- セクション7: 8. 代替モデルとしてのプラットフォーム・コーペラティブ -->
         <section id="section7" class="content-section">
-            <h2 class="section-title">8. 代替モデルとしてのプラットフォーム・コーペラティブ</h2>
+            <h2 class="section-title">7. テクノロジーによる対抗策：暗号化・匿名化・データ最小化</h2>
             <p class="content-paragraph">
-                搾取的なプラットフォームに対するもう一つの応答として、
-                近年「プラットフォーム・コーペラティブ（platform cooperatives）」が注目されています。
+                監視社会に対して、個人に何ができるのか。
+                その一つの答えとして、技術的な対抗策があります。
             </p>
             <p class="content-paragraph">
-                これは、配車アプリやフードデリバリー、クラウドワークなどを
-                投資家ではなく、労働者や地域コミュニティが共同所有し、
-                民主的に運営しようとする試みです。
+                メッセージアプリのエンド・ツー・エンド暗号化（E2EE）。
+                通信の経路を秘匿するTorのような匿名化ネットワーク。
+                通信内容を第三者から守るVPN。
+                位置情報やクッキーを最小限に抑えるブラウザ設定やプライバシーツール。
             </p>
             <p class="content-paragraph">
-                OECDの政策レポートは、
-                プラットフォーム・コーペラティブが
-                ・よりよい労働条件
-                ・透明なデータ管理
-                ・地域社会への貢献
-                などの点で可能性を持つ一方、
-                資金調達や規模の拡大といった課題に直面していると指摘しています。(OECD)
+                こうした技術は、犯罪者のためだけのものではありません。
+                ジャーナリストや人権活動家、権威主義的な政権下で暮らす市民にとって、
+                生存と表現の自由を守るためのライフラインになっている場合もあります。(AP News)
             </p>
             <p class="content-paragraph">
-                とはいえ、
-                すべてのプラットフォームを協同組合化するのは現実的ではないにしても、
-                少なくとも「所有とガバナンスのあり方」は
-                企業任せではなく、社会が選びうるものとして議論されるべきでしょう。
+                一方で、これらの手段だけで監視社会の構造が消えるわけではありません。
+                暗号化や匿名化は、個人レベルの「守り」を強化する手段にすぎません。
+                記録の設計やデータの扱い方そのものを変えるには、
+                やはり制度やルールのレベルでの変化が不可欠だと考えられています。
             </p>
         </section>
-        
-        <!-- セクション8: 9. 問題の深刻度と、本論への還元 -->
+
         <section id="section8" class="content-section">
-            <h2 class="section-title">9. 問題の深刻度と、本論への還元</h2>
+            <h2 class="section-title">8. 法整備の現在地：AI時代の監視をどう線引きするか</h2>
             <p class="content-paragraph">
-                ここまで見てきたように、
-                デジタル・プロレタリアートの問題は複数の層で進行しています。
+                近年、各国でAIと監視技術をめぐる法整備が進みつつあります。
+            </p>
+            <p class="content-paragraph">
+                EUでは、2025年から「AI法（AI Act）」の一部が施行され、
+                ・社会的スコアリング（ソーシャルスコア）
+                ・感情認識の乱用
+                ・リアルタイムの遠隔生体認証による監視（原則禁止、厳格な例外のみ許容）
+                などが「許されないAIの利用」として制限されました。(Le Monde.fr)
+            </p>
+            <p class="content-paragraph">
+                また、AI生成コンテンツやディープフェイクについては、
+                「AIが生成・改変したことを明示する」ことを義務づける透明性ルールが導入され、
+                スペインでは表示義務違反に対して最大3,500万ユーロ、売上の7％という重い罰則を課す法案も進んでいます。(EU人工知能法)
+            </p>
+            <p class="content-paragraph">
+                イタリアは2025年、EUで最初に包括的なAI規制法を成立させ、
+                有害なディープフェイクやAI犯罪に対して懲役刑を含む厳格な罰則を定めました。(ガーディアン)
+            </p>
+            <p class="content-paragraph">
+                一方で、警察によるライブ顔認証の扱いは国や地域によって大きく異なります。
+                EUのAI法は原則として公共空間でのリアルタイム顔認証を禁じつつ、
+                重大犯罪の捜査など限定的な例外を認める構造になっています。(EU人工知能法)
+            </p>
+            <p class="content-paragraph">
+                アメリカでは、市や州単位で禁止・モラトリアム・容認が混在しており、
+                ニューオーリンズのように一度禁止した顔認証を再び合法化しようとする動きも見られます。(techreg.org)
+            </p>
+            <p class="content-paragraph">
+                Clearview AIに対する各国の制裁や訴訟も、
+                「越境する監視」にどこまで介入できるかを試すケースとして注目されています。(American Civil Liberties Union)
+            </p>
+            <p class="content-paragraph">
+                法整備は一歩前進しつつも、
+                ・民間の防犯カメラや小売店での顔認証
+                ・私的な監視サービスの提供
+                ・国家間での技術輸出と人権問題
+                など、多くの領域が依然としてグレーゾーンに残されています。
+            </p>
+        </section>
+
+        <section id="section9" class="content-section">
+            <h2 class="section-title">9. 本論への還元：忘れない社会と「監視される記憶」</h2>
+            <p class="content-paragraph">
+                本論「記憶」では、SNSが「忘れにくいメディア」であること、
+                過去の発言や行動が延々と掘り返されるリスクを見てきました。
+            </p>
+            <p class="content-paragraph">
+                発展論「監視」で扱っているのは、その記憶が
+                「誰のものか」「どのような目的で使われるのか」という問題です。
             </p>
             <ul>
-                <li>ギグワーカーの低賃金・無権利状態</li>
-                <li>クリエイターエコノミーの不透明な収益配分</li>
-                <li>一般ユーザーの「データ労働」が無償で搾取される構造</li>
-                <li>それに対抗しようとする労働組合や協同組合の、まだ小さな試み</li>
+                <li>国家によるスコアリングや監視</li>
+                <li>企業による行動予測とターゲティング広告</li>
+                <li>顔認証による常時トラッキング</li>
+                <li>データベース化された「過去の自分」が将来の機会に与える影響</li>
             </ul>
             <p class="content-paragraph">
-                本論「資本」では、SNSのビジネスモデルを
-                「データと注意を資本に変換する仕組み」として分析しました。
-                この発展論「労働」は、その裏側で
-                誰がその資本を支えているのか、
-                その負担とリスクがどのように配分されているのかを補完する位置づけです。
+                これらをまとめて考えると、
+                私たちは「忘れられにくいだけでなく、常に評価される社会」に住んでいる、
+                と言えるのかもしれません。
             </p>
             <p class="content-paragraph">
-                資本側から見れば「効率的なプラットフォーム」でも、
-                労働側から見れば
-                ・長時間労働
-                ・収入の不安定さ
-                ・アルゴリズムによる一方的な評価
-                ・交渉の場の欠如
-                といった問題が積み上がっています。
+                問題の深刻さは、単に「プライバシーがちょっと減る」レベルではありません。
+                監視と記録が結びつくことで、
+                ・何を検索するか
+                ・どこに行くか
+                ・誰と話すか
+                ・どのような意見を表明するか
+                といった日常的な選択にまで、「見られているかもしれない」という影響が入り込んできます。
             </p>
             <p class="content-paragraph">
-                つまり、SNSとプラットフォーム経済は
-                単なる「便利なサービス」ではなく、
-                新しいかたちの階級構造を内包した社会インフラでもある。
-                それが、本論と発展論を合わせて浮かび上がらせたい全体像です。
+                これは、民主主義や少数派の権利、創造性にとって、
+                長期的に大きなダメージになりうると考えられています。(LSEブログ)
+            </p>
+            <p class="content-paragraph">
+                本論と合わせると、
+                SNSとAIは「記憶を強化する技術」であると同時に、
+                「その記憶を通じて人を管理する技術」でもある、
+                という二重の顔を持っていることが見えてきます。
             </p>
         </section>
-        
-        <!-- セクション9: 10. 筆者の主張 -->
-        <section id="section9" class="content-section">
-            <h2 class="section-title">10. 筆者の主張 「ただ働き」に慣れ切らないために</h2>
+
+        <section id="section10" class="content-section">
+            <h2 class="section-title">10. 筆者の視点：それでも「見えない場所」を守りたい</h2>
             <p class="content-paragraph">
-                最後に、筆者としての考えを述べたいと思います。
+                最後に、このテーマについて筆者自身の考えを書いておきます。
             </p>
             <p class="content-paragraph">
-                正直に言えば、私自身もSNSを日常的に使い、
-                アルゴリズムに勧められるまま動画を見続けてしまうことがあります。
-                その時間が、どこかの企業の利益に変わっていることを意識する瞬間は、
-                まだ多くありません。
+                正直に言えば、ここまで見てきた事実は、なかなか重たいものです。
+                巨大な監視インフラ。
+                越境する顔認証企業。
+                加速する監視市場と、そこに追いつかない法整備。
             </p>
             <p class="content-paragraph">
-                それでも、
-                「無料で便利なサービスなんだから、多少のことは仕方ない」
-                というあきらめ方だけは、危ういと感じています。
+                一方で、私たちの日常は、監視だけでできているわけではありません。
+                オフラインで友だちと雑談をする時間。
+                ノートにだけ残すメモ。
+                誰にも見せないドラフトや、心の中だけの感情。
             </p>
             <p class="content-paragraph">
-                自分の時間と注意とデータが、
-                誰の利益のために、どのような条件で差し出されているのか。
-                それを知ったうえで利用を続けるのか、
-                別のサービスや設定（トラッキング制限、広告オプトアウトなど）を選ぶのか。
+                こうした「半分だけ見えているもの」「誰にも見せていないもの」が、
+                人間の自由や創造性を支えている部分も大きいのではないでしょうか。
             </p>
-            
             <div class="warning-box">
-                <div class="highlight-title">スタートラインは「問い続ける」こと</div>
+                <div class="highlight-title">二択に閉じ込められないために</div>
                 <p>
-                    選択肢そのものを持つことが、
-                    デジタル・プロレタリアートとしての「無自覚な従属」から
-                    一歩離れるためのスタートになるのではないでしょうか。
+                    だからこそ私は、
+                    監視技術をすべて否定するか、
+                    逆に「便利だから仕方ない」と全面的に受け入れてしまうか、
+                    という二択に閉じ込められたくないと感じています。
+                </p>
+                <ul>
+                    <li>監視カメラが本当に必要な場所はどこか</li>
+                    <li>顔認証を使ってはいけない場所はどこか</li>
+                    <li>どこまでのログを、どれくらいの期間保存してよいのか</li>
+                    <li>その決定に、市民がどのように関わるべきか</li>
+                </ul>
+                <p>
+                    こうした問いを、技術者だけでなく、利用する私たち自身が考え続けること。
+                    「誰が、誰を、どの目的で見ているのか」を問うことをやめないこと。
                 </p>
                 <p>
-                    また、ギグワーカーやクリエイターの労働条件について、
-                    「好きでやっているのだから自己責任」と切り捨てるのではなく、
-                    それを支える制度や交渉の場をどう整えるかという視点を
-                    社会全体で共有する必要があると考えています。
+                    それが、パノプティコンのような「見えない監獄」に閉じ込められないための、
+                    ささやかだけれど大事な抵抗だと感じています。
                 </p>
                 <p>
-                    SNSやプラットフォームを「やめる／やめない」の二択ではなく、
-                    ・どのような所有構造のサービスを支援したいのか
-                    ・どのようなルールが整えば参加しやすいのか
-                    ・自分の時間とデータに、どんな価値を認めたいのか
-                    そうした問いを、利用者として投げかけ続けること。
-                </p>
-                <p>
-                    それこそが、デジタル・プロレタリアートが
-                    「ただ働き」を強いられるだけの存在ではなく、
-                    ルールメイキングに参加する主体へと変わっていくための条件だと、私は考えています。
+                    本論「記憶」で見たように、
+                    デジタルな記録は簡単には消えません。
+                    だからこそ、その記録が「監視のためだけに使われない」社会をどう作るか。
+                    AIと監視技術の時代に生きる私たち一人ひとりにとって、
+                    それはもう、専門家だけに任せておけるテーマではないのだと思います。
                 </p>
             </div>
 
             <div style="text-align: center; margin: 60px 0;">
-                <a href="page7.html" class="next-page-button">
-                    次ページ「記憶」
+                <a href="page8.html" class="next-page-button">
+                    次ページ「未来」
                 </a>
             </div>
         </section>
 
-        <!-- 参考文献 -->
         <section class="content-section">
-            <h3 class="subsection-title">参考文献・出典（本文中で参照した主なもの）</h3>
+            <h3 class="subsection-title">参考文献（一部）</h3>
             <div class="references">
-                <p>・Christian Fuchs, Digital Labour and Karl Marx, Routledge, 2014.(SpringerLink)</p>
-                <p>・Christian Fuchs, “Digital prosumption labour on social media in the context of the capitalist regime of time”, 2014.(MR Online)</p>
-                <p>・International Labour Organization, World Employment and Social Outlook 2021: The role of digital labour platforms in transforming the world of work, 2021.(International Labour Organization)</p>
-                <p>・International Labour Organization, A global analysis of worker protest in digital labour platforms, ILO Working Paper 70, 2022.(Bollettino ADAPT)</p>
-                <p>・International Journal of Research Publication and Reviews, “Risk Management in the Gig Economy: Protecting the Health and Safety of Gig Workers”, Vol. 6, Issue 3, 2025.(ResearchGate)</p>
-                <p>・“Can digital labour platforms create fair competition and decent jobs?”, ILO InfoStories, 2021.(International Labour Organization)</p>
-                <p>・“UK’s YouTube and TikTok content creators deserve more rights, say MPs”, The Guardian, 24 Sept 2025.(ガーディアン)</p>
-                <p>・Eurofound, “FairTube campaign – joint initiative of IG Metall and the Youtubers Union”, Platform Economy Repository.(Eurofound Apps)</p>
-                <p>・“Organizing YouTube – IG Metall negotiates better rights”, IndustriALL, 2020.(IndustriALL)</p>
-                <p>・“Amazon workers strike at seven US facilities ahead of Christmas rush”, Reuters, 19 Dec 2024.(Reuters)</p>
-                <p>・“Amazon Warehouse Workers Across US Strike Ahead of Holiday Rush”, WIRED, 2024.(WIRED)</p>
-                <p>・“Amazon Labor Union”, Wikipedia（最終閲覧日：2025年11月）(ウィキペディア)</p>
-                <p>・Imanol Arrieta-Ibarra et al., “Should We Treat Data as Labor?”, AEA Papers and Proceedings, 2018.(Future of Privacy Forum)</p>
-                <p>・Jaron Lanier & E. Glen Weyl, “A Blueprint for a Better Digital Society”, Harvard Business Review, 2018.(Future of Privacy Forum)</p>
-                <p>・Susan Ariel Aaronson, “Data Is Different: Why the World Needs a New Approach to Governing Cross-border Data Flows”, CIGI Papers No. 197, 2018.</p>
-                <p>・Trebor Scholz, “Platform Cooperativism: Challenging the Corporate Sharing Economy”, Rosa Luxemburg Stiftung, 2016.</p>
-                <p>・OECD, “Empowering communities with platform cooperatives”, 2023.(OECD)</p>
+                <p>Michel Foucault, Discipline and Punish: The Birth of the Prison, 1975.(moyak.com)</p>
+                <p>Shoshana Zuboff, The Age of Surveillance Capitalism, 2019.(Harvard Gazette)</p>
+                <p>Mass surveillance in China, Wikipedia（最終閲覧日：2025年11月）(ウィキペディア)</p>
+                <p>Bertelsmann Stiftung, China’s Social Credit System, 2017.(bertelsmann-stiftung.de)</p>
+                <p>Horizons, China Social Credit System Explained, 2024.(Horizons)</p>
+                <p>Associated Press, Silicon Valley enabled brutal mass detention and surveillance in China, 2025.(AP News)</p>
+                <p>MarketsandMarkets, Facial Recognition Market – Global Forecast to 2028.(MarketsandMarkets)</p>
+                <p>Spherical Insights, Video Surveillance Market Size, Forecast, 2023–2032.(Spherical Insights)</p>
+                <p>The Guardian, Live facial recognition cameras may become ‘commonplace’ as police use soars, 2025.(ガーディアン)</p>
+                <p>Le Monde, London’s use of facial recognition is surging, despite technology’s flaws, 2025.(Le Monde.fr)</p>
+                <p>ACLU, “Big Win: Settlement Ensures Clearview AI Complies With Groundbreaking Illinois Law”, 2022.(American Civil Liberties Union)</p>
+                <p>Reuters, US judge approves ‘novel’ Clearview AI class action settlement, 2025.(Reuters)</p>
+                <p>ICO / Pinsent Masons, ICO wins appeal over Clearview AI jurisdiction ruling, 2025.(Pinsent Masons)</p>
+                <p>Data Privacy Manager, 20 biggest GDPR fines so far, 2025.(The Paypers)</p>
+                <p>European Commission, EU AI Act and relatedガイドライン, 2025.(EU人工知能法)</p>
+                <p>Spain AI deepfake labelling law, Reuters, 2025.(dedep.eu)</p>
+                <p>Italy AI regulation law, The Guardian, 2025.(ガーディアン)</p>
+                <p>Human Rights Watch, “Time to Ban Facial Recognition from Public Spaces and Borders”, 2023.(人権監視団)</p>
+                <p>Privacy International, “Toward Regulation: Addressing the Legal Void in Facial Recognition Technology”, 2025.(インターネットポリシーレビュー)</p>
+                <p>Washington Post, New Orleans pushes to legalize police use of “facial surveillance”, 2025.(techreg.org)</p>
             </div>
         </section>
     </main>
 
     <script>
-        // ナビゲーション制御 (Page4/5から流用)
+        // ナビゲーション制御 (Page4/5/6から流用)
         let navTimer;
         const navContainer = document.querySelector('.nav-container');
         
@@ -620,7 +629,7 @@
         
         showNav();
 
-        // スクロールアニメーション (Page4/5から流用)
+        // スクロールアニメーション (Page4/5/6から流用)
         function handleScroll() {
             const sections = document.querySelectorAll('.content-section');
             const windowHeight = window.innerHeight;
@@ -637,7 +646,7 @@
             updateTOC();
         }
 
-        // TOC制御 (Page4/5から流用)
+        // TOC制御 (Page4/5/6から流用)
         function updateTOC() {
             const sections = document.querySelectorAll('.content-section');
             const tocLinks = document.querySelectorAll('.toc-link');
@@ -664,7 +673,7 @@
             initializeCharts(); // Chart.jsの初期化呼び出し
         });
 
-        // スムーススクロール (Page4/5から流用)
+        // スムーススクロール (Page4/5/6から流用)
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -677,54 +686,47 @@
 
         // Chart.js初期化
         function initializeCharts() {
-            // ギグワーカーがプラットフォーム収入を主な生計手段としている割合
-            const chartEl = document.getElementById('chartPage6Advance');
+            // 顔認証市場の成長を示すシンプルな棒グラフ
+            const chartEl = document.getElementById('facialRecognitionMarketChart');
             if (chartEl) {
-                const ctxPage6Advance = chartEl.getContext('2d');
-                // ILO “World Employment Social Outlook 2021” の
-                // 「Is platform work the main source of income?」に基づくデータ（タクシー84％、配達90％、オンライン約3分の1）
-                new Chart(ctxPage6Advance, {
+                const ctx = chartEl.getContext('2d');
+                new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['タクシー配車アプリ', '配達アプリ', 'オンライン型プラットフォーム'],
-                        datasets: [
-                            {
-                                label: 'プラットフォーム収入を主な生計手段とする労働者の割合（％）',
-                                data: [84, 90, 33],
-                                backgroundColor: [
-                                    'rgba(239, 68, 68, 0.7)',  // 赤 (タクシー)
-                                    'rgba(245, 158, 11, 0.7)', // 黄 (配達)
-                                    'rgba(59, 130, 246, 0.7)' // 青 (オンライン)
-                                ],
-                                borderColor: [
-                                    '#EF4444',
-                                    '#F59E0B',
-                                    '#3B82F6'
-                                ],
-                                borderWidth: 1,
-                                borderRadius: 8
-                            }
-                        ]
+                        labels: ['2023年', '2028年（予測）'],
+                        datasets: [{
+                            label: '顔認証市場規模（十億ドル）',
+                            // データ出典：
+                            // MarketsandMarkets, Facial Recognition Market – Global Forecast to 2028
+                            // 2023年：6.3B USD, 2028年：13.4B USD
+                            data: [6.3, 13.4],
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.7)',  // 青 (2023)
+                                'rgba(239, 68, 68, 0.7)'   // 赤 (2028)
+                            ],
+                            borderColor: [
+                                '#3B82F6',
+                                '#EF4444'
+                            ],
+                            borderWidth: 1,
+                            borderRadius: 8
+                        }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         scales: {
                             y: {
-                                suggestedMin: 0,
-                                suggestedMax: 100,
+                                beginAtZero: true,
+                                suggestedMax: 15,
                                 grid: { color: 'rgba(0, 0, 0, 0.06)' },
-                                ticks: {
-                                    stepSize: 20,
-                                    callback: function (value) {
-                                        return value + '%';
-                                    },
+                                title: {
+                                    display: true,
+                                    text: '市場規模（十億ドル）',
                                     font: { size: 12 },
                                     color: '#718096'
                                 },
-                                title: {
-                                    display: true,
-                                    text: '割合（％）',
+                                ticks: {
                                     font: { size: 12 },
                                     color: '#718096'
                                 }
@@ -732,7 +734,7 @@
                             x: {
                                 title: {
                                     display: true,
-                                    text: 'プラットフォームの種類',
+                                    text: '年',
                                     font: { size: 12 },
                                     color: '#718096'
                                 },
@@ -753,7 +755,7 @@
                                 cornerRadius: 8,
                                 callbacks: {
                                     label: function (context) {
-                                        return context.parsed.y + '%';
+                                        return '約 ' + context.parsed.y + ' 十億ドル';
                                     }
                                 }
                             }
