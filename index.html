@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SNSが現代社会に与えた影響 - 全国中高生WEBコンテスト2025</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
-    <link rel="stylesheet" href="css/common.css">
     <style>
-        :root{
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
             --text-primary: #1a202c;
             --text-secondary: #4a5568;
             --text-light: #718096;
@@ -15,8 +20,385 @@
             --surface: #f7fafc;
             --border: #e2e8f0;
         }
-    </style>
-		<style>
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* p5.js背景 */
+        #p5-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* メインコンテンツ */
+        .main-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ヒーローセクション */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .hero-content {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1.5s ease 1s forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -6px;
+            color: rgba(255, 255, 255, 0.98);
+            text-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.6),
+                0 4px 16px rgba(0, 0, 0, 0.4),
+                0 0 80px rgba(102, 126, 234, 0.3);
+            margin-bottom: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            text-transform: uppercase;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+            position: relative;
+        }
+
+        .hero-title.chaos-mode {
+            color: rgba(255, 100, 100, 0.98);
+            text-shadow: 
+                0 8px 32px rgba(255, 0, 0, 0.6),
+                0 4px 16px rgba(255, 0, 0, 0.4),
+                0 0 100px rgba(255, 68, 68, 0.5);
+            letter-spacing: -4px;
+            transform: scale(1.05);
+        }
+
+        .hero-title::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.3), transparent 70%);
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .hero-title.chaos-mode::before {
+            background: radial-gradient(circle, rgba(255, 68, 68, 0.4), transparent 70%);
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.6;
+            }
+        }
+
+        .hero-title-main {
+            display: block;
+            font-size: 1em;
+            margin-bottom: 0.1em;
+        }
+
+        .hero-title-sub {
+            display: block;
+            font-size: 0.35em;
+            letter-spacing: 0.15em;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards, bounce 2s ease-in-out 2s infinite;
+        }
+
+        .scroll-arrow {
+            width: 24px;
+            height: 24px;
+            border-left: 2px solid var(--text-light);
+            border-bottom: 2px solid var(--text-light);
+            transform: rotate(-45deg);
+        }
+
+        /* ページカードセクション */
+        .pages-section {
+            min-height: 100vh;
+            padding: 120px 40px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .section-header.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ページカードグリッド */
+        .pages-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            padding: 0 20px;
+        }
+
+        .page-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 48px 40px;
+            border: 2px solid transparent;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .page-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--card-color-1), transparent);
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .page-card:hover::after {
+            width: 600px;
+            height: 600px;
+            opacity: 0.15;
+        }
+
+        /* 粒子エフェクト */
+        .page-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--card-color-1), var(--card-color-2), var(--card-color-1));
+            background-size: 300% 300%;
+            border-radius: 24px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.5s ease;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .page-card:hover::before {
+            opacity: 1;
+        }
+
+        /* グリッチエフェクト */
+        .page-card:hover .page-card-title {
+            animation: glitch 0.3s ease;
+        }
+
+        @keyframes glitch {
+            0%, 100% {
+                transform: translate(0);
+            }
+            25% {
+                transform: translate(-2px, 2px);
+            }
+            50% {
+                transform: translate(2px, -2px);
+            }
+            75% {
+                transform: translate(-2px, -2px);
+            }
+        }
+
+        /* ナンバー */
+        .page-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--card-color-1);
+            line-height: 1;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        /* リンクアニメーション */
+        .page-card-link {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-card-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--card-color-1);
+            transition: width 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .page-card:hover .page-card-link::before {
+            width: 100%;
+        }
+
+        .page-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .page-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--card-color-1), var(--card-color-2));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .page-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .page-card:hover {
+            transform: translateY(-16px) scale(1.02);
+            box-shadow: 
+                0 32px 80px rgba(0, 0, 0, 0.2),
+                0 16px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--card-color-1);
+        }
+
+        /* カード個別カラー設定 */
+        .page-card[data-theme="normal"][data-page="intro"] {
+            --card-color-1: #667eea;
+            --card-color-2: #764ba2;
+        }
+
+        .page-card[data-theme="normal"][data-page="genealogy"] {
+            --card-color-1: #D4A574;
+            --card-color-2: #F4C430;
+        }
+
+        .page-card[data-theme="chaos"][data-page="duality"] {
+            --card-color-1: #8B7355;
+            --card-color-2: #C9A961;
+        }
+
+        .page-card[data-theme="chaos"][data-page="self"] {
+            --card-color-1: #48cae4;
+            --card-color-2: #0096c7;
+        }
+
+        .page-card[data-theme="chaos"][data-page="capital"] {
+            --card-color-1: #EF4444;
+            --card-color-2: #DC2626;
+        }
+
+        .page-card[data-theme="chaos"][data-page="memory"] {
+            --card-color-1: #6B7280;
+            --card-color-2: #4B5563;
+        }
+
+        .page-card[data-theme="normal"][data-page="future"] {
+            --card-color-1: #10B981;
+            --card-color-2: #059669;
+        }
+
+        .page-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--card-color-1);
+            line-height: 1;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .page-card-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            line-height: 1;
+            font-family: 'Noto Sans JP', sans-serif;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
         .page-card-theme {
             display: block;
             font-size: 1.1rem;
@@ -189,7 +571,7 @@
             </div>
 
             <div class="pages-grid">
-                <!-- Page 1: 序論 -->
+                <!-- Page 2: 序論 -->
                 <div class="page-card" data-theme="normal" data-page="intro">
                     <div class="page-number">01</div>
                     <h3 class="page-card-title">
@@ -200,10 +582,10 @@
                     <p class="page-card-description">
                         もはや単なるツールではない。ミーム文化、サードプレイスとしての機能。現代社会の文化形成を根底から変えた存在の正体。
                     </p>
-                    <a href="page1_foundation.html" class="page-card-link">詳しく見る</a>
+                    <a href="page2.html" class="page-card-link">詳しく見る</a>
                 </div>
 
-                <!-- Page 2: 系譜 -->
+                <!-- Page 3: 系譜 -->
                 <div class="page-card" data-theme="normal" data-page="genealogy">
                     <div class="page-number">02</div>
                     <h3 class="page-card-title">
@@ -214,10 +596,10 @@
                     <p class="page-card-description">
                         口承から文字、印刷、電信、そしてSNSへ。人類が数千年かけて築いた情報ネットワークの系譜。現代の問題は、実は古くからある。
                     </p>
-                    <a href="page2_evolution.html" class="page-card-link">詳しく見る</a>
+                    <a href="page3.html" class="page-card-link">詳しく見る</a>
                 </div>
 
-                <!-- Page 3: 両義 -->
+                <!-- Page 4: 両義 -->
                 <div class="page-card" data-theme="chaos" data-page="duality">
                     <div class="page-number">03</div>
                     <h3 class="page-card-title">
@@ -228,10 +610,10 @@
                     <p class="page-card-description">
                         フェイクニュースは真実より6倍速く拡散する。認知バイアス、エコーチェンバー、アルゴリズムが編む情報の罠。あなたは騙されている。
                     </p>
-                    <a href="page3_duality.html" class="page-card-link">詳しく見る</a>
+                    <a href="page4.html" class="page-card-link">詳しく見る</a>
                 </div>
 
-                <!-- Page 4: 自己 -->
+                <!-- Page 5: 自己 -->
                 <div class="page-card" data-theme="chaos" data-page="self">
                     <div class="page-number">04</div>
                     <h3 class="page-card-title">
@@ -242,10 +624,10 @@
                     <p class="page-card-description">
                         承認欲求、依存症、うつ病リスク26%増加。SNSは脳内ドーパミンを操り、あなたの精神を支配する。データが示す残酷な真実。
                     </p>
-                    <a href="page4_identity.html" class="page-card-link">詳しく見る</a>
+                    <a href="page5.html" class="page-card-link">詳しく見る</a>
                 </div>
 
-                <!-- Page 5: 資本 -->
+                <!-- Page 6: 資本 -->
                 <div class="page-card" data-theme="chaos" data-page="capital">
                     <div class="page-number">05</div>
                     <h3 class="page-card-title">
@@ -256,10 +638,10 @@
                     <p class="page-card-description">
                         年間収益25兆円。あなたの注意力、感情、行動データが商品化される監視資本主義。「無料」の正体は、あなた自身だった。
                     </p>
-                    <a href="page5_capitalism.html" class="page-card-link">詳しく見る</a>
+                    <a href="page6.html" class="page-card-link">詳しく見る</a>
                 </div>
 
-                <!-- Page 6: 記憶 -->
+                <!-- Page 7: 記憶 -->
                 <div class="page-card" data-theme="chaos" data-page="memory">
                     <div class="page-number">06</div>
                     <h3 class="page-card-title">
@@ -269,10 +651,10 @@
                     <p class="page-card-description">
                         削除したはずの投稿が9000億ページのアーカイブに永久保存。Wayback Machineが変えた情報社会。忘却する権利は失われた。
                     </p>
-                    <a href="page6_memory.html" class="page-card-link">詳しく見る</a>
+                    <a href="page7.html" class="page-card-link">詳しく見る</a>
                 </div>
 
-                <!-- Page 7: 未来 -->
+                <!-- Page 8: 未来 -->
                 <div class="page-card" data-theme="normal" data-page="future">
                     <div class="page-number">07</div>
                     <h3 class="page-card-title">
@@ -282,7 +664,7 @@
                     <p class="page-card-description">
                         分散型SNS、デジタルサービス法、若い世代の意識変化。絶望の先にある希望。より良いデジタル社会への道筋を、今ここから。
                     </p>
-                    <a href="page7_future.html" class="page-card-link">詳しく見る</a>
+                    <a href="page8.html" class="page-card-link">詳しく見る</a>
                 </div>
             </div>
         </section>
