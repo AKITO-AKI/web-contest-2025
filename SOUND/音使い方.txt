@@ -1,0 +1,7 @@
+BGMは表サイトのSNS部分でのBGM。
+Page_change_soundは各ページ遷移時に鳴らしてほしい音。
+action_soundはボタンを押したり、文字が出てきたとき（最初の演出・最後の演出・ノイズが出る等）に鳴る音
+background-soundは裏サイトのSNS部分・LIVE部分のBGM。
+（LIVE画面のBGMとLIVE時のエフェクトの音がまだ未定）
+
+※oundはデモファイル。
