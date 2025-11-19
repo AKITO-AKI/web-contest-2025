@@ -3,10 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <base href="./"> <!-- 追加 -->
+    <link rel="icon" type="image/svg+xml" href="vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>「@IronY」</title>
-    <script type="module" crossorigin src="./assets/index-DlCnWVIo.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-RzwWNKxR.css">
+    <script>
+      // Shim: rewrite leading-slash asset paths to relative paths
+      (function(){
+        function fixPath(p){
+          try { return (typeof p === 'string' && p.startsWith('/')) ? p.slice(1) : p; } catch { return p; }
+        }
+        // Patch setAttribute for src/href
+        const origSetAttribute = Element.prototype.setAttribute;
+        Element.prototype.setAttribute = function(name, value){
+          if ((name === 'src' || name === 'href') && typeof value === 'string') {
+            value = fixPath(value);
+          }
+          return origSetAttribute.call(this, name, value);
+        };
+        // Patch HTMLImageElement.src
+        const imgDesc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+        if (imgDesc && imgDesc.set) {
+          Object.defineProperty(HTMLImageElement.prototype, 'src', {
+            configurable: true,
+            enumerable: imgDesc.enumerable,
+            get: imgDesc.get,
+            set: function(v){ imgDesc.set.call(this, fixPath(v)); }
+          });
+        }
+        // Patch HTMLMediaElement.src (covers <audio> and <video>)
+        const mediaDesc = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'src');
+        if (mediaDesc && mediaDesc.set) {
+          Object.defineProperty(HTMLMediaElement.prototype, 'src', {
+            configurable: true,
+            enumerable: mediaDesc.enumerable,
+            get: mediaDesc.get,
+            set: function(v){ mediaDesc.set.call(this, fixPath(v)); }
+          });
+        }
+        // Patch Audio constructor for new Audio('/...') cases
+        const OriginalAudio = window.Audio;
+        window.Audio = function(src){
+          return new OriginalAudio(fixPath(src));
+        };
+        window.Audio.prototype = OriginalAudio.prototype;
+      })();
+    </script>
+    <script type="module" crossorigin src="assets/index-DzIEofMy.js"></script>
+    <link rel="stylesheet" crossorigin href="assets/index-Dmo4PRwV.css">
   </head>
   <body>
     <div id="app"></div>
