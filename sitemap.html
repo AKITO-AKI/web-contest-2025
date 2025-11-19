@@ -189,33 +189,12 @@
     box-shadow:0 0 0 4px rgba(140,205,255,0.5);
   }
 
-  /* カテゴリ別ドット */
-  .slotItem:nth-child(2)::before{ background:var(--neon-core); }
-  .slotItem:nth-child(3)::before,
-  .slotItem:nth-child(4)::before,
-  .slotItem:nth-child(5)::before,
-  .slotItem:nth-child(6)::before,
-  .slotItem:nth-child(7)::before,
-  .slotItem:nth-child(8)::before{
-    background:var(--neon-pink);
-  }
-  .slotItem:nth-child(9)::before,
-  .slotItem:nth-child(10)::before,
-  .slotItem:nth-child(11)::before,
-  .slotItem:nth-child(12)::before,
-  .slotItem:nth-child(13)::before{
-    background:var(--neon-cyan);
-  }
-  .slotItem:nth-child(14)::before,
-  .slotItem:nth-child(15)::before{
-    background:#ce8bff;
-  }
-  .slotItem:nth-child(16)::before,
-  .slotItem:nth-child(17)::before,
-  .slotItem:nth-child(18)::before,
-  .slotItem:nth-child(19)::before,
-  .slotItem:nth-child(20)::before{
-    background:#f9e08a;
+  /* カテゴリ別ドット（動的に設定されるため、デフォルトのみ） */
+  .slotItem::before{
+    transition:
+      background .2s ease,
+      box-shadow .2s ease,
+      transform .18s ease;
   }
 
   /* ========= HUD ラベル ========= */
@@ -399,20 +378,20 @@
 
   const PAGES = [
     {category:0, title:"トップページ", slug:"index.html", desc:"「@IronY ー(サブタイ)ー」のトップページ。ここから様々なページへと飛ぶことが可能です。迷った方はまずこちらのページから、このサイトを踏破する第一歩を踏み出してみて下さい。"},
-    {category:0, title:"序論", slug:"page2.html", desc:"そもそもSNSとは一体何なのか、そんな最も前提的な、しかしそれでいてこの問題の根幹に根付く「SNSの定義」を明らかにします。知の探究が、このページから幕を開けます。"},
-    {category:1, title:"本論：系譜", slug:"page3.html", desc:"本質は歴史にこそ隠れた、とはよく言うものです。SNSとは一体どのようにして今の強固な立ち位置を手に入れたのか、その過去を紐解きます。そこに本質があり、同時に全てを解き明かす謎が隠れているのです。"},
-    {category:1, title:"本論：両義", slug:"page4.html", desc:"社会に変革という名の深い爪痕を残したSNS。しかしそのSNSの、光が落とした闇に気づくことができていたでしょうか？そんな真実と虚構の二面性、両義的なその存在を今知覚しましょう。"},
-    {category:1, title:"本論：自己", slug:"page5.html", desc:"SNSに浸食されていく日常時間。私たちの体には、私たちの思考には一体何が起きているのでしょうか。SNSが生み出した「絶え間ない常時接続」から抜け出すために、まずはその問題を理解しましょう。"},
-    {category:1, title:"本論：資本", slug:"page6.html", desc:"私たちが多用するSNSは、世界中の天才達の「狩場」になりました。SNSによって誕生した新たな支配的資本主義形態の中で、私たちが狩られずに生き残るために、強大な社会構造のメカニズムを知りましょう。"},
-    {category:1, title:"本論：記憶", slug:"page7.html", desc:"インターネットは「生きて」います。かつて崇高な理念より生み出された存在「Wayback machine」。しかしそれはインターネットの全てを刻み、やがて黒い部分が表層へと顔を出すようになりました。"},
-    {category:1, title:"結論：未来", slug:"page8.html", desc:"問題は、現在のSNSが誰のために、どのような価値観で設計されているかにあります。そして、それを変える力は、私たち一人ひとりの手の中にあるのです。"},
-    {category:2, title:"発展論：旧網", slug:"page3_advance.html", desc:"応用トピックでは、Page3「系譜」で扱ったデジタル時代のSNS史の前に存在した、人類の長大なネットワーク構築史を振り返ります。"},
-    {category:2, title:"発展論：偽装", slug:"page4_advance.html", desc:"生成AIと情報倫理の関係、偽装・誤情報問題に向き合うための視点を提示します。"},
-    {category:2, title:"発展論：依存", slug:"page5_advance.html", desc:"日常化したSNSが依存へ向かうメカニズムを分析し、距離を取るための実践を考えます。"},
-    {category:2, title:"発展論：労働", slug:"page6_advance.html", desc:"SNS時代に変容する『労働』を見つめ直し、制作と注意の価値をどう守るかを議論します。"},
-    {category:2, title:"発展論：監視", slug:"page7_advance.html", desc:"プライバシーと監視の現状を整理し、制度的な対策や個人の防衛手段を提示します。"},
+    {category:0, title:"序論", slug:"page1_foundation.html", desc:"そもそもSNSとは一体何なのか、そんな最も前提的な、しかしそれでいてこの問題の根幹に根付く「SNSの定義」を明らかにします。知の探究が、このページから幕を開けます。"},
+    {category:1, title:"本論：系譜", slug:"page2_evolution.html", desc:"本質は歴史にこそ隠れた、とはよく言うものです。SNSとは一体どのようにして今の強固な立ち位置を手に入れたのか、その過去を紐解きます。そこに本質があり、同時に全てを解き明かす謎が隠れているのです。"},
+    {category:1, title:"本論：両義", slug:"page3_duality.html", desc:"社会に変革という名の深い爪痕を残したSNS。しかしそのSNSの、光が落とした闇に気づくことができていたでしょうか？そんな真実と虚構の二面性、両義的なその存在を今知覚しましょう。"},
+    {category:1, title:"本論：自己", slug:"page4_identity.html", desc:"SNSに浸食されていく日常時間。私たちの体には、私たちの思考には一体何が起きているのでしょうか。SNSが生み出した「絶え間ない常時接続」から抜け出すために、まずはその問題を理解しましょう。"},
+    {category:1, title:"本論：資本", slug:"page5_capitalism.html", desc:"私たちが多用するSNSは、世界中の天才達の「狩場」になりました。SNSによって誕生した新たな支配的資本主義形態の中で、私たちが狩られずに生き残るために、強大な社会構造のメカニズムを知りましょう。"},
+    {category:1, title:"本論：記憶", slug:"page6_memory.html", desc:"インターネットは「生きて」います。かつて崇高な理念より生み出された存在「Wayback machine」。しかしそれはインターネットの全てを刻み、やがて黒い部分が表層へと顔を出すようになりました。"},
+    {category:1, title:"結論：未来", slug:"page7_future.html", desc:"問題は、現在のSNSが誰のために、どのような価値観で設計されているかにあります。そして、それを変える力は、私たち一人ひとりの手の中にあるのです。"},
+    {category:2, title:"発展論：旧網", slug:"page2_advance.html", desc:"応用トピックでは、Page3「系譜」で扱ったデジタル時代のSNS史の前に存在した、人類の長大なネットワーク構築史を振り返ります。"},
+    {category:2, title:"発展論：偽装", slug:"page3_advance.html", desc:"生成AIと情報倫理の関係、偽装・誤情報問題に向き合うための視点を提示します。"},
+    {category:2, title:"発展論：依存", slug:"page4_advance.html", desc:"日常化したSNSが依存へ向かうメカニズムを分析し、距離を取るための実践を考えます。"},
+    {category:2, title:"発展論：労働", slug:"page5_advance.html", desc:"SNS時代に変容する『労働』を見つめ直し、制作と注意の価値をどう守るかを議論します。"},
+    {category:2, title:"発展論：監視", slug:"page6_advance.html", desc:"プライバシーと監視の現状を整理し、制度的な対策や個人の防衛手段を提示します。"},
     {category:3, title:"探求", slug:"interview.html", desc:"専門家の声を通じて現場の実務・研究の知見を届けます。"},
-    {category:3, title:"探求からの考察", slug:"interview_summary.html", desc:"インタビューで得た洞察を体系化し、実践的な示唆を整理します。"},
+    {category:4, title:"制作ログ", slug:"site_log.html", desc:"インタビューで得た洞察を体系化し、実践的な示唆を整理します。"},
     {category:4, title:"クイズ：試練", slug:"quiz.html", desc:"学んだことを確認するための短い演習を用意しました。"},
     {category:4, title:"参考文献：源泉", slug:"reference.html", desc:"参考文献・引用元を整理した一覧です。"},
     {category:4, title:"サイトマップ：羅針", slug:"sitemap.html", desc:"このサイトマップから各コンテンツへアクセスできます。設計意図も併記しています。"},
@@ -555,9 +534,22 @@
     }
   }
 
+  // 前面のラベルのみ表示する関数
+  function updateLabelVisibility() {
+    const camDir = tmpVec3.subVectors(camera.position, mesh.position).normalize();
+    
+    for (let i = 0; i < faceCenters.length; i++) {
+      const faceDir = faceCenters[i].clone().normalize().applyQuaternion(mesh.quaternion);
+      const dot = faceDir.dot(camDir);
+      
+      // カメラに向いている面（dot > 0.3程度）のみ表示
+      labels[i].visible = dot > 0.2;
+    }
+  }
+
   // ================== NEON GRID WAVE (床) ==================
 
-  const GRID_COLS = 32;
+  const GRID_COLS = 55;
   const GRID_ROWS = 22;
   const TILE_SIZE = 0.24;
   const TILE_GAP  = 0.04;
@@ -609,30 +601,29 @@
 
   let waveTime = 0;
   let waveStrength = 0;
+  const prevTileHeights = new Array(totalTiles).fill(0); // 各タイルの高さを保存
 
   // 色用の補間変数
   let colorT = 0;          // 0→1→0
   let colorDirection = 0;  // 1: up, -1: down, 0: stop
 
-  function randomPaletteColor() {
-    const choices = [
-      0x1b3047, // シアン寄りブルー
-      0x362148, // マゼンタ寄りパープル
-      0x184547, // ティール
-      0x3b3154  // ディープパープル
-    ];
-    const hex = choices[Math.floor(Math.random() * choices.length)];
-    return new THREE.Color(hex);
+  function getCategoryFloorColor(categoryIndex) {
+    const neon = CATEGORY_NEON[categoryIndex]?.edge || CATEGORY_NEON[0].edge;
+    // ネオン色を暗めに調整して床色として使用
+    return neon.clone().multiplyScalar(0.3);
   }
 
-  function kickWave(amount = 1) {
-    waveStrength = Math.min(1.7, waveStrength + amount);
-    if (waveTime === 0) waveTime = 0.0001;
+  function kickWave(amount = 1, categoryIndex = null) {
+    // 新しいウェーブが来たら即座にリセットして割り込み
+    waveStrength = amount;
+    waveTime = 0.0001;
 
-    // 色をランダムに決めて、黒 → ネオン → 黒 の往復を開始
-    activeFloorColor = randomPaletteColor();
+    // カテゴリ別の色を使用、指定がなければ現在のインデックスから取得
+    const catIndex = categoryIndex !== null ? categoryIndex : PAGES[currentIndex]?.category || 0;
+    activeFloorColor = getCategoryFloorColor(catIndex);
     activeEmissive   = activeFloorColor.clone().multiplyScalar(0.22);
 
+    // 色アニメーションも即座にリスタート
     colorT = 0;
     colorDirection = 1;
   }
@@ -654,13 +645,21 @@
       const speed = 4.0;
       const freq = 2.3;
       const baseH = 0.04;
+      
+      // 新しいウェーブの開始時は前の高さから滑らかに遷移
+      const blendFactor = Math.min(1, waveTime * 4.0);
 
       for (let i = 0; i < totalTiles; i++) {
         const pos = tilePositions[i];
         const dist = Math.sqrt(pos.x * pos.x + pos.z * pos.z);
         const wave = Math.sin(dist * freq - waveTime * speed);
 
-        const h = baseH + 0.6 * ((wave + 1) * 0.5) * strength;
+        const targetH = baseH + 0.6 * ((wave + 1) * 0.5) * strength;
+        
+        // 前の高さと新しい高さをブレンド
+        const h = prevTileHeights[i] * (1 - blendFactor) + targetH * blendFactor;
+        prevTileHeights[i] = h;
+        
         dummy.position.set(pos.x, h * 0.5, pos.z);
         dummy.scale.set(1, h / baseH, 1);
         dummy.updateMatrix();
@@ -717,9 +716,9 @@
   let activeTween = null;
   let lastInteractionTime = performance.now();
 
-  function markInteraction() {
+  function markInteraction(categoryIndex = null) {
     lastInteractionTime = performance.now();
-    kickWave(0.9);
+    kickWave(0.9, categoryIndex);
   }
 
   // ================== TWEEN HELPER ==================
@@ -768,11 +767,18 @@
     PAGES.forEach((p, i) => {
       const el = document.createElement("div");
       el.className = "slotItem";
-      el.textContent = `${i + 1}. ${p.title}`;
+      el.textContent = `${i-1 + 1}. ${p.title}`;
       el.dataset.index = String(i);
+      
+      // カテゴリ別のドット色を設定
+      const neon = CATEGORY_NEON[p.category]?.edge || CATEGORY_NEON[0].edge;
+      el.style.setProperty('--dot-color', `#${neon.getHexString()}`);
+      const beforeStyle = document.createElement('style');
+      beforeStyle.textContent = `.slotItem[data-index="${i}"]::before { background: #${neon.getHexString()}; }`;
+      document.head.appendChild(beforeStyle);
 
       el.addEventListener("click", () => {
-        markInteraction();
+        markInteraction(p.category);
         const idx = i;
         if (focusIndex === idx) {
           window.location.href = PAGES[idx].slug;
@@ -880,11 +886,23 @@
     const fromPos   = mesh.position.clone();
     const targetPos = mesh.position.clone();
 
+    // 回転をロック
+    lockedRotation = true;
+
     startTween(duration, (t) => {
       mesh.quaternion.copy(fromQuat).slerp(targetQuat, t);
       mesh.position.lerpVectors(fromPos, targetPos, t);
       edges.quaternion.copy(mesh.quaternion);
       edges.position.copy(mesh.position);
+    }, () => {
+      // Tween完了後も回転を固定
+      mesh.quaternion.copy(targetQuat);
+      edges.quaternion.copy(mesh.quaternion);
+      
+      // 3秒後にロック解除してアイドル回転に戻す
+      setTimeout(() => {
+        lockedRotation = false;
+      }, 3000);
     });
   }
 
@@ -930,7 +948,10 @@
 
     if (focusIndex === null) {
       orientToFace(index, { focus: false, duration: 550 });
-      edgeMaterial.color.copy(EDGE_BASE_COLOR);
+      // カテゴリ別のエッジ色を薄く適用
+      const page = PAGES[index];
+      const neon = CATEGORY_NEON[page.category]?.edge || CATEGORY_NEON[0].edge;
+      edgeMaterial.color.copy(neon).lerp(EDGE_BASE_COLOR, 0.7);
       edgeMaterial.opacity = 0.9;
     }
   }
@@ -1008,6 +1029,12 @@
 
     if (!dragMoved && distSq > dragThreshold * dragThreshold) {
       dragMoved = true;
+      // ドラッグ開始時にTweenをキャンセルし、回転ロックを解除
+      if (activeTween && activeTween.cancel) {
+        activeTween.cancel();
+        activeTween = null;
+      }
+      lockedRotation = false;
     }
 
     if (dragMoved && focusIndex === null) {
@@ -1065,6 +1092,10 @@
   // ================== ANIMATION LOOP ==================
 
   const clock = new THREE.Clock();
+  let idleRotation = false; // アイドル回転が有効かどうか
+  let lockedRotation = false; // 回転が固定されているかどうか
+  let transitionToIdle = 0; // 固定からアイドルへの遷移係数 (0-1)
+  let idleTransitionStartQuat = null; // 遷移開始時のquaternion
 
   function animate() {
     requestAnimationFrame(animate);
@@ -1075,13 +1106,50 @@
       closeInfo();
     }
 
-    if (focusIndex === null && !isDraggingCanvas && !activeTween) {
-      mesh.rotation.y += 0.12 * dt;
-      mesh.rotation.x = Math.sin(clock.elapsedTime * 0.12) * 0.05;
-      edges.rotation.copy(mesh.rotation);
+    // アイドル回転の条件：フォーカスなし、ドラッグなし、Tweenなし、回転ロックなし
+    const shouldIdleRotate = focusIndex === null && !isDraggingCanvas && !activeTween && !lockedRotation;
+    
+    if (shouldIdleRotate) {
+      if (!idleRotation) {
+        // アイドル回転の開始準備：現在の回転を記録
+        idleRotation = true;
+        transitionToIdle = 0;
+        idleTransitionStartQuat = mesh.quaternion.clone();
+      }
+      
+      // 固定状態からアイドル回転への滑らかな遷移
+      if (transitionToIdle < 1) {
+        transitionToIdle = Math.min(1, transitionToIdle + dt * 0.5);
+        
+        // easeOutCubic: ゆっくり始まって速く終わる
+        const eased = 1 - Math.pow(1 - transitionToIdle, 3);
+        
+        // 遷移中：固定されたquaternionからEuler回転へブレンド
+        const targetEuler = new THREE.Euler(
+          Math.sin(clock.elapsedTime * 0.12) * 0.05,
+          mesh.rotation.y + 0.12 * dt,
+          0,
+          'XYZ'
+        );
+        const targetQuat = new THREE.Quaternion().setFromEuler(targetEuler);
+        
+        mesh.quaternion.copy(idleTransitionStartQuat).slerp(targetQuat, eased);
+        edges.quaternion.copy(mesh.quaternion);
+      } else {
+        // 遷移完了後は通常のアイドル回転
+        mesh.rotation.y += 0.12 * dt;
+        mesh.rotation.x = Math.sin(clock.elapsedTime * 0.12) * 0.05;
+        edges.rotation.copy(mesh.rotation);
+      }
+    } else {
+      // アイドル回転から抜ける
+      idleRotation = false;
+      transitionToIdle = 0;
+      idleTransitionStartQuat = null;
     }
 
     updateWave(dt);
+    updateLabelVisibility();
 
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
