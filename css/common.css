@@ -156,6 +156,66 @@ body {
 /* ユーティリティ */
 .hidden{ display:none !important; }
 
+/* ================= Study Toolbox ================= */
+.study-toolbox{ position:fixed; right:24px; bottom:24px; z-index:1200; display:flex; flex-direction:column; align-items:flex-end; gap:14px; font-family:'Inter', 'Noto Sans JP', sans-serif; }
+.study-toolbox .tool-buttons{ display:flex; flex-direction:column; gap:12px; }
+.study-toolbox button{ all:unset; cursor:pointer; padding:14px 18px; border-radius:16px; font-size:13px; font-weight:600; letter-spacing:.5px; background:rgba(255,255,255,.85); backdrop-filter:blur(14px); border:1px solid rgba(0,0,0,.08); box-shadow:0 6px 20px rgba(0,0,0,.12); color:var(--text-secondary); position:relative; transition:background .3s, transform .3s, box-shadow .3s; }
+.study-toolbox button:hover{ background:var(--surface); transform:translateY(-3px); box-shadow:0 10px 28px rgba(0,0,0,.16); }
+.study-toolbox button:active{ transform:translateY(0); box-shadow:0 4px 16px rgba(0,0,0,.12); }
+.study-toolbox button[aria-pressed="true"]{ background:linear-gradient(135deg,var(--primary-color,#667eea),var(--primary-dark,#5a67d8)); color:#fff; box-shadow:0 10px 30px rgba(102,126,234,.4); }
+.study-toolbox .memo-count{ position:absolute; top:6px; right:10px; background:var(--primary-color,#667eea); color:#fff; font-size:10px; padding:3px 6px; border-radius:10px; line-height:1; box-shadow:0 2px 6px rgba(0,0,0,.18); }
+
+/* Drawer */
+.study-memo-drawer{ position:fixed; right:24px; bottom:100px; width:340px; max-width:90vw; background:rgba(255,255,255,.9); backdrop-filter:blur(18px); border:1px solid rgba(0,0,0,.08); border-radius:20px; padding:20px 22px 26px; box-shadow:0 16px 50px rgba(0,0,0,.18); z-index:1199; display:none; flex-direction:column; gap:14px; }
+.study-memo-drawer[aria-hidden="false"]{ display:flex; animation:drawerFade .45s cubic-bezier(.23,1,.32,1); }
+@keyframes drawerFade{ from{ opacity:0; transform:translateY(20px) scale(.98);} to{ opacity:1; transform:translateY(0) scale(1);} }
+.study-memo-drawer h3{ margin:0; font-size:15px; font-weight:700; letter-spacing:.8px; color:var(--text-primary); display:flex; align-items:center; gap:8px; }
+.study-memo-drawer .memo-actions{ display:flex; gap:10px; }
+.study-memo-drawer button.action{ all:unset; cursor:pointer; padding:10px 14px; border-radius:12px; font-size:12px; font-weight:600; background:var(--surface); border:1px solid var(--border); color:var(--text-secondary); transition:.25s; }
+.study-memo-drawer button.action:hover{ background:var(--primary-light,#f0f4ff); color:var(--primary-color,#667eea); }
+.study-memo-drawer textarea{ width:100%; min-height:130px; resize:vertical; font-family:inherit; font-size:13px; line-height:1.5; padding:14px 16px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.8); box-shadow:inset 0 2px 6px rgba(0,0,0,.06); }
+.study-memo-drawer textarea:focus{ outline:2px solid var(--primary-color,#667eea); outline-offset:2px; }
+.study-memo-drawer .saved-at{ font-size:11px; color:var(--text-light); text-align:right; }
+
+/* Highlight mode indicator */
+.study-toolbox .highlight-mode-indicator{ position:absolute; right:100%; margin-right:10px; top:50%; transform:translateY(-50%); background:linear-gradient(135deg,var(--primary-color,#667eea),var(--primary-dark,#5a67d8)); color:#fff; padding:8px 14px; border-radius:14px; font-size:11px; font-weight:600; letter-spacing:.5px; box-shadow:0 8px 24px rgba(102,126,234,.4); opacity:0; pointer-events:none; transition:.35s; }
+.study-toolbox.highlight-active .highlight-mode-indicator{ opacity:1; transform:translateY(-50%) scale(1); }
+
+/* Highlight styles */
+.study-highlight{ background:linear-gradient(120deg, rgba(255,245,167,.9), rgba(255,230,95,.7)); padding:2px 4px; border-radius:6px; box-shadow:0 2px 0 rgba(255,200,0,.35); position:relative; cursor:pointer; transition:background .3s, box-shadow .3s; }
+.study-highlight:hover{ background:linear-gradient(120deg, rgba(255,250,195,1), rgba(255,235,120,.9)); box-shadow:0 3px 4px rgba(0,0,0,.12); }
+.study-highlight[data-temp="true"]{ outline:2px dashed var(--primary-color,#667eea); }
+.study-highlight .remove-highlight{ position:absolute; top:-8px; right:-8px; width:20px; height:20px; background:linear-gradient(135deg,#ff6b6b,#ff8787); color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center; border-radius:50%; box-shadow:0 4px 10px rgba(0,0,0,.25); opacity:0; transform:scale(.6); transition:.3s; cursor:pointer; }
+.study-highlight:hover .remove-highlight{ opacity:1; transform:scale(1); }
+
+/* Scroll-to-top button (emerges when scrolled) */
+.study-toolbox button.scroll-top{ width:54px; height:54px; padding:0; display:flex; align-items:center; justify-content:center; font-size:18px; border-radius:18px; }
+.study-toolbox button.scroll-top.hidden{ opacity:0; transform:translateY(20px); pointer-events:none; }
+
+/* Responsive adjustments */
+@media (max-width:900px){
+  .study-toolbox{ right:18px; bottom:18px; }
+  .study-memo-drawer{ right:18px; bottom:90px; width:320px; }
+}
+@media (max-width:600px){
+  .study-toolbox button{ padding:12px 14px; font-size:12px; }
+  .study-memo-drawer{ width:300px; padding:18px 18px 24px; }
+  .study-memo-drawer textarea{ min-height:110px; }
+}
+@media (max-width:480px){
+  .study-toolbox{ right:14px; bottom:14px; }
+  .study-memo-drawer{ right:14px; bottom:80px; width:calc(100% - 28px); }
+}
+/* Sticky Notes */
+.study-sticky-note{ position:absolute; min-width:160px; max-width:220px; padding:14px 16px 26px 16px; background:linear-gradient(160deg,#fff9c4,#ffe082); box-shadow:0 8px 22px rgba(0,0,0,.18); border-radius:10px; font-size:13px; line-height:1.5; color:#5a5135; z-index:1150; cursor:grab; user-select:none; transition:box-shadow .25s, transform .25s; }
+.study-sticky-note:active{ cursor:grabbing; box-shadow:0 4px 14px rgba(0,0,0,.22); }
+.study-sticky-note .note-text{ white-space:pre-wrap; word-break:break-word; }
+.study-sticky-note .note-close{ position:absolute; top:4px; right:6px; width:22px; height:22px; border:none; background:#ff6b6b; color:#fff; font-size:13px; line-height:1; border-radius:50%; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.25); transition:.25s; }
+.study-sticky-note .note-close:hover{ background:#ff8787; }
+.study-sticky-note .note-drag{ position:absolute; bottom:4px; right:8px; font-size:14px; opacity:.5; cursor:grab; }
+.study-sticky-note .note-drag:hover{ opacity:.9; }
+.placing-note-indicator{ position:fixed; left:50%; top:20px; transform:translateX(-50%); background:linear-gradient(135deg,var(--primary-color,#667eea),var(--primary-dark,#5a67d8)); color:#fff; padding:10px 18px; font-size:12px; font-weight:600; letter-spacing:.8px; border-radius:30px; box-shadow:0 8px 28px rgba(102,126,234,.45); z-index:1500; animation:fadeIn .4s ease; }
+
 /* Index ページ用カード / ヒーロー（含めても他ページに影響は小さい） */
 #p5-canvas{ position: fixed; top:0; left:0; width:100%; height:100%; z-index:0; }
 .main-container{ position:relative; z-index:1; }
