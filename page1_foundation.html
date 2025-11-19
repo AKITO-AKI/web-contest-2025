@@ -216,7 +216,7 @@
     </nav>
 
     <!-- メインコンテンツ -->
-    <main class="main-content">
+    <main id="article-content" class="main-content">
         <!-- ページヘッダー -->
         <header class="page-header">
             <div class="page-subtitle">Page 1</div>
@@ -398,7 +398,7 @@
             <h2 class="section-title fade-in-title">2. SNSの課題点</h2>
             
             <p class="content-paragraph">
-                現代での新たな立ち位置を確立しつつあるSNS。しかしその一方で、私達は何かを失ってはいなかったでしょうか？
+                現代での新たな立ち位置を確立しつつあるSNS。一方で、私達は何かを失っているのかもしれません。
             </p>
 
             <p class="content-paragraph">
@@ -456,9 +456,32 @@
             <div class="references">
                 <p>ダナ・ボイド「つながりっぱなしの日常を生きる：ソーシャルメディアが若者にもたらしたもの」</p>
                 <p>レイ・オルデンバーグ「サードプレイス：コミュニティの核になる「とびきり居心地のよい場所」」</p>
+                <p>マーク・グラノヴェッター「弱い紐帯の強さ」</p>
             </div>
         </section>
-    </main>
+        </main>
+
+        <!-- Study Toolbox Markup -->
+        <div class="study-toolbox" aria-label="学習ツールボックス">
+            <div class="tool-buttons">
+                <button type="button" class="tool-highlight" aria-pressed="false" aria-label="ハイライト切替">ハイライト</button>
+                <button type="button" class="tool-memo" aria-expanded="false" aria-controls="studyMemoDrawer" aria-label="メモを開く">メモ</button>
+                <button type="button" class="scroll-top hidden" aria-label="トップへ戻る">↑</button>
+                <div class="highlight-mode-indicator" aria-hidden="true">選択でハイライト</div>
+            </div>
+        </div>
+        <div id="studyMemoDrawer" class="study-memo-drawer" aria-hidden="true" role="dialog" aria-label="ページ付箋メモ">
+            <h3>付箋メモ</h3>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.6;">テキストを書いて「追加」→配置したい場所をクリック。ドラッグで移動、×で削除できます。</p>
+            <div class="memo-actions">
+                <button type="button" class="action memo-add" aria-label="付箋を追加">追加</button>
+                <button type="button" class="action memo-clear-all" aria-label="全ての付箋を削除">全削除</button>
+            </div>
+            <textarea placeholder="付箋に書く内容..." aria-label="付箋メモ入力欄"></textarea>
+            <div class="saved-at" aria-live="polite"></div>
+        </div>
+
+        <script src="assets/study-toolbox.js" defer></script>
 
     <script>
         // ナビゲーション制御の改良版

@@ -184,7 +184,7 @@
     </nav>
 
     <!-- メインコンテンツ -->
-    <main class="main-content">
+    <main id="article-content" class="main-content">
         <!-- ページヘッダー -->
         <header class="page-header">
             <div class="page-subtitle">Page 3</div>
@@ -444,9 +444,31 @@
                 <p>ダニエル・カーネマン『ファスト＆スロー：あなたの意思はどのように決まるか？』早川書房、2012年</p>
                 <p>イーライ・パリサー『フィルターバブル：インターネットが隠していること』早川書房、2016年</p>
                 <p>増井啓太ほか「SNSにおけるデマ拡散に関する研究」追手門学院大学、2022年</p>
-                <p>Vosoughi, S., Roy, D., & Aral, S. (2018). The spread of true and false news online. Science, 359(6380), 1146-1151.</p>
+                <p>フランシス・ホーゲン 「内部告発」、2021年</p>
             </div>
         </section>
+        </main>
+        <!-- Study Toolbox Markup -->
+        <div class="study-toolbox" aria-label="学習ツールボックス">
+            <div class="tool-buttons">
+                <button type="button" class="tool-highlight" aria-pressed="false" aria-label="ハイライト切替">ハイライト</button>
+                <button type="button" class="tool-memo" aria-expanded="false" aria-controls="studyMemoDrawer" aria-label="付箋メモを開く">メモ</button>
+                <button type="button" class="scroll-top hidden" aria-label="トップへ戻る">↑</button>
+                <div class="highlight-mode-indicator" aria-hidden="true">選択でハイライト</div>
+            </div>
+        </div>
+        <div id="studyMemoDrawer" class="study-memo-drawer" aria-hidden="true" role="dialog" aria-label="ページ付箋メモ">
+            <h3>付箋メモ</h3>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.6;">テキストを書いて「追加」→本文をクリックで配置。ドラッグ移動/×で削除。</p>
+            <div class="memo-actions">
+                <button type="button" class="action memo-add" aria-label="付箋を追加">追加</button>
+                <button type="button" class="action memo-clear-all" aria-label="全付箋を削除">全削除</button>
+            </div>
+            <textarea placeholder="付箋に書く内容..." aria-label="付箋メモ入力欄"></textarea>
+            <div class="saved-at" aria-live="polite"></div>
+        </div>
+        <script src="assets/study-toolbox.js" defer></script>
+        </section> 
     </main>
 
     <script>
