@@ -49,7 +49,7 @@
         .issues-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
+            gap: 32px 24px;
             margin: 32px 0;
         }
 
@@ -168,14 +168,36 @@
         <nav class="navigation">
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">HOME</a></li>
-                <li><a data-theme="chaos" data-page="genealogy" href="page1_foundation.html" class="nav-link active">序論</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page2_evolution.html" class="nav-link">系譜</a></li>
-                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a></li>
-                <li><a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a></li>
-                <li><a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a></li>
-                <li><a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a></li>
-                <li><a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a></li>
+                <li><a data-theme="chaos" data-page="intro" href="page1_foundation.html" class="nav-link active">序論</a></li>
+                
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="genealogy" href="page2_evolution.html" class="nav-link">系譜</a>
+								    <a data-theme="normal" data-page="genealogy" href="page3_advance.html" class="nav-link">旧網</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a>
+								    <a data-theme="chaos" data-page="duality" href="page3_advance.html" class="nav-link">偽装</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a>
+								    <a data-theme="chaos" data-page="self" href="page4_advance.html" class="nav-link">依存</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a>
+								    <a data-theme="chaos" data-page="capital" href="page5_advance.html" class="nav-link">労働</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a>
+								    <a data-theme="chaos" data-page="memory" href="page6_advance.html" class="nav-link">監視</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a>
+								</li>
             </ul>
         </nav>
     </div>
@@ -194,7 +216,7 @@
     </nav>
 
     <!-- メインコンテンツ -->
-    <main class="main-content">
+    <main id="article-content" class="main-content">
         <!-- ページヘッダー -->
         <header class="page-header">
             <div class="page-subtitle">Page 1</div>
@@ -437,7 +459,29 @@
                 <br><p>マーク・グラノヴェッター「弱い紐帯の強さ」</p>
             </div>
         </section>
-    </main>
+        </main>
+
+        <!-- Study Toolbox Markup -->
+        <div class="study-toolbox" aria-label="学習ツールボックス">
+            <div class="tool-buttons">
+                <button type="button" class="tool-highlight" aria-pressed="false" aria-label="ハイライト切替">ハイライト</button>
+                <button type="button" class="tool-memo" aria-expanded="false" aria-controls="studyMemoDrawer" aria-label="メモを開く">メモ</button>
+                <button type="button" class="scroll-top hidden" aria-label="トップへ戻る">↑</button>
+                <div class="highlight-mode-indicator" aria-hidden="true">選択でハイライト</div>
+            </div>
+        </div>
+        <div id="studyMemoDrawer" class="study-memo-drawer" aria-hidden="true" role="dialog" aria-label="ページ付箋メモ">
+            <h3>付箋メモ</h3>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.6;">テキストを書いて「追加」→配置したい場所をクリック。ドラッグで移動、×で削除できます。</p>
+            <div class="memo-actions">
+                <button type="button" class="action memo-add" aria-label="付箋を追加">追加</button>
+                <button type="button" class="action memo-clear-all" aria-label="全ての付箋を削除">全削除</button>
+            </div>
+            <textarea placeholder="付箋に書く内容..." aria-label="付箋メモ入力欄"></textarea>
+            <div class="saved-at" aria-live="polite"></div>
+        </div>
+
+        <script src="assets/study-toolbox.js" defer></script>
 
     <script>
         // ナビゲーション制御の改良版
