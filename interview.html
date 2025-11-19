@@ -295,8 +295,8 @@
   gap: 0.85rem;
 }
 
-/* 会話行ふきだし風 */
-.dialog-line {
+/* 会話行ふきだし風（セッション内のみ適用） */
+.session-section .dialog-line {
   display: grid;
   grid-template-columns: minmax(0, 6.5rem) minmax(0, 1fr);
   column-gap: 1.2rem;
@@ -307,11 +307,11 @@
   box-shadow: 0 1px 0 rgba(148, 163, 184, 0.25);
 }
 
-.dialog-line:nth-of-type(2n) {
+.session-section .dialog-line:nth-of-type(2n) {
   background: rgba(241, 245, 249, 0.96);
 }
 
-.dialog-speaker {
+.session-section .dialog-speaker {
   font-weight: 600;
   font-size: 0.78rem;
   color: #64748b;
@@ -320,40 +320,44 @@
   white-space: nowrap;
 }
 
-.dialog-text {
+.session-section .dialog-text {
   color: #0f172a;
   font-size: 0.9rem;
   line-height: 1.9;
 }
 
-.dialog-text p {
+.session-section .dialog-text p {
   margin: 0;
 }
 
-.dialog-text p + p {
+.session-section .dialog-text p + p {
   margin-top: 0.35rem;
 }
 
 /* topic 行（小見出し） */
-.dialog-line.topic {
+.session-section .dialog-line.topic {
   background: transparent;
   box-shadow: none;
   padding: 0;
   margin-top: 1.6rem;
+  /* 一列で文章を完結（2カラムを使わない） */
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
 }
 
-.dialog-line.topic .dialog-speaker {
+.session-section .dialog-line.topic .dialog-speaker {
   display: none;
 }
 
-.dialog-line.topic .dialog-text {
+.session-section .dialog-line.topic .dialog-text {
   font-size: 0.78rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #6b7280;
 }
 
-.dialog-line.topic .dialog-text::before {
+.session-section .dialog-line.topic .dialog-text::before {
   content: "";
   display: inline-block;
   width: 7px;
@@ -373,17 +377,297 @@
 }
 
 @media (max-width: 720px) {
-  .dialog-line {
+  .session-section .dialog-line {
     grid-template-columns: 1fr;
     row-gap: 0.15rem;
   }
 
-  .dialog-speaker {
+  .session-section .dialog-speaker {
     text-align: left;
     font-size: 0.76rem;
     padding-top: 0;
   }
 }
+
+/* =====================
+   Animations (scoped)
+   ===================== */
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(12px); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowIn {
+  0% { opacity: 0; filter: blur(4px); }
+  100% { opacity: 1; filter: blur(0); }
+}
+
+/* 初期状態 */
+.reveal { opacity: 0; transform: translateY(12px); will-change: opacity, transform; }
+.reveal.is-visible { animation: fadeUp 600ms cubic-bezier(.2,.7,.2,1) forwards; }
+
+/* セッション内の行を段階的に表示 */
+.session-section .session-lines.reveal-stagger > .dialog-line { opacity: 0; transform: translateY(10px); }
+.session-section .session-lines.reveal-stagger.is-visible > .dialog-line { 
+  animation: fadeUp 520ms cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+/* ささやかなホバー効果 */
+.session-section .dialog-line:hover { box-shadow: 0 3px 10px rgba(15,23,42,.08), 0 0 0 1px rgba(148,163,184,.18); }
+
+/* 低モーション設定の尊重 */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .session-section .session-lines.reveal-stagger > .dialog-line,
+  .reveal.is-visible, .session-section .session-lines.reveal-stagger.is-visible > .dialog-line { 
+    animation: none !important; transform: none !important; opacity: 1 !important; 
+  }
+}
+
+/* =====================
+   Teen Notebook Styling
+   ===================== */
+/* 反省セクション全体を「ノート用紙」風に */
+.reflection-section {
+  position: relative;
+  border-radius: 18px;
+  padding: 2.2rem 1.6rem 2.6rem;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9)),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(91,145,199,0.15) 0px,
+      rgba(91,145,199,0.15) 2px,
+      transparent 2px,
+      transparent 36px
+    );
+  box-shadow:
+    0 18px 45px rgba(15, 23, 42, 0.18),
+    0 0 0 1px rgba(255,255,255,0.7) inset;
+}
+/* ヘッダーラベルを付箋風に */
+.reflection-header-label {
+  display: inline-block;
+  background: #fff6b5;
+  color: #5b5b22;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.06), 0 10px 18px rgba(0,0,0,0.08);
+  transform: rotate(-1deg);
+}
+
+/* タイトルにマーカー風ハイライト */
+.reflection-title {
+  display: inline;
+  background: linear-gradient(transparent 62%, rgba(255,246,150,0.8) 62%);
+  padding: 0 0.15rem 0.1rem;
+}
+
+/* 会話行を手書きメモ風に柔らかく */
+.reflection-dialog .dialog-line {
+  background: rgba(255,255,255,0.86);
+  border: 1.5px dashed rgba(71,85,105,0.28);
+  box-shadow: 0 1px 0 rgba(148,163,184,0.2);
+}
+.reflection-dialog .dialog-speaker {
+  color: #475569;
+  background: linear-gradient(transparent 60%, rgba(255,230,140,0.7) 60%);
+  border-radius: 4px;
+  padding: 0.05rem 0.2rem;
+}
+
+.reflection-essay-title {
+  display: inline-block;
+  background: linear-gradient(transparent 60%, rgba(255,246,150,0.8) 60%);
+  padding: 0 0.2rem 0.1rem;
+}
+
+.reflection-subtitle {
+  position: relative;
+  padding-left: 1.15rem;
+}
+.reflection-subtitle::before {
+  content: "✎";
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  color: #64748b;
+}
+
+.reflection-essay ul li {
+  padding-left: 0.4rem;
+}
+.reflection-essay ul li::marker {
+  content: "・ ";
+  color: #475569;
+}
+
+/* =====================
+   Emphasis for headings & claims
+   ===================== */
+/* 見出しをマーカー強調（既存のトーンを他見出しにも展開） */
+.intro-title,
+.session-title,
+.session-block-title,
+.iv-title,
+.reflection-essay-title {
+  background: linear-gradient(transparent 68%, rgba(255,246,150,0.7) 68%);
+  display: inline;
+  padding: 0 0.15rem 0.1rem;
+}
+
+/* ブロック見出しの左罫線で視線誘導 */
+.session-block-title {
+  display: inline-block;
+  padding-left: 0.6rem;
+  border-left: 4px solid rgba(30,58,138,0.5);
+  border-radius: 2px;
+}
+
+/* 章末の主張（まとめ）をコールアウト化 */
+.reflection-essay-final {
+  position: relative;
+  margin-top: 1.2rem;
+  padding: 1rem 1.1rem 1rem 1.2rem;
+  background: rgba(255,255,255,0.9);
+  border-left: 5px solid #ef4444; /* アクセントで強調 */
+  box-shadow: 0 10px 24px rgba(15,23,42,0.12), 0 0 0 1px rgba(148,163,184,0.18);
+  border-radius: 10px;
+}
+.reflection-essay-final::before {
+  content: "\201C"; /* 開き引用符 */
+  position: absolute;
+  left: -10px;
+  top: -10px;
+  font-size: 48px;
+  color: rgba(239,68,68,0.25);
+  line-height: 1;
+  pointer-events: none;
+}
+/* =========================
+   ④ 高校生セッション＋まとめ
+   ========================= */
+
+.reflection-section {
+  margin: 3.8rem auto 0;
+  max-width: 960px;
+  padding: 2.6rem 2.2rem 3.1rem;
+  border-radius: 24px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(240, 244, 252, 0.97)
+  );
+  box-shadow:
+    0 20px 55px rgba(15, 23, 42, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+.reflection-header-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-bottom: 0.7rem;
+}
+
+.reflection-header-label::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: #cbd5e1;
+}
+
+.reflection-title {
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  letter-spacing: 0.06em;
+  margin: 0 0 0.6rem;
+}
+
+.reflection-lead {
+  font-size: 0.9rem;
+  color: #4b5563;
+  line-height: 1.9;
+  max-width: 760px;
+  margin: 0 0 1.6rem;
+}
+
+.reflection-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 2.4rem;
+}
+
+/* ④でも .dialog-line 系をそのまま利用 */
+
+.reflection-divider {
+  height: 1px;
+  margin: 0.3rem 0 2.2rem;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(148, 163, 184, 0.6),
+    transparent
+  );
+}
+
+.reflection-essay-title {
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.9rem;
+}
+
+.reflection-essay {
+  font-size: 0.9rem;
+  color: #111827;
+  line-height: 1.9;
+}
+
+.reflection-essay p {
+  margin: 0 0 1rem;
+}
+
+.reflection-subtitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 1.1rem 0 0.2rem;
+  letter-spacing: 0.05em;
+}
+
+.reflection-essay ul {
+  margin: 0.2rem 0 0.8rem 1.2rem;
+  padding: 0;
+}
+
+.reflection-essay li {
+  margin-bottom: 0.25rem;
+}
+
+.reflection-essay-final {
+  margin-top: 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* モバイル調整 */
+@media (max-width: 900px) {
+  .reflection-section {
+    padding: 2.3rem 1.7rem 2.7rem;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 720px) {
+  .reflection-section {
+    padding-inline: 1.3rem;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -825,7 +1109,177 @@
     
           </section>
     
-          <!-- この下に ④ 高校生同士のセッション ＋ まとめ をつなげていく -->
+                <!-- ④ 高校生同士のセッション ＋ まとめ -->
+      <section id="after-session" class="reflection-section">
+        <div class="reflection-header-label">STEP 3</div>
+        <h2 class="reflection-title">
+          高校生チームのアフターセッションと、私たちの答え
+        </h2>
+        <p class="reflection-lead">
+          note・金谷武明さんへのインタビューを終えたあと、私たちは高校生同士であらためて「何を受け取ったのか」「これからどう SNS と付き合っていきたいのか」を話し合いました。<br>
+          ここでは、そのときのセッションの一部と、そこからまとめた私たちなりの指針を紹介します。
+        </p>
+
+        <!-- ④-1 高校生同士のセッション -->
+        <div class="reflection-dialog">
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タカクラ</div>
+            <div class="dialog-text">
+              <p>
+                まず、一番びっくりしたのは note さんが「ランキングも広告も置かない」ってはっきり言っていたところかな。
+                ビジネスとしてはむしろ置いたほうが稼げそうなのに、それでも「空気」を優先しているのが印象的だった。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タナカ</div>
+            <div class="dialog-text">
+              <p>
+                分かる。「クリエイターがストレスを感じない場所にしたい」っていう言葉が、そのまま設計に落ちている感じがしたよね。
+                アルゴリズムって冷たいものだと思っていたけど、どんな価値観で動かすか次第なんだな、って。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タカクラ</div>
+            <div class="dialog-text">
+              <p>
+                金谷さんの話も、「技術そのものより、どういうビジネスモデルで使われているかのほうが問題だ」っていうのが刺さった。
+                たしかに、同じレコメンドでも「滞在時間を伸ばすため」なのか、「いろんな意見を見てもらうため」なのかで、まったく違う使い方になるよね。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タナカ</div>
+            <div class="dialog-text">
+              <p>
+                フィルターバブルやエコーチェンバーの話も、「アルゴリズムが悪い」というより、
+                「自分の気持ちいい世界だけを強化する使い方をしちゃう人間側の問題もある」っていう視点が新鮮だった。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タカクラ</div>
+            <div class="dialog-text">
+              <p>
+                うん。だからこそ、「使う側」としての責任も逃れられないなって。
+                タイムラインに出てきたものをそのまま世界のすべてだと思わないで、一回立ち止まるクセをつけないといけないのかも。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タナカ</div>
+            <div class="dialog-text">
+              <p>
+                それと同時に、「しんどかったら距離を取っていい」ってことも、もっと言葉にしていいと思った。
+                可処分時間の奪い合いって話があったけど、私たちがそのゲームから降りる権利も、ちゃんとあるはずだから。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タカクラ</div>
+            <div class="dialog-text">
+              <p>
+                そうだね。完全に SNS をやめるのは現実的じゃないとしても、「ここからここまでは見ない」とか、
+                「この時間帯はアプリを開かない」とか、自分でルールを決めてもいい。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タナカ</div>
+            <div class="dialog-text">
+              <p>
+                あと、プラットフォーム側に「もっと説明してほしい」と言っていくことも、ユーザーにできることだよね。
+                アルゴリズムがどう動いているのか、何を重視しているのか。知らないままだと、怖さだけがふくらんじゃうから。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タカクラ</div>
+            <div class="dialog-text">
+              <p>
+                結局、アルゴリズムは「敵」でも「味方」でもなくて、私たちと一緒に社会を形作っている一つの道具なんだと思う。
+                だからこそ、任せっぱなしにせずに、自分たちの側からも関わり方を選び直していきたいよね。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タナカ</div>
+            <div class="dialog-text">
+              <p>
+                うん。そのうえで、「私たちはこういう未来の SNS を望むし、こう生きたい」というのを、
+                ちゃんと文章として残しておきたいな。せっかくインタビューまでしたんだし。
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="reflection-divider"></div>
+
+        <!-- ④-2 まとめのエッセイ／指針 -->
+        <div class="reflection-essay">
+          <h3 class="reflection-essay-title">
+            それでも、私たちはSNSと生きていく  
+            ― アルゴリズム時代をわたるための小さな指針
+          </h3>
+
+          <p>
+            インタビューを通して見えてきたのは、「アルゴリズム＝悪者」という単純な図では説明できない現実でした。  
+            note のように、あえてランキングや広告を置かず、クリエイターのストレスを減らす方向に使われているアルゴリズムもあれば、
+            可処分時間をできるだけ多く奪うために最適化されている仕組みもある。  
+            技術そのものよりも、「どんな世界を目指して設計されているか」が決定的に重要だということです。
+          </p>
+
+          <p>
+            同時に、フィルターバブルやエコーチェンバーの問題は、「使う側」の選び方とも深く結びついていると分かりました。  
+            自分と同じ意見の投稿ばかりをフォローすれば、タイムラインはどんどん心地よく、そしてどんどん狭くなっていきます。
+            「世界が偏って見える」ようにしているのは、アルゴリズムだけではなく、自分自身の行動でもあるのかもしれません。
+          </p>
+
+          <p>
+            だからこそ、私たちは「つくる側」と「使う側」のあいだに立つ高校生として、次のような小さな指針を持っていたいと考えました。
+          </p>
+
+          <h4 class="reflection-subtitle">1. アルゴリズムに「任せっぱなし」にしない</h4>
+          <ul>
+            <li>タイムラインに流れてくる情報を、「世界のすべて」とは思い込まない。</li>
+            <li>おすすめの理由や仕組みについて、説明を求めたり調べたりする姿勢を忘れない。</li>
+            <li>レコメンドだけでなく、自分から検索したり、本や人との会話など別の経路も持つ。</li>
+          </ul>
+
+          <h4 class="reflection-subtitle">2. しんどいときは、距離を取る権利がある</h4>
+          <ul>
+            <li>「なんとなく疲れた」と感じたら、タイムラインから一度離れてもいいと自分に許可する。</li>
+            <li>一日のどこかに、完全にオフラインで過ごす時間を少しだけつくってみる。</li>
+            <li>通知を全部オンにするのではなく、自分が本当に必要だと思うものだけ残す。</li>
+          </ul>
+
+          <h4 class="reflection-subtitle">3. 一緒にルールをつくる側に回る</h4>
+          <ul>
+            <li>プラットフォームの利用規約やポリシーに関心を持ち、「何が歓迎されている場なのか」を知る。</li>
+            <li>おかしいと思った仕様や空気に対しては、ユーザーとして声を届けることも選択肢に入れる。</li>
+            <li>将来、もしサービスをつくる立場になったら、「どんな世界を実現したいか」から設計を始める。</li>
+          </ul>
+
+          <p class="reflection-essay-final">
+            アルゴリズムは、ただの「魔法の黒箱」ではありません。  
+            それを設計する人たちの価値観と、それを使う私たち一人ひとりの選択が混ざり合って、はじめて社会のかたちを変えていきます。  
+            このインタビューとセッションが、あなた自身と SNS との距離を、少しだけ見直してみるきっかけになれば嬉しいです。
+          </p>
+        </div>
+      </section>
+
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -887,6 +1341,41 @@
         }
       });
     });
+      </script>
+      <script>
+        // セクション＆会話行のアニメーション制御（このページにのみ適用）
+        document.addEventListener('DOMContentLoaded', () => {
+          const io = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            }
+          }, { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+
+          // タイトルや説明などに reveal を付与
+          document.querySelectorAll('#intro .intro-title, #intro .intro-sub, #interview-video .iv-inner, #session-log .session-title, #session-log .session-description').forEach(el => {
+            el.classList.add('reveal');
+            io.observe(el);
+          });
+
+          // セッションの各行を段階表示
+          document.querySelectorAll('.session-section .session-lines').forEach(lines => {
+            lines.classList.add('reveal-stagger');
+            Array.from(lines.children).forEach((line, idx) => {
+              if (!(line instanceof HTMLElement)) return;
+              line.style.setProperty('--i', String(idx));
+            });
+            io.observe(lines);
+          });
+
+          // 反省セクションの見出し・結語も強調表示
+          document.querySelectorAll('#after-session .reflection-title, #after-session .reflection-essay-title, #after-session .reflection-essay-final').forEach(el => {
+            el.classList.add('reveal');
+            io.observe(el);
+          });
+        });
       </script>
       
   </main>
