@@ -754,7 +754,7 @@
     PAGES.forEach((p, i) => {
       const el = document.createElement("div");
       el.className = "slotItem";
-      el.textContent = `${i + 1}. ${p.title}`;
+      el.textContent = `${i-1 + 1}. ${p.title}`;
       el.dataset.index = String(i);
       
       // カテゴリ別のドット色を設定
