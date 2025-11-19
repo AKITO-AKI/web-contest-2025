@@ -41,7 +41,12 @@ body {
 }
 /* サイドバー目次 */
 .table-of-contents{
-  position: fixed; left: 40px; top:50%; transform: translateY(-50%); width: 240px; z-index:100;
+  position: fixed; 
+  left: calc(50% - 450px - 280px); 
+  top: 50%; 
+  transform: translateY(-50%); 
+  width: 240px; 
+  z-index: 100;
   background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 16px; padding: 24px; border:1px solid var(--border);
   box-shadow: 0 8px 32px rgba(0,0,0,0.06); transition: all .3s ease; max-height:80vh; overflow-y:auto;
 }
@@ -52,7 +57,7 @@ body {
 .toc-link:hover, .toc-link.active{ background: var(--surface); border-left-color: var(--primary-color, #667eea); color: var(--primary-color, #667eea); transform: translateX(4px); }
 
 /* メインコンテンツ */
-.main-content{ max-width:900px; margin:0 auto; padding:140px 40px 100px; margin-left: 320px; }
+.main-content{ max-width:900px; margin:0 auto; padding:140px 40px 100px; }
 .page-header{ margin-bottom:80px; opacity:0; transform:translateY(40px); animation: fadeInUp 1.2s ease .3s forwards; }
 .page-subtitle{ color: var(--primary-color, #667eea); font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:2px; margin-bottom:20px; position:relative; }
 .page-subtitle::after{ content:''; position:absolute; bottom:-8px; left:0; width:60px; height:2px; background: var(--primary-color, #667eea); }
@@ -208,9 +213,16 @@ body {
 .timeline-description{ color:var(--text-secondary); line-height:1.7; font-size:1rem; }
 
 /* レスポンシブデザイン - 共通 */
+@media (max-width:1400px){
+  .table-of-contents{ 
+    left: 20px;
+    width: 200px;
+  }
+}
+
 @media (max-width:1200px){
-  .table-of-contents{ left:20px; width:200px; }
-  .main-content{ margin-left:260px; padding:120px 30px 80px; }
+  .table-of-contents{ display: none; }
+  .main-content{ padding:120px 30px 80px; }
   .timeline-content{ width:calc(50% - 30px); }
 }
 
@@ -219,8 +231,7 @@ body {
   .pages-section{ padding:80px 20px; }
   .page-card{ padding:40px 32px; }
   .page-card-title{ font-size:2.8rem; }
-  .table-of-contents{ display:none; }
-  .main-content{ margin-left:0; padding:120px 20px 60px; }
+  .main-content{ padding:120px 20px 60px; }
   .page-title{ font-size:3rem; }
   .section-title{ font-size:2rem; padding-left:20px; }
   .section-title::before{ width:4px; }
