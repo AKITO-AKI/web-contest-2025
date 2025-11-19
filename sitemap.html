@@ -534,6 +534,19 @@
     }
   }
 
+  // 前面のラベルのみ表示する関数
+  function updateLabelVisibility() {
+    const camDir = tmpVec3.subVectors(camera.position, mesh.position).normalize();
+    
+    for (let i = 0; i < faceCenters.length; i++) {
+      const faceDir = faceCenters[i].clone().normalize().applyQuaternion(mesh.quaternion);
+      const dot = faceDir.dot(camDir);
+      
+      // カメラに向いている面（dot > 0.3程度）のみ表示
+      labels[i].visible = dot > 0.2;
+    }
+  }
+
   // ================== NEON GRID WAVE (床) ==================
 
   const GRID_COLS = 55;
@@ -1136,6 +1149,7 @@
     }
 
     updateWave(dt);
+    updateLabelVisibility();
 
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
