@@ -21,6 +21,15 @@
         }
     </style>
 		<style>
+            
+        .image-placeholder img {
+            width:100%;
+            height:auto;
+            display:block;
+            object-fit:contain; /* cover にすると切り抜きで埋める */
+            border-radius:8px;
+            max-height:60vh; /* 高さの上限（必要なら調整） */
+        }
         /* ページ固有: セクションタイトルのアフター要素 */
         .subsection-title::after {
             content: '';
@@ -49,7 +58,7 @@
         .issues-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
+            gap: 32px 24px;
             margin: 32px 0;
         }
 
@@ -168,14 +177,36 @@
         <nav class="navigation">
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">HOME</a></li>
-                <li><a data-theme="chaos" data-page="genealogy" href="page1_foundation.html" class="nav-link active">序論</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page2_evolution.html" class="nav-link">系譜</a></li>
-                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a></li>
-                <li><a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a></li>
-                <li><a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a></li>
-                <li><a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a></li>
-                <li><a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a></li>
+                <li><a data-theme="chaos" data-page="intro" href="page1_foundation.html" class="nav-link active">序論</a></li>
+                
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="genealogy" href="page2_evolution.html" class="nav-link">系譜</a>
+								    <a data-theme="normal" data-page="genealogy" href="page2_advance.html" class="nav-link">旧網</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a>
+								    <a data-theme="chaos" data-page="duality" href="page3_advance.html" class="nav-link">偽装</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a>
+								    <a data-theme="chaos" data-page="self" href="page4_advance.html" class="nav-link">依存</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a>
+								    <a data-theme="chaos" data-page="capital" href="page5_advance.html" class="nav-link">労働</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a>
+								    <a data-theme="chaos" data-page="memory" href="page6_advance.html" class="nav-link">監視</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a>
+								</li>
             </ul>
         </nav>
     </div>
@@ -194,7 +225,7 @@
     </nav>
 
     <!-- メインコンテンツ -->
-    <main class="main-content">
+    <main id="article-content" class="main-content">
         <!-- ページヘッダー -->
         <header class="page-header">
             <div class="page-subtitle">Page 1</div>
@@ -215,6 +246,7 @@
 
             <!-- 画像プレースホルダー -->
             <div class="image-placeholder">
+                <img src="image/コラージュ.png"></img>
                 📱 SNSアイコンのコラージュ画像を挿入推奨<br>
                 （Twitter/X, Instagram, Facebook, TikTok, LINE等のアイコン）
             </div>
@@ -251,6 +283,7 @@
 
             <!-- 画像プレースホルダー -->
             <div class="image-placeholder">
+                <img src="image\network.png"></img>
                 🌐 人々がデジタル空間で繋がっているイメージ図を挿入推奨<br>
                 （グローバルなネットワーク、デジタル社会の概念図）
             </div>
@@ -275,6 +308,7 @@
 
             <!-- 画像プレースホルダー -->
             <div class="image-placeholder">
+                <img src="image\mi-mu.png"></img>
                 🔄 ミーム拡散のフロー図解を挿入推奨<br>
                 （オリジナル投稿→アレンジ→再投稿→拡散のサイクル図）
             </div>
@@ -293,7 +327,7 @@
             </p>
 
             <p class="content-paragraph">
-                このように、ミームは一度爆発すると留まることを知らず、もはや発信者と受信者という境界線を曖昧にしてしまうほどになることで、誰もがその文化を形成していく一人者へとなっていくのです。
+                このように、ミームは一度爆発すると留まることを知らず、もはや発信者と受信者という境界線を曖昧にしてしまうほどで、誰もがその文化を形成していく一人者へとなっていくのです。
             </p>
 
             <p class="content-paragraph">
@@ -319,6 +353,7 @@
 
             <!-- 画像プレースホルダー -->
             <div class="image-placeholder">
+                <img src="image\firstplace.png"></img>
                 🏠 サードプレイスの概念図を挿入推奨<br>
                 （家庭・職場・SNS空間の三つの居場所を表現した図）
             </div>
@@ -376,11 +411,11 @@
             <h2 class="section-title fade-in-title">2. SNSの課題点</h2>
             
             <p class="content-paragraph">
-                現代での新たな立ち位置を確立しつつあるSNS。しかしその一方で、私達は何かを失ってはいなかったでしょうか？
+                現代での新たな立ち位置を確立しつつあるSNS。一方で、私達は何かを失っているのかもしれません。
             </p>
 
             <p class="content-paragraph">
-                いつでも、誰とでも繋がれる便利さの裏側で、私たちは「常に誰かに見られている」というプレッシャーを感じていないでしょうか。自由に発信できるようになった反面、心無い言葉に傷ついたり、見えない敵と戦ったりすることもあります。
+                いつでも、どこでも、誰とでも繋がれる便利さの裏側で、私たちは「常に誰かに見られている」というプレッシャーを感じていないでしょうか。自由に発信できるようになった反面、心無い言葉に傷ついたり、見えない敵と戦ったりすることもあります。
             </p>
 
             <p class="content-paragraph">
@@ -432,11 +467,34 @@
         <section class="content-section">
             <h3 class="subsection-title">参考文献</h3>
             <div class="references">
-                <p>ダナ・ボイド「つながりっぱなしの日常を生きる：ソーシャルメディアが若者にもたらしたもの」</p>
-                <p>レイ・オルデンバーグ「サードプレイス：コミュニティの核になる「とびきり居心地のよい場所」」</p>
+                <br><p>ダナ・ボイド「つながりっぱなしの日常を生きる：ソーシャルメディアが若者にもたらしたもの」</p>
+                <br><p>レイ・オルデンバーグ「サードプレイス：コミュニティの核になる「とびきり居心地のよい場所」」</p>
+                <br><p>マーク・グラノヴェッター「弱い紐帯の強さ」</p>
             </div>
         </section>
-    </main>
+        </main>
+
+        <!-- Study Toolbox Markup -->
+        <div class="study-toolbox" aria-label="学習ツールボックス">
+            <div class="tool-buttons">
+                <button type="button" class="tool-highlight" aria-pressed="false" aria-label="ハイライト切替">ハイライト</button>
+                <button type="button" class="tool-memo" aria-expanded="false" aria-controls="studyMemoDrawer" aria-label="メモを開く">メモ</button>
+                <button type="button" class="scroll-top hidden" aria-label="トップへ戻る">↑</button>
+                <div class="highlight-mode-indicator" aria-hidden="true">選択でハイライト</div>
+            </div>
+        </div>
+        <div id="studyMemoDrawer" class="study-memo-drawer" aria-hidden="true" role="dialog" aria-label="ページ付箋メモ">
+            <h3>付箋メモ</h3>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.6;">テキストを書いて「追加」→配置したい場所をクリック。ドラッグで移動、×で削除できます。</p>
+            <div class="memo-actions">
+                <button type="button" class="action memo-add" aria-label="付箋を追加">追加</button>
+                <button type="button" class="action memo-clear-all" aria-label="全ての付箋を削除">全削除</button>
+            </div>
+            <textarea placeholder="付箋に書く内容..." aria-label="付箋メモ入力欄"></textarea>
+            <div class="saved-at" aria-live="polite"></div>
+        </div>
+
+        <script src="assets/study-toolbox.js" defer></script>
 
     <script>
         // ナビゲーション制御の改良版
@@ -772,6 +830,8 @@
                 handleScroll();
             }, 250);
         });
+        
     </script>
+    <script src="assets/nav-center.js"></script>
 </body>
 </html>

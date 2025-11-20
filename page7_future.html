@@ -22,6 +22,15 @@
         }
     </style>
 		<style>
+
+        .image-placeholder img {
+            width:100%;
+            height:auto;
+            display:block;
+            object-fit:contain; /* cover にすると切り抜きで埋める */
+            border-radius:8px;
+            max-height:60vh; /* 高さの上限（必要なら調整） */
+        }
         /* ページ固有: ナビゲーションのボーダー色 */
         .navigation {
             border-color: rgba(139, 115, 85, 0.2);
@@ -152,22 +161,46 @@
     </style>
 </head>
 <body>
+    <header>
     <!-- ナビゲーション -->
     <div class="nav-container">
         <nav class="navigation">
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">HOME</a></li>
-                <li><a data-theme="chaos" data-page="genealogy" href="page1_foundation.html" class="nav-link active">序論</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page2_evolution.html" class="nav-link">系譜</a></li>
-                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a></li>
-                <li><a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a></li>
-                <li><a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a></li>
-                <li><a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a></li>
-                <li><a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a></li>
+                <li><a data-theme="chaos" data-page="intro" href="page1_foundation.html" class="nav-link">序論</a></li>
+                
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="genealogy" href="page2_evolution.html" class="nav-link">系譜</a>
+								    <a data-theme="normal" data-page="genealogy" href="page2_advance.html" class="nav-link">旧網</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a>
+								    <a data-theme="chaos" data-page="duality" href="page3_advance.html" class="nav-link">偽装</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a>
+								    <a data-theme="chaos" data-page="self" href="page4_advance.html" class="nav-link">依存</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a>
+								    <a data-theme="chaos" data-page="capital" href="page5_advance.html" class="nav-link">労働</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a>
+								    <a data-theme="chaos" data-page="memory" href="page6_advance.html" class="nav-link">監視</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link active">未来</a>
+								</li>
             </ul>
         </nav>
     </div>
+	</header>
 
     <!-- 目次サイドバー -->
     <nav class="table-of-contents">
@@ -185,7 +218,7 @@
     </nav>
 
     <!-- メインコンテンツ -->
-    <main class="main-content">
+    <main id="article-content" class="main-content">
         <!-- ページヘッダー -->
         <header class="page-header">
             <div class="page-subtitle">Page 7</div>
@@ -254,6 +287,7 @@
             </div>
 
             <div class="image-placeholder">
+                <img src="image/bunsan.png"></img>
                 🔄 分散型SNSの概念図を挿入推奨<br>
                 （中央集権型 vs 分散型のネットワーク構造比較図）
             </div>
@@ -413,6 +447,7 @@
             </div>
 
             <div class="image-placeholder">
+                <img src="image\user.png"></img>
                 🎯 理想的なSNSエコシステムの概念図を挿入推奨<br>
                 （ユーザー中心の設計、透明性、プライバシー保護、多様性の尊重を視覚化）
             </div>
@@ -526,6 +561,7 @@
             </p>
 
             <div class="image-placeholder">
+                <img src="image\saigo.png"></img>
                 💻 オープンソースコミュニティのイラストを挿入推奨<br>
                 （協働で開発する人々、GitHubなどのプラットフォーム、コントリビューションの流れ）
             </div>
@@ -596,14 +632,34 @@
         <section class="content-section">
             <h3 class="subsection-title">参考文献</h3>
             <div class="references">
-                <p>Mastodon. (2023). About Mastodon. Retrieved from https://joinmastodon.org/</p>
-                <p>W3C Social Web Working Group. (2018). ActivityPub is now a W3C Recommendation. W3C News.</p>
-                <p>European Commission. (2022). The EU's Digital Services Act. Retrieved from https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/europe-fit-digital-age/digital-services-act_en</p>
-                <p>EUR-Lex. (2022). Regulation (EU) 2022/2065 of the European Parliament and of the Council on a Single Market For Digital Services (Digital Services Act).</p>
-                <p>ActivityPub Rocks! (2023). About ActivityPub. Retrieved from https://activitypub.rocks/</p>
+                <br><p>Mastodon. (2023). About Mastodon. Retrieved from https://joinmastodon.org/</p>
+                <br><p>W3C Social Web Working Group. (2018). ActivityPub is now a W3C Recommendation. W3C News.</p>
+                <br><p>European Commission. (2022). The EU's Digital Services Act. Retrieved from https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/europe-fit-digital-age/digital-services-act_en</p>
+                <br><p>EUR-Lex. (2022). Regulation (EU) 2022/2065 of the European Parliament and of the Council on a Single Market For Digital Services (Digital Services Act).</p>
+                <br><p>ActivityPub Rocks! (2023). About ActivityPub. Retrieved from https://activitypub.rocks/</p>
             </div>
         </section>
-    </main>
+        </main>
+        <!-- Study Toolbox Markup -->
+        <div class="study-toolbox" aria-label="学習ツールボックス">
+            <div class="tool-buttons">
+                <button type="button" class="tool-highlight" aria-pressed="false" aria-label="ハイライト切替">ハイライト</button>
+                <button type="button" class="tool-memo" aria-expanded="false" aria-controls="studyMemoDrawer" aria-label="付箋メモを開く">メモ</button>
+                <button type="button" class="scroll-top hidden" aria-label="トップへ戻る">↑</button>
+                <div class="highlight-mode-indicator" aria-hidden="true">選択でハイライト</div>
+            </div>
+        </div>
+        <div id="studyMemoDrawer" class="study-memo-drawer" aria-hidden="true" role="dialog" aria-label="ページ付箋メモ">
+            <h3>付箋メモ</h3>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.6;">テキストを書いて「追加」→本文クリックで配置。ドラッグ/×で削除可能。</p>
+            <div class="memo-actions">
+                <button type="button" class="action memo-add" aria-label="付箋を追加">追加</button>
+                <button type="button" class="action memo-clear-all" aria-label="全付箋を削除">全削除</button>
+            </div>
+            <textarea placeholder="付箋に書く内容..." aria-label="付箋メモ入力欄"></textarea>
+            <div class="saved-at" aria-live="polite"></div>
+        </div>
+        <script src="assets/study-toolbox.js" defer></script>
 
     <script>
         // ナビゲーション制御
@@ -702,5 +758,6 @@
             resizeTimeout = setTimeout(handleScroll, 250);
         });
     </script>
+    <script src="assets/nav-center.js"></script>
 </body>
 </html>

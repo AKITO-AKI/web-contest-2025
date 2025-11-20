@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>インタビューセッション | @IronY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --bg-main: #f3f4f8;
+      --bg-gradient-top: #f8fafc;
+      --bg-gradient-mid: #eef1f8;
+      --bg-gradient-bottom: #e4e7f0;
+      --text-main: #111827;
+      --text-sub: #4b5563;
+      --accent: #111827;
+      --border-soft: #c7cedd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Hiragino Sans", "ヒラギノ角ゴ ProN", "Yu Gothic", "游ゴシック体",
+        "Noto Sans JP", sans-serif;
+      color: var(--text-main);
+      background: var(--bg-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main.interview-page {
+      min-height: 100vh;
+      padding: 4rem 1.5rem 5rem;
+      background:
+        radial-gradient(circle at top, var(--bg-gradient-top) 0, transparent 40%),
+        linear-gradient(to bottom, var(--bg-gradient-mid), var(--bg-gradient-bottom));
+    }
+
+    .ip-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    /* 導入セクション */
+    #intro {
+      margin-bottom: 3.5rem;
+    }
+
+    .intro-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 0.9rem;
+    }
+
+    .intro-label::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: #9ca3af;
+    }
+
+    .intro-title {
+      font-size: clamp(1.9rem, 3.3vw, 2.5rem);
+      line-height: 1.3;
+      letter-spacing: 0.05em;
+      margin: 0 0 1.1rem;
+    }
+
+    .intro-sub {
+      font-size: 0.94rem;
+      color: var(--text-sub);
+      line-height: 1.9;
+      max-width: 720px;
+      margin: 0 0 1.3rem;
+    }
+
+    .intro-note {
+      font-size: 0.8rem;
+      color: #6b7280;
+      line-height: 1.7;
+      border-left: 2px solid var(--border-soft);
+      padding-left: 0.8rem;
+    }
+
+    /* 動画セクション */
+    #interview-video {
+      border-radius: 24px;
+      padding: 2.4rem 2rem;
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow:
+        0 22px 60px rgba(15, 23, 42, 0.16),
+        0 0 0 1px rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(18px);
+    }
+
+    .iv-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.25fr);
+      gap: 2.4rem;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      main.interview-page {
+        padding-inline: 1.25rem;
+      }
+
+      #interview-video {
+        padding: 1.8rem 1.5rem;
+      }
+
+      .iv-inner {
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      main.interview-page {
+        padding: 3rem 1rem 4rem;
+      }
+
+      #interview-video {
+        padding: 1.6rem 1.1rem;
+        border-radius: 18px;
+      }
+    }
+
+    .iv-text {
+      font-size: 0.94rem;
+      line-height: 1.9;
+    }
+
+    .iv-eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin-bottom: 0.4rem;
+    }
+
+    .iv-title {
+      font-size: clamp(1.2rem, 2vw, 1.4rem);
+      margin: 0 0 0.7rem;
+      letter-spacing: 0.06em;
+    }
+
+    .iv-lead {
+      margin: 0 0 1.1rem;
+      color: var(--text-sub);
+    }
+
+    .iv-points {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-left: 2px solid var(--border-soft);
+    }
+
+    .iv-points li {
+      padding: 0.35rem 0 0.35rem 0.9rem;
+      font-size: 0.9rem;
+      color: #4b5563;
+    }
+
+    .iv-points li::before {
+      content: "・";
+      margin-right: 0.1rem;
+    }
+
+    .iv-player {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .iv-video-frame {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      background: radial-gradient(circle at top left, #020617, #020617 45%, #020617);
+      box-shadow:
+        0 18px 45px rgba(15, 23, 42, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.32);
+    }
+
+    .iv-video {
+      display: table-cell;
+      width: 100%;
+      height: auto;
+      vertical-align: middle;
+      background: #020617;
+    }
+
+    .iv-caption {
+      font-size: 0.78rem;
+      color: #6b7280;
+    }
+
+    .iv-summary {
+      margin-top: 0.25rem;
+      font-size: 0.82rem;
+      color: #6b7280;
+    }
+
+    .iv-summary summary {
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .session-section {
+  margin-top: 4rem;
+  padding: 2.6rem 2.2rem 3.1rem;
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 24px;
+  border-top: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(243, 244, 248, 0.97)
+  );
+  box-shadow:
+    0 22px 60px rgba(15, 23, 42, 0.16),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+.session-header-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-bottom: 0.7rem;
+}
+
+.session-header-label::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: #cbd5e1;
+}
+
+.session-title {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  margin: 0 0 0.7rem;
+  letter-spacing: 0.06em;
+}
+
+.session-description {
+  font-size: 0.9rem;
+  color: #4b5563;
+  line-height: 1.9;
+  max-width: 780px;
+  margin: 0 0 1.4rem;
+}
+
+.session-description-note {
+  display: block;
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-top: 0.3rem;
+}
+
+.session-block {
+  margin: 2.4rem 0 2.8rem;
+}
+
+.session-block-title {
+  font-size: 1.02rem;
+  margin: 0 0 0.4rem;
+  letter-spacing: 0.08em;
+}
+
+.session-block-lead {
+  font-size: 0.86rem;
+  color: #6b7280;
+  margin: 0 0 1.4rem;
+  line-height: 1.9;
+}
+
+.session-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* 会話行ふきだし風（セッション内のみ適用） */
+.session-section .dialog-line {
+  display: grid;
+  grid-template-columns: minmax(0, 6.5rem) minmax(0, 1fr);
+  column-gap: 1.2rem;
+  align-items: flex-start;
+  padding: 0.55rem 0.9rem;
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.9);
+  box-shadow: 0 1px 0 rgba(148, 163, 184, 0.25);
+}
+
+.session-section .dialog-line:nth-of-type(2n) {
+  background: rgba(241, 245, 249, 0.96);
+}
+
+.session-section .dialog-speaker {
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #64748b;
+  text-align: right;
+  padding-top: 0.15rem;
+  white-space: nowrap;
+}
+
+.session-section .dialog-text {
+  color: #0f172a;
+  font-size: 0.9rem;
+  line-height: 1.9;
+}
+
+.session-section .dialog-text p {
+  margin: 0;
+}
+
+.session-section .dialog-text p + p {
+  margin-top: 0.35rem;
+}
+
+/* topic 行（小見出し） */
+.session-section .dialog-line.topic {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  margin-top: 1.6rem;
+  /* 一列で文章を完結（2カラムを使わない） */
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+.session-section .dialog-line.topic .dialog-speaker {
+  display: none;
+}
+
+.session-section .dialog-line.topic .dialog-text {
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.session-section .dialog-line.topic .dialog-text::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #9ca3af;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* モバイル調整 */
+@media (max-width: 900px) {
+  .session-section {
+    padding: 2.2rem 1.6rem 2.6rem;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 720px) {
+  .session-section .dialog-line {
+    grid-template-columns: 1fr;
+    row-gap: 0.15rem;
+  }
+
+  .session-section .dialog-speaker {
+    text-align: left;
+    font-size: 0.76rem;
+    padding-top: 0;
+  }
+}
+
+/* =====================
+   Animations (scoped)
+   ===================== */
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(12px); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowIn {
+  0% { opacity: 0; filter: blur(4px); }
+  100% { opacity: 1; filter: blur(0); }
+}
+
+/* 初期状態 */
+.reveal { opacity: 0; transform: translateY(12px); will-change: opacity, transform; }
+.reveal.is-visible { animation: fadeUp 600ms cubic-bezier(.2,.7,.2,1) forwards; }
+
+/* セッション内の行を段階的に表示 */
+.session-section .session-lines.reveal-stagger > .dialog-line { opacity: 0; transform: translateY(10px); }
+.session-section .session-lines.reveal-stagger.is-visible > .dialog-line { 
+  animation: fadeUp 520ms cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+/* ささやかなホバー効果 */
+.session-section .dialog-line:hover { box-shadow: 0 3px 10px rgba(15,23,42,.08), 0 0 0 1px rgba(148,163,184,.18); }
+
+/* 低モーション設定の尊重 */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .session-section .session-lines.reveal-stagger > .dialog-line,
+  .reveal.is-visible, .session-section .session-lines.reveal-stagger.is-visible > .dialog-line { 
+    animation: none !important; transform: none !important; opacity: 1 !important; 
+  }
+}
+
+/* =====================
+   Teen Notebook Styling
+   ===================== */
+/* 反省セクション全体を「ノート用紙」風に */
+.reflection-section {
+  position: relative;
+  border-radius: 18px;
+  padding: 2.2rem 1.6rem 2.6rem;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9)),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(91,145,199,0.15) 0px,
+      rgba(91,145,199,0.15) 2px,
+      transparent 2px,
+      transparent 36px
+    );
+  box-shadow:
+    0 18px 45px rgba(15, 23, 42, 0.18),
+    0 0 0 1px rgba(255,255,255,0.7) inset;
+}
+/* ヘッダーラベルを付箋風に */
+.reflection-header-label {
+  display: inline-block;
+  background: #fff6b5;
+  color: #5b5b22;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.06), 0 10px 18px rgba(0,0,0,0.08);
+  transform: rotate(-1deg);
+}
+
+/* タイトルにマーカー風ハイライト */
+.reflection-title {
+  display: inline;
+  background: linear-gradient(transparent 62%, rgba(255,246,150,0.8) 62%);
+  padding: 0 0.15rem 0.1rem;
+}
+
+/* 会話行を手書きメモ風に柔らかく */
+.reflection-dialog .dialog-line {
+  background: rgba(255,255,255,0.86);
+  border: 1.5px dashed rgba(71,85,105,0.28);
+  box-shadow: 0 1px 0 rgba(148,163,184,0.2);
+}
+.reflection-dialog .dialog-speaker {
+  color: #475569;
+  background: linear-gradient(transparent 60%, rgba(255,230,140,0.7) 60%);
+  border-radius: 4px;
+  padding: 0.05rem 0.2rem;
+}
+
+.reflection-essay-title {
+  display: inline-block;
+  background: linear-gradient(transparent 60%, rgba(255,246,150,0.8) 60%);
+  padding: 0 0.2rem 0.1rem;
+}
+
+.reflection-subtitle {
+  position: relative;
+  padding-left: 1.15rem;
+}
+.reflection-subtitle::before {
+  content: "✎";
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  color: #64748b;
+}
+
+.reflection-essay ul li {
+  padding-left: 0.4rem;
+}
+.reflection-essay ul li::marker {
+  content: "・ ";
+  color: #475569;
+}
+
+/* =====================
+   Emphasis for headings & claims
+   ===================== */
+/* 見出しをマーカー強調（既存のトーンを他見出しにも展開） */
+.intro-title,
+.session-title,
+.session-block-title,
+.iv-title,
+.reflection-essay-title {
+  background: linear-gradient(transparent 68%, rgba(255,246,150,0.7) 68%);
+  display: inline;
+  padding: 0 0.15rem 0.1rem;
+}
+
+/* ブロック見出しの左罫線で視線誘導 */
+.session-block-title {
+  display: inline-block;
+  padding-left: 0.6rem;
+  border-left: 4px solid rgba(30,58,138,0.5);
+  border-radius: 2px;
+}
+
+/* 章末の主張（まとめ）をコールアウト化 */
+.reflection-essay-final {
+  position: relative;
+  margin-top: 1.2rem;
+  padding: 1rem 1.1rem 1rem 1.2rem;
+  background: rgba(255,255,255,0.9);
+  border-left: 5px solid #ef4444; /* アクセントで強調 */
+  box-shadow: 0 10px 24px rgba(15,23,42,0.12), 0 0 0 1px rgba(148,163,184,0.18);
+  border-radius: 10px;
+}
+.reflection-essay-final::before {
+  content: "\201C"; /* 開き引用符 */
+  position: absolute;
+  left: -10px;
+  top: -10px;
+  font-size: 48px;
+  color: rgba(239,68,68,0.25);
+  line-height: 1;
+  pointer-events: none;
+}
+/* =========================
+   ④ 高校生セッション＋まとめ
+   ========================= */
+
+.reflection-section {
+  margin: 3.8rem auto 0;
+  max-width: 960px;
+  padding: 2.6rem 2.2rem 3.1rem;
+  border-radius: 24px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(240, 244, 252, 0.97)
+  );
+  box-shadow:
+    0 20px 55px rgba(15, 23, 42, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+.reflection-header-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-bottom: 0.7rem;
+}
+
+.reflection-header-label::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: #cbd5e1;
+}
+
+.reflection-title {
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  letter-spacing: 0.06em;
+  margin: 0 0 0.6rem;
+}
+
+.reflection-lead {
+  font-size: 0.9rem;
+  color: #4b5563;
+  line-height: 1.9;
+  max-width: 760px;
+  margin: 0 0 1.6rem;
+}
+
+.reflection-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 2.4rem;
+}
+
+/* ④でも .dialog-line 系をそのまま利用 */
+
+.reflection-divider {
+  height: 1px;
+  margin: 0.3rem 0 2.2rem;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(148, 163, 184, 0.6),
+    transparent
+  );
+}
+
+.reflection-essay-title {
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.9rem;
+}
+
+.reflection-essay {
+  font-size: 0.9rem;
+  color: #111827;
+  line-height: 1.9;
+}
+
+.reflection-essay p {
+  margin: 0 0 1rem;
+}
+
+.reflection-subtitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 1.1rem 0 0.2rem;
+  letter-spacing: 0.05em;
+}
+
+.reflection-essay ul {
+  margin: 0.2rem 0 0.8rem 1.2rem;
+  padding: 0;
+}
+
+.reflection-essay li {
+  margin-bottom: 0.25rem;
+}
+
+.reflection-essay-final {
+  margin-top: 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* モバイル調整 */
+@media (max-width: 900px) {
+  .reflection-section {
+    padding: 2.3rem 1.7rem 2.7rem;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 720px) {
+  .reflection-section {
+    padding-inline: 1.3rem;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main id="article-content" class="interview-page">
+    <div class="ip-inner">
+
+      <!-- ① 導入セクション -->
+      <section id="intro">
+        <div class="intro-label">INTERVIEW SESSION</div>
+        <h1 class="intro-title">
+          アルゴリズムの内側と、私たちのこれから
+        </h1>
+        <p class="intro-sub">
+          私たちは毎日、アルゴリズムが選んだタイムラインの中で生きています。<br>
+          そのしくみを「つくる側」と「見続けてきた側」に話を聞き、@IronYとしてインタビューセッションを行いました。<br>
+          まずは、インタビューをもとに制作した動画で、その空気を一緒に体験してください。
+        </p>
+        <p class="intro-note">
+          ※ このページでは、動画でインタビューの感覚を味わってもらったあと、<br>
+          実際のセッション内容の全文と、そこから生まれた私たち自身の問い・答えを順番にたどっていきます。
+        </p>
+      </section>
+
+      <!-- ② 動画セクション -->
+      <section id="interview-video">
+        <div class="iv-inner">
+          <div class="iv-text">
+            <div class="iv-eyebrow">STEP 1</div>
+            <h2 class="iv-title">
+              まずは動画で：インタビューの「温度」を感じる
+            </h2>
+            <p class="iv-lead">
+              note・金谷武明さんへのインタビューをもとにしたセッション動画です。<br>
+              声のトーンや間合い、その場の空気感ごと感じてもらえるように構成しました。
+            </p>
+            <ul class="iv-points">
+              <li>プラットフォームがアルゴリズムに込めている「意図」</li>
+              <li>SNSが生み出す「出会い」と「しんどさ」の両面</li>
+              <li>ユーザー・企業・社会、それぞれの責任と役割</li>
+            </ul>
+          </div>
+
+          <div class="iv-player">
+            <div class="iv-video-frame">
+              <video
+                class="iv-video"
+                controls
+                preload="metadata"
+                playsinline
+                poster="img/interview-thumb.jpg"
+              >
+                <!-- 実際のパスに合わせて変更してね -->
+                <source src="video/web-douga.mp4" type="video/mp4">
+                お使いのブラウザは video タグに対応していません。
+                <a href="video/web-douga.mp4">こちらから動画ファイルをダウンロード</a>して再生してください。
+              </video>
+            </div>
+            <p class="iv-caption">
+              ※ 通信量が大きくなる場合があります。Wi-Fi環境での視聴をおすすめします。
+            </p>
+
+            <details class="iv-summary">
+              <summary>動画を見られない方へ：内容の概要</summary>
+              <p>
+                ・アルゴリズムを「つくる側」「見続けてきた側」の声を交えたセッション動画です。<br>
+                ・便利さとしんどさ、どちらも生まれてしまう構造について話しています。<br>
+                ・最後に「私たちはどうSNSと付き合うか？」という問いを投げかけています。
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- このあとに ③ 会話セクション / ④ 高校生セッション＋まとめ を追加していくイメージ -->
+    </div>
+          <!-- ③ 実際のセッション セクション -->
+          <section id="session-log" class="session-section">
+            <div class="session-header-label">STEP 2</div>
+            <h2 class="session-title">
+              実際のセッション：アルゴリズムとSNSの内側へ
+            </h2>
+            <p class="session-description">
+              ここからは、動画のもとになったインタビューセッションを、会話形式で再構成したものを掲載します。<br>
+              一部、読みやすさのために言い回しや順序を編集していますが、内容は実際の発言に基づいています。
+              <span class="session-description-note">
+                ※ 話者名は「聞き手」「note 今さん」「金谷さん」として表記しています。
+              </span>
+            </p>
+    
+            <!-- 3-1. note に聞く「創作を支えるアルゴリズム」 -->
+            <div class="session-block" id="session-note">
+              <h3 class="session-block-title">
+                3-1. noteに聞く「創作を支えるアルゴリズム」
+              </h3>
+              <p class="session-block-lead">
+                クリエイターのためのプラットフォームを名乗る note は、「どんな世界を実現したいのか」をどうアルゴリズムに落とし込んでいるのか。<br>
+                サービスの理念から、ランキングや広告を置かない理由、レコメンドが生む出会いとリスクまでうかがいました。
+              </p>
+    
+              <div class="session-lines">
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">聞き手</div>
+                  <div class="dialog-text">
+                    <p>
+                      まずは、日々の利用や記事を通じて note を知ってはいるのですが、改めて「どんなサービスを運営していて、どんな理念で動いているのか」を教えていただけますか。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">note 今さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      私たちは「note.com」という CGM（Consumer Generated Media）、つまりユーザーがコンテンツを作って発信するタイプのメディアプラットフォームを運営しています。
+                      中核になっているのが「note」というサービスで、今はこの note が事業としてもっとも大きな領域ですね。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">聞き手</div>
+                  <div class="dialog-text">
+                    <p>
+                      ミッションとして掲げられている「だれもが創作をはじめ、続けられるようにする」という言葉が印象的でした。
+                      このミッションは、アルゴリズムの設計にどう関わっているのでしょうか。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">note 今さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      プラットフォーム側から見ると、C to C のメディアなので「読みたい人に、読みたいコンテンツが届く」ことがものすごく大事なんです。
+                      そのために、閲覧履歴やフォローしているクリエイター、近そうなジャンルなどを組み合わせて、
+                      「読む可能性が高いであろうコンテンツ」をアルゴリズムと露出面のデザインでおすすめする、というイメージですね。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line topic">
+                  <div class="dialog-speaker">topic</div>
+                  <div class="dialog-text">
+                    ランキングも広告も置かない、その理由
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">聞き手</div>
+                  <div class="dialog-text">
+                    <p>
+                      いま、SNSやプラットフォームはたくさんありますが、その中で note が特に大事にしている「差別化ポイント」はどこですか。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">note 今さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      「クリエイターにとってストレスが少ない場所であること」はかなり意識しています。
+                      クリエイター向けをうたうサービスは多いのですが、実際にはランキングがあったり、数字で煽られたり、広告がたくさん出ていたりしますよね。
+                      そうすると、評価や数字に疲れてしまうクリエイターも多い。
+                    </p>
+                    <p>
+                      note では、あえてランキングを置かない、サイト内のディスプレイ広告を載せない、といった設計にしています。
+                      ビジネス的には異例かもしれませんが、「余計なプレッシャーを減らして、淡々と創作を続けられる場所」にしたいという意図が大きいです。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">聞き手</div>
+                  <div class="dialog-text">
+                    <p>
+                      実際に僕たちも note で記事を書いてみたのですが、「数字で煽られない」空気はすごく感じました。
+                      「クリエイターに寄り添う」という言葉が、具体的な設計に落ちているのが分かります。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line topic">
+                  <div class="dialog-speaker">topic</div>
+                  <div class="dialog-text">
+                    レコメンドが生む「出会い」と、その裏側
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">聞き手</div>
+                  <div class="dialog-text">
+                    <p>
+                      レコメンド機能についても伺いたいです。
+                      アルゴリズムが、クリエイターと読者の新しい「出会い」を生んだと感じる場面はありますか。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">note 今さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      note には本当にいろいろなジャンルの作品があります。
+                      何もしないと、読者からすると「どこを見ればいいか分からない場所」になってしまうんです。
+                    </p>
+                    <p>
+                      そこで、閲覧履歴やフォロー関係をもとに興味領域が近いものを出したり、
+                      すでにファンになりつつあるクリエイターの新しい記事をきちんと届けたり、といったロジックを複数組み合わせています。
+                      そうやって、まだ出会っていない作品との接点を増やしていこうとしているイメージですね。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">聞き手</div>
+                  <div class="dialog-text">
+                    <p>
+                      創作のモチベーションという意味では、アルゴリズムはどう貢献していると感じますか。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">note 今さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      一番大きいのは「反応」です。
+                      「スキ」がついた、PV が増えた、フォロワーが増えた、売上が上がった……こうした変化は、やはり多くのクリエイターにとって重要なモチベーションになります。
+                    </p>
+                    <p>
+                      だからこそ、そうした反応が起こりそうな読者にコンテンツを届ける、つまりターゲティングの精度を高めていくことが、
+                      アルゴリズム側でやっていることの中核だと思っています。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line topic">
+                  <div class="dialog-speaker">topic</div>
+                  <div class="dialog-text">
+                    「怒り」を煽らないために、アルゴリズムより大事にしているもの
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">聞き手</div>
+                  <div class="dialog-text">
+                    <p>
+                      一方で、レコメンドが怒りや不安といった感情を増幅させるという指摘も増えています。
+                      note では、そういった意図しない偏りを防ぐために、どんな工夫をされていますか。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">note 今さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      まず、危険なコンテンツや違法コンテンツを出さないための「Trust &amp; Safety（トラスト＆セーフティ）」の仕組みがあります。
+                      詳細はお話しできませんが、さまざまなアルゴリズムでスコアリングを行い、必要に応じて記事を非表示にしたり、人の目で確認したりしています。
+                    </p>
+                    <p>
+                      もう一つは、「サービス全体の雰囲気づくり」です。
+                      世の中には、議論を呼びそうな強い言葉の投稿をたくさん流すことで盛り上がりをつくる SNS もありますが、
+                      note はあまりそういうトーンが前面に出ないようにしています。
+                      どんなコンテンツを歓迎して、どんなコンテンツは歓迎しないか――アルゴリズム以前に、サービスとしてのスタンスを決めることの方が重要だと考えています。
+                    </p>
+                  </div>
+                </div>
+    
+              </div>
+            </div>
+    
+            <!-- 3-2. 金谷武明さんに聞く「SNSの光と影、その向こう側」 -->
+            <div class="session-block" id="session-kanaya">
+              <h3 class="session-block-title">
+                3-2. 金谷武明さんに聞く「SNSの光と影、その向こう側」
+              </h3>
+              <p class="session-block-lead">
+                SNSの黎明期からその変化を見続けてきた金谷武明さんに、フィルターバブルやエコーチェンバー、<br>
+                そして生成AI時代の SNS との付き合い方について伺いました。
+              </p>
+    
+              <div class="session-lines">
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">聞き手</div>
+                  <div class="dialog-text">
+                    <p>
+                      私たちの生活にとって身近な存在になった SNS ですが、今の各種プラットフォームの課題について、どうお考えですか。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">金谷さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      SNS の課題は本当にたくさんありますが、まず「本来の楽しさ」があまり理解されていないと感じています。
+                    </p>
+                    <p>
+                      もともと Twitter の初期には、「ゆるいコミュニケーションが広がって、豊かな対話が生まれる」といったことが公式サイトにも書かれていて、
+                      僕はそういう部分に共感して使い始めました。
+                      でも今の SNS では、そういったポジティブな側面よりも、戦場のようなやりとりが目立ってしまっているのが残念ですね。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">金谷さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      もう一つの課題は、反応の偏りです。
+                      100件ポジティブなリアクションがあっても、1件のネガティブな反応に引きずられてしまう。
+                      不特定多数に向けて発信する場なので、そこで誹謗中傷や断絶が起きると、発言する側はどんどん萎縮していきます。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line topic">
+                  <div class="dialog-speaker">topic</div>
+                  <div class="dialog-text">
+                    フィルターバブル――同じ意見ばかりに囲まれる怖さ
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">聞き手</div>
+                  <div class="dialog-text">
+                    <p>
+                      SNS の課題として、フィルターバブル現象がよく挙げられます。
+                      この点についてはどう見ていますか。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">金谷さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      まずは「そういう現象がある」ということを、もっと多くの人が認識する必要があると思います。
+                      リアルな人間関係でも、似た考えの人とばかり付き合っていれば、世界の見え方はどんどん偏っていきますよね。
+                    </p>
+                    <p>
+                      SNS では、アルゴリズムが「関心がありそうな情報」をどんどん持ってきてくれるので、その傾向がさらに加速します。
+                      自分と似た意見ばかりが流れてくると、「自分は正しい」という確信だけが強くなってしまう。
+                      その一方で、反対意見に触れる機会はどんどん減っていきます。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">金谷さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      本来、SNS は自分の視野を広げることもできるツールのはずです。
+                      でも「自分の思想を裏付ける証拠集め」のために使ってしまうと、フィルターバブルはどんどん強まってしまう。
+                      個人的には、そういう使い方があまり好きではないですね。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line topic">
+                  <div class="dialog-speaker">topic</div>
+                  <div class="dialog-text">
+                    レコメンドとビジネスモデルのジレンマ
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">聞き手</div>
+                  <div class="dialog-text">
+                    <p>
+                      レコメンド機能を最適化することが、フィルターバブルやエコーチェンバーを強めてしまうとも言われます。
+                      この点についてはどう感じますか。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">金谷さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      基本的には、その通りだと思います。
+                      だからこそ大事なのは「サービスを作っている側の思想や考え方」です。
+                    </p>
+                    <p>
+                      多くの SNS は広告モデルで成り立っていて、インプレッションが増えれば増えるほど広告が表示され、売上につながる構造になっています。
+                      その中で「できるだけ長く利用してもらいたい」「強い反応が起きる投稿を優先したい」と考えれば、レコメンドはどうしても偏りやすくなる。
+                    </p>
+                    <p>
+                      一方で、「いろいろな意見を見てほしい」と考えるなら、反対意見をあえて混ぜる設計だってできるはずです。
+                      つまり問題はアルゴリズムの精度そのものではなく、「どんな前提で設計しているか」というビジネスモデルと価値観の方なんですよね。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line topic">
+                  <div class="dialog-speaker">topic</div>
+                  <div class="dialog-text">
+                    生成AI時代、それでも「根本はあまり変わらない」かもしれない
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">聞き手</div>
+                  <div class="dialog-text">
+                    <p>
+                      生成AIや高度なパーソナライズが進んでいく未来を見据えると、フィルターバブルやエコーチェンバーはどう変化していくと考えますか。
+                    </p>
+                  </div>
+                </div>
+    
+                <div class="dialog-line">
+                  <div class="dialog-speaker">金谷さん</div>
+                  <div class="dialog-text">
+                    <p>
+                      サービスの種類によって事情はかなり違うと思います。
+                      X のように思想的な発言が多い場と、Instagram や TikTok のように娯楽色の強い場では、問題の出方も変わります。
+                    </p>
+                    <p>
+                      ただ、エコーチェンバーやフィルターバブルの問題自体は以前から指摘され続けていて、今後も少しずつ対策が進んでいくとは思いますが、
+                      「劇的に何かが変わる」というよりは、ゆっくりとした変化かもしれません。
+                    </p>
+                    <p>
+                      その中で大事なのは、ユーザー側の自衛やリテラシー教育だと感じています。
+                      誹謗中傷のように目に見える問題もあれば、「ぼーっと見ているだけで思想が偏っていくかもしれない」という、もっと曖昧で気づきにくい問題もある。
+                    </p>
+                    <p>
+                      だからこそ、研究者や教育者、今回のように問題提起をする人たちが
+                      「こういう仕組みで、こういうリスクがある」と伝えていくことが重要ですし、
+                      プラットフォーム側も仕組みやルールについて透明性を高めていく必要があると思います。
+                    </p>
+                  </div>
+                </div>
+    
+              </div>
+            </div>
+    
+          </section>
+    
+                <!-- ④ 高校生同士のセッション ＋ まとめ -->
+      <section id="after-session" class="reflection-section">
+        <div class="reflection-header-label">STEP 3</div>
+        <h2 class="reflection-title">
+          高校生チームのアフターセッションと、私たちの答え
+        </h2>
+        <p class="reflection-lead">
+          note・金谷武明さんへのインタビューを終えたあと、私たちは高校生同士であらためて「何を受け取ったのか」「これからどう SNS と付き合っていきたいのか」を話し合いました。<br>
+          ここでは、そのときのセッションの一部と、そこからまとめた私たちなりの指針を紹介します。
+        </p>
+
+        <!-- ④-1 高校生同士のセッション -->
+        <div class="reflection-dialog">
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タカクラ</div>
+            <div class="dialog-text">
+              <p>
+                まず、一番びっくりしたのは note さんが「ランキングも広告も置かない」ってはっきり言っていたところかな。
+                ビジネスとしてはむしろ置いたほうが稼げそうなのに、それでも「空気」を優先しているのが印象的だった。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タナカ</div>
+            <div class="dialog-text">
+              <p>
+                分かる。「クリエイターがストレスを感じない場所にしたい」っていう言葉が、そのまま設計に落ちている感じがしたよね。
+                アルゴリズムって冷たいものだと思っていたけど、どんな価値観で動かすか次第なんだな、って。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タカクラ</div>
+            <div class="dialog-text">
+              <p>
+                金谷さんの話も、「技術そのものより、どういうビジネスモデルで使われているかのほうが問題だ」っていうのが刺さった。
+                たしかに、同じレコメンドでも「滞在時間を伸ばすため」なのか、「いろんな意見を見てもらうため」なのかで、まったく違う使い方になるよね。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タナカ</div>
+            <div class="dialog-text">
+              <p>
+                フィルターバブルやエコーチェンバーの話も、「アルゴリズムが悪い」というより、
+                「自分の気持ちいい世界だけを強化する使い方をしちゃう人間側の問題もある」っていう視点が新鮮だった。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タカクラ</div>
+            <div class="dialog-text">
+              <p>
+                うん。だからこそ、「使う側」としての責任も逃れられないなって。
+                タイムラインに出てきたものをそのまま世界のすべてだと思わないで、一回立ち止まるクセをつけないといけないのかも。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タナカ</div>
+            <div class="dialog-text">
+              <p>
+                それと同時に、「しんどかったら距離を取っていい」ってことも、もっと言葉にしていいと思った。
+                可処分時間の奪い合いって話があったけど、私たちがそのゲームから降りる権利も、ちゃんとあるはずだから。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タカクラ</div>
+            <div class="dialog-text">
+              <p>
+                そうだね。完全に SNS をやめるのは現実的じゃないとしても、「ここからここまでは見ない」とか、
+                「この時間帯はアプリを開かない」とか、自分でルールを決めてもいい。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タナカ</div>
+            <div class="dialog-text">
+              <p>
+                あと、プラットフォーム側に「もっと説明してほしい」と言っていくことも、ユーザーにできることだよね。
+                アルゴリズムがどう動いているのか、何を重視しているのか。知らないままだと、怖さだけがふくらんじゃうから。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タカクラ</div>
+            <div class="dialog-text">
+              <p>
+                結局、アルゴリズムは「敵」でも「味方」でもなくて、私たちと一緒に社会を形作っている一つの道具なんだと思う。
+                だからこそ、任せっぱなしにせずに、自分たちの側からも関わり方を選び直していきたいよね。
+              </p>
+            </div>
+          </div>
+
+          <div class="dialog-line">
+            <div class="dialog-speaker">タナカ</div>
+            <div class="dialog-text">
+              <p>
+                うん。そのうえで、「私たちはこういう未来の SNS を望むし、こう生きたい」というのを、
+                ちゃんと文章として残しておきたいな。せっかくインタビューまでしたんだし。
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="reflection-divider"></div>
+
+        <!-- ④-2 まとめのエッセイ／指針 -->
+        <div class="reflection-essay">
+          <h3 class="reflection-essay-title">
+            それでも、私たちはSNSと生きていく  
+            ― アルゴリズム時代をわたるための小さな指針
+          </h3>
+
+          <p>
+            インタビューを通して見えてきたのは、「アルゴリズム＝悪者」という単純な図では説明できない現実でした。  
+            note のように、あえてランキングや広告を置かず、クリエイターのストレスを減らす方向に使われているアルゴリズムもあれば、
+            可処分時間をできるだけ多く奪うために最適化されている仕組みもある。  
+            技術そのものよりも、「どんな世界を目指して設計されているか」が決定的に重要だということです。
+          </p>
+
+          <p>
+            同時に、フィルターバブルやエコーチェンバーの問題は、「使う側」の選び方とも深く結びついていると分かりました。  
+            自分と同じ意見の投稿ばかりをフォローすれば、タイムラインはどんどん心地よく、そしてどんどん狭くなっていきます。
+            「世界が偏って見える」ようにしているのは、アルゴリズムだけではなく、自分自身の行動でもあるのかもしれません。
+          </p>
+
+          <p>
+            だからこそ、私たちは「つくる側」と「使う側」のあいだに立つ高校生として、次のような小さな指針を持っていたいと考えました。
+          </p>
+
+          <h4 class="reflection-subtitle">1. アルゴリズムに「任せっぱなし」にしない</h4>
+          <ul>
+            <li>タイムラインに流れてくる情報を、「世界のすべて」とは思い込まない。</li>
+            <li>おすすめの理由や仕組みについて、説明を求めたり調べたりする姿勢を忘れない。</li>
+            <li>レコメンドだけでなく、自分から検索したり、本や人との会話など別の経路も持つ。</li>
+          </ul>
+
+          <h4 class="reflection-subtitle">2. しんどいときは、距離を取る権利がある</h4>
+          <ul>
+            <li>「なんとなく疲れた」と感じたら、タイムラインから一度離れてもいいと自分に許可する。</li>
+            <li>一日のどこかに、完全にオフラインで過ごす時間を少しだけつくってみる。</li>
+            <li>通知を全部オンにするのではなく、自分が本当に必要だと思うものだけ残す。</li>
+          </ul>
+
+          <h4 class="reflection-subtitle">3. 一緒にルールをつくる側に回る</h4>
+          <ul>
+            <li>プラットフォームの利用規約やポリシーに関心を持ち、「何が歓迎されている場なのか」を知る。</li>
+            <li>おかしいと思った仕様や空気に対しては、ユーザーとして声を届けることも選択肢に入れる。</li>
+            <li>将来、もしサービスをつくる立場になったら、「どんな世界を実現したいか」から設計を始める。</li>
+          </ul>
+
+          <p class="reflection-essay-final">
+            アルゴリズムは、ただの「魔法の黒箱」ではありません。  
+            それを設計する人たちの価値観と、それを使う私たち一人ひとりの選択が混ざり合って、はじめて社会のかたちを変えていきます。  
+            このインタビューとセッションが、あなた自身と SNS との距離を、少しだけ見直してみるきっかけになれば嬉しいです。
+          </p>
+        </div>
+      </section>
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const video = document.querySelector('.iv-video');
+          if (!video) return;
+      
+          function enterFullscreen() {
+            // すでにフルスクリーンなら何もしない
+            if (document.fullscreenElement) return;
+      
+            // 通常のフルスクリーンAPI
+            if (video.requestFullscreen) {
+              video.requestFullscreen().catch(() => {});
+            }
+            // iOS Safari 用のフルスクリーン
+            else if (video.webkitEnterFullscreen) {
+              video.webkitEnterFullscreen();
+            }
+            // 古い IE/Edge 用（念のため）
+            else if (video.msRequestFullscreen) {
+              video.msRequestFullscreen();
+            }
+          }
+      
+          // 再生ボタンが押されたタイミングで呼ぶ
+          video.addEventListener('play', enterFullscreen);
+      
+          // クリックでもフルスクリーン要求しておくと成功しやすい
+          video.addEventListener('click', function () {
+            // まだ再生していない & ユーザー操作なら、そのままフルスクリーン＋再生
+            if (video.paused) {
+              enterFullscreen();
+              video.play().catch(() => {});
+            }
+          });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+      const video = document.querySelector('.iv-video');
+      if (!video) return;
+
+      function enterFullscreen() {
+        if (document.fullscreenElement) return;
+
+        if (video.requestFullscreen) {
+          video.requestFullscreen().catch(() => {});
+        } else if (video.webkitEnterFullscreen) {
+          video.webkitEnterFullscreen();
+        } else if (video.msRequestFullscreen) {
+          video.msRequestFullscreen();
+        }
+      }
+
+      video.addEventListener('play', enterFullscreen);
+
+      video.addEventListener('click', function () {
+        if (video.paused) {
+          enterFullscreen();
+          video.play().catch(() => {});
+        }
+      });
+    });
+      </script>
+      <script>
+        // セクション＆会話行のアニメーション制御（このページにのみ適用）
+        document.addEventListener('DOMContentLoaded', () => {
+          const io = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            }
+          }, { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+
+          // タイトルや説明などに reveal を付与
+          document.querySelectorAll('#intro .intro-title, #intro .intro-sub, #interview-video .iv-inner, #session-log .session-title, #session-log .session-description').forEach(el => {
+            el.classList.add('reveal');
+            io.observe(el);
+          });
+
+          // セッションの各行を段階表示
+          document.querySelectorAll('.session-section .session-lines').forEach(lines => {
+            lines.classList.add('reveal-stagger');
+            Array.from(lines.children).forEach((line, idx) => {
+              if (!(line instanceof HTMLElement)) return;
+              line.style.setProperty('--i', String(idx));
+            });
+            io.observe(lines);
+          });
+
+          // 反省セクションの見出し・結語も強調表示
+          document.querySelectorAll('#after-session .reflection-title, #after-session .reflection-essay-title, #after-session .reflection-essay-final').forEach(el => {
+            el.classList.add('reveal');
+            io.observe(el);
+          });
+        });
+      </script>
+      
+  </main>
+  <!-- Study Toolbox Markup -->
+  <div class="study-toolbox" aria-label="学習ツールボックス">
+    <div class="tool-buttons">
+      <button type="button" class="tool-highlight" aria-pressed="false" aria-label="ハイライト切替">ハイライト</button>
+      <button type="button" class="tool-memo" aria-expanded="false" aria-controls="studyMemoDrawer" aria-label="付箋メモを開く">メモ</button>
+      <button type="button" class="scroll-top hidden" aria-label="トップへ戻る">↑</button>
+      <div class="highlight-mode-indicator" aria-hidden="true">選択でハイライト</div>
+    </div>
+  </div>
+  <div id="studyMemoDrawer" class="study-memo-drawer" aria-hidden="true" role="dialog" aria-label="ページ付箋メモ">
+    <h3>付箋メモ</h3>
+    <p style="font-size:12px; color:var(--text-sub); line-height:1.6;">テキストを書いて「追加」→本文クリックで配置。ドラッグ/×で削除。</p>
+    <div class="memo-actions">
+      <button type="button" class="action memo-add" aria-label="付箋を追加">追加</button>
+      <button type="button" class="action memo-clear-all" aria-label="全付箋を削除">全削除</button>
+    </div>
+    <textarea placeholder="付箋に書く内容..." aria-label="付箋メモ入力欄"></textarea>
+    <div class="saved-at" aria-live="polite"></div>
+  </div>
+  <script src="assets/study-toolbox.js" defer></script>
+</body>
+</html>

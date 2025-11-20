@@ -26,6 +26,14 @@
         }
     </style>
         <style>
+        .image-placeholder img {
+            width:100%;
+            height:auto;
+            display:block;
+            object-fit:contain; /* cover にすると切り抜きで埋める */
+            border-radius:8px;
+            max-height:60vh; /* 高さの上限（必要なら調整） */
+        }
         /* ページ固有: ナビゲーションのボーダー色 */
         .navigation {
             border-color: rgba(139, 115, 85, 0.2);
@@ -136,21 +144,46 @@
     </style>
 </head>
 <body>
+    <header>
+    <!-- ナビゲーション -->
     <div class="nav-container">
         <nav class="navigation">
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">HOME</a></li>
-                <li><a data-theme="chaos" data-page="genealogy" href="page1_foundation.html" class="nav-link active">序論</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page2_evolution.html" class="nav-link">系譜</a></li>
-                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a></li>
-                <li><a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a></li>
-                <li><a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a></li>
-                <li><a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a></li>
-                <li><a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a></li>
+                <li><a data-theme="chaos" data-page="intro" href="page1_foundation.html" class="nav-link">序論</a></li>
+                
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="genealogy" href="page2_evolution.html" class="nav-link">系譜</a>
+								    <a data-theme="normal" data-page="genealogy" href="page2_advance.html" class="nav-link">旧網</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a>
+								    <a data-theme="chaos" data-page="duality" href="page3_advance.html" class="nav-link active">偽装</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a>
+								    <a data-theme="chaos" data-page="self" href="page4_advance.html" class="nav-link">依存</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a>
+								    <a data-theme="chaos" data-page="capital" href="page5_advance.html" class="nav-link">労働</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a>
+								    <a data-theme="chaos" data-page="memory" href="page6_advance.html" class="nav-link">監視</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a>
+								</li>
             </ul>
         </nav>
     </div>
+	</header>
 
     <nav class="table-of-contents">
         <div class="toc-title">Contents</div>
@@ -165,7 +198,7 @@
         </ul>
     </nav>
 
-    <main class="main-content">
+    <main id="article-content" class="main-content">
         <header class="page-header">
             <div class="page-subtitle">Page 3 - 発展論</div>
             <h1 class="page-title">偽装</h1>
@@ -420,21 +453,41 @@
         <section class="content-section">
             <h3 class="subsection-title">参考文献</h3>
             <div class="references">
-                <p>Chesney, R., & Citron, D. (2019). Deepfakes and the new disinformation war: The coming age of post-truth geopolitics. *Foreign Affairs*. ([Misinformation Review][5])</p>
-                <p>Spiralytics (2024). *70 Deepfake Statistics You Need To Know*. ([Spiralytics][3])</p>
-                <p>Views4You (2025). *Deepfake Statistical Data (2023–2025)*. ([Views4You][19])</p>
-                <p>Somoray, K. et al. (2023). Providing detection strategies to improve human ability to identify deepfakes. ([サイエンスダイレクト][9])</p>
-                <p>Keepnet Labs (2025). *Deepfake Statistics & Trends 2025*. ([Keepnet Labs][8])</p>
-                <p>Reuters Institute for the Study of Journalism (2024). *Digital News Report 2024*. ([Other News - Voices against the tide][20])</p>
-                <p>World Economic Forum (2024). *Global Risks Report 2024*. ([AP News][1])</p>
-                <p>European Union (2024–2025). AI Act, Article 50 and Code of Practice on AI-generated content. ([EU人工知能法][10])</p>
-                <p>Cyberspace Administration of China (2023). *Provisions on the Administration of Deep Synthesis of Internet Information Services*. ([A&O Shearman][12])</p>
-                <p>Thorn (2025). *Deepfake Nudes & Young People*. ([Thorn][7])</p>
-                <p>Thomson Reuters Practical Law (2024). *Deepfakes: Federal and state regulation aims to curb a growing threat*. ([Thomson Reuters][13])</p>
-                <p>Reality Defender (2025). *The State of Deepfake Regulations in 2025*. ([リアリティディフェンダー][14])</p>
+                <br><p>Chesney, R., & Citron, D. (2019). Deepfakes and the new disinformation war: The coming age of post-truth geopolitics. *Foreign Affairs*. ([Misinformation Review][5])</p>
+                <br><p>Spiralytics (2024). *70 Deepfake Statistics You Need To Know*. ([Spiralytics][3])</p>
+                <br><p>Views4You (2025). *Deepfake Statistical Data (2023–2025)*. ([Views4You][19])</p>
+                <br><p>Somoray, K. et al. (2023). Providing detection strategies to improve human ability to identify deepfakes. ([サイエンスダイレクト][9])</p>
+                <br><p>Keepnet Labs (2025). *Deepfake Statistics & Trends 2025*. ([Keepnet Labs][8])</p>
+                <br><p>Reuters Institute for the Study of Journalism (2024). *Digital News Report 2024*. ([Other News - Voices against the tide][20])</p>
+                <br><p>World Economic Forum (2024). *Global Risks Report 2024*. ([AP News][1])</p>
+                <br><p>European Union (2024–2025). AI Act, Article 50 and Code of Practice on AI-generated content. ([EU人工知能法][10])</p>
+                <br><p>Cyberspace Administration of China (2023). *Provisions on the Administration of Deep Synthesis of Internet Information Services*. ([A&O Shearman][12])</p>
+                <br><p>Thorn (2025). *Deepfake Nudes & Young People*. ([Thorn][7])</p>
+                <br><p>Thomson Reuters Practical Law (2024). *Deepfakes: Federal and state regulation aims to curb a growing threat*. ([Thomson Reuters][13])</p>
+                <br><p>Reality Defender (2025). *The State of Deepfake Regulations in 2025*. ([リアリティディフェンダー][14])</p>
             </div>
         </section>
-    </main>
+        </main>
+        <!-- Study Toolbox Markup -->
+        <div class="study-toolbox" aria-label="学習ツールボックス">
+            <div class="tool-buttons">
+                <button type="button" class="tool-highlight" aria-pressed="false" aria-label="ハイライト切替">ハイライト</button>
+                <button type="button" class="tool-memo" aria-expanded="false" aria-controls="studyMemoDrawer" aria-label="付箋メモを開く">メモ</button>
+                <button type="button" class="scroll-top hidden" aria-label="トップへ戻る">↑</button>
+                <div class="highlight-mode-indicator" aria-hidden="true">選択でハイライト</div>
+            </div>
+        </div>
+        <div id="studyMemoDrawer" class="study-memo-drawer" aria-hidden="true" role="dialog" aria-label="ページ付箋メモ">
+            <h3>付箋メモ</h3>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.6;">テキストを書いて「追加」→本文クリックで配置。ドラッグ/×で削除。</p>
+            <div class="memo-actions">
+                <button type="button" class="action memo-add" aria-label="付箋を追加">追加</button>
+                <button type="button" class="action memo-clear-all" aria-label="全付箋を削除">全削除</button>
+            </div>
+            <textarea placeholder="付箋に書く内容..." aria-label="付箋メモ入力欄"></textarea>
+            <div class="saved-at" aria-live="polite"></div>
+        </div>
+        <script src="assets/study-toolbox.js" defer></script>
 
     <script>
         // ナビゲーション制御 (Page4から流用)
@@ -613,5 +666,6 @@
             }, 250);
         });
     </script>
+    <script src="assets/nav-center.js"></script>
 </body>
 </html>

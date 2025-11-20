@@ -23,6 +23,14 @@
         }
     </style>
 		<style>
+        .image-placeholder img {
+            width:100%;
+            height:auto;
+            display:block;
+            object-fit:contain; /* cover にすると切り抜きで埋める */
+            border-radius:8px;
+            max-height:60vh; /* 高さの上限（必要なら調整） */
+        }
         /* ページ固有: ナビゲーションのボーダー色 */
         .navigation {
             border-color: rgba(72, 202, 228, 0.2);
@@ -118,22 +126,46 @@
     </style>
 </head>
 <body>
+    <header>
     <!-- ナビゲーション -->
     <div class="nav-container">
         <nav class="navigation">
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">HOME</a></li>
-                <li><a data-theme="chaos" data-page="genealogy" href="page1_foundation.html" class="nav-link active">序論</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page2_evolution.html" class="nav-link">系譜</a></li>
-                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a></li>
-                <li><a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a></li>
-                <li><a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a></li>
-                <li><a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a></li>
-                <li><a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a></li>
+                <li><a data-theme="chaos" data-page="intro" href="page1_foundation.html" class="nav-link">序論</a></li>
+                
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="genealogy" href="page2_evolution.html" class="nav-link">系譜</a>
+								    <a data-theme="normal" data-page="genealogy" href="page2_advance.html" class="nav-link">旧網</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a>
+								    <a data-theme="chaos" data-page="duality" href="page3_advance.html" class="nav-link">偽装</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link active">自己</a>
+								    <a data-theme="chaos" data-page="self" href="page4_advance.html" class="nav-link">依存</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a>
+								    <a data-theme="chaos" data-page="capital" href="page5_advance.html" class="nav-link">労働</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a>
+								    <a data-theme="chaos" data-page="memory" href="page6_advance.html" class="nav-link">監視</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a>
+								</li>
             </ul>
         </nav>
     </div>
+	</header>
 
     <!-- 目次サイドバー -->
     <nav class="table-of-contents">
@@ -149,7 +181,7 @@
     </nav>
 
     <!-- メインコンテンツ -->
-    <main class="main-content">
+    <main id="article-content" class="main-content">
         <!-- ページヘッダー -->
         <header class="page-header">
             <div class="page-subtitle">Page 4</div>
@@ -195,6 +227,7 @@
             </div>
 
             <div class="image-placeholder">
+                <img src="image\saikuru.png"></img>
                 脳内ドーパミン報酬システムの概念図を挿入推奨<br>
                 （SNS通知→ドーパミン分泌→依存形成のサイクル図）
             </div>
@@ -305,14 +338,15 @@
 
             <div class="highlight-box">
                 <div class="highlight-title">サイレント・プレッシャー現象</div>
-                <p>慶應義塾大学の藤代裕之准教授らの研究によると、日本のSNSユーザーは「炎上」を極度に恐れ、自己検閲を強化する傾向があります。この現象は「サイレント・プレッシャー」と呼ばれ、表向きは問題なく見えても、内的には強いストレスを抱えている状態を作り出します。</p>
+                <p>法政大学の藤代裕之教授らの研究によると、SNSなどで一度「炎上」が起きると、激しい非難が集中し、こうした炎上の恐怖や不安から、多くのユーザーが自己検閲するようになっています。その結果、自由な意見が言いにくくなる「発言の萎縮」が広がっているのが現状とされています。</p>
             </div>
 
             <p class="content-paragraph">
-                また、東京大学の橋元良明教授らが実施した「情報通信メディアの利用時間と情報行動に関する調査」では、日本人のSNS利用は「受動的閲覧」の割合が他国と比較して高く、この受動的な利用パターンがうつ症状のリスクをより高めることが示唆されています。
+                東京大学の橋元良明教授らが実施した「情報通信メディアの利用時間と情報行動に関する調査」では、日本人のSNS利用は「受動的閲覧」の割合が他国と比較して高く、この受動的な利用パターンがうつ症状のリスクをより高めることが示唆されています。
             </p>
 
             <div class="image-placeholder">
+                <img src="image\sutoresu.png"></img>
                 日本のSNS文化の特徴を示す図を挿入推奨<br>
                 （炎上恐怖→自己検閲→内的ストレス蓄積のサイクル図）
             </div>
@@ -330,21 +364,21 @@
                 <div class="solution-card">
                     <div class="solution-card-title">マインドフルネス</div>
                     <div class="solution-card-description">
-                        カリフォルニア大学サンフランシスコ校のアダム・ガザリー博士らの研究では、マインドフルネス瞑想トレーニングが注意機能の回復に効果的であることが実証されています。8週間のプログラムで持続的注意力が20-30％改善しました。
+                        カリフォルニア大学サンフランシスコ校のアダム・ガザリー博士らの研究では、マインドフルネス瞑想トレーニングが注意機能の回復に効果的であることが実証されています。
                     </div>
                 </div>
 
                 <div class="solution-card">
                     <div class="solution-card-title">段階的デジタル・デトックス</div>
                     <div class="solution-card-description">
-                        ペンシルベニア大学の研究では、急激な利用制限よりも段階的な削減がより効果的であることが示されています。第1週：通知最適化、第2週：就寝前禁止、第3週：利用時間制限、第4週：アナログ時間の創出。
+                        ペンシルベニア大学のメリッサ・G・ハント博士らの研究では、SNS（Facebook, Instagram, Snapchat）の利用を1日合計30分に制限する介入が、孤独感や抑うつ症状の軽減に効果的であることが示されています。この研究は、SNSの利用時間を制限することが精神的健康の改善につながる可能性を示唆しています。
                     </div>
                 </div>
 
                 <div class="solution-card">
                     <div class="solution-card-title">対面コミュニケーション</div>
                     <div class="solution-card-description">
-                        MITのシェリー・タークル教授の研究では、週に3回以上の対面での深い会話を持つ人は、SNSの悪影響を大幅に軽減できることが示されています。リアルな人間関係がデジタルの悪影響を緩和します。
+                        MITのシェリー・タークル教授の研究では、SNSなどデジタル技術への過度な依存がもたらす悪影響に対し、対面での深い会話を持つことが重要であると示されています。彼女は、リアルな人間関係における質の高い会話こそが、デジタルの悪影響を緩和すると主張しています。                 
                     </div>
                 </div>
 
@@ -395,7 +429,7 @@
             </div>
 
             <p class="content-paragraph">
-                次章では、この精神的搾取がいかに経済的搾取と結びついているか、「監視資本主義」の構造を明らかにしていきます。私たちの注意力と感情が、どのように商品化され、巨大な利益の源泉となっているのかを見ていきましょう。
+                次章では、この精神的搾取が、いかに経済的搾取と結びついているか、「監視資本主義」の構造を明らかにしていきます。私たちの注意力と感情が、どのように商品化され、巨大な利益の源泉となっているのかを見ていきましょう。
             </p>
 
             <div style="text-align: center; margin: 60px 0;">
@@ -410,16 +444,41 @@
             <h3 class="subsection-title">参考文献</h3>
             <div class="references">
                 <p>Hunt, M. G., Marx, R., Lipson, C., &amp; Young, J. (2018). No more FOMO: Limiting social media decreases loneliness and depression. Journal of Social and Clinical Psychology, 37(10), 751-768.</p>
-                <p>Primack, B. A., Shensa, A., Sidani, J. E., Whaite, E. O., Lin, L. Y., Rosen, D., ... &amp; Miller, E. (2017). Social media use and perceived social isolation among young adults in the US. American Journal of Preventive Medicine, 53(1), 1-8.</p>
-                <p>野井真吾ら (2023). 「児童生徒における電子メディア利用と精神的健康の関連性に関する疫学研究」日本体育大学紀要, 52(3), 15-28.</p>
-                <p>Royal Society for Public Health. (2017). #StatusOfMind: Social media and young people's mental health and wellbeing. London: RSPH.</p>
+                <br><p>Primack, B. A., Shensa, A., Sidani, J. E., Whaite, E. O., Lin, L. Y., Rosen, D., ... &amp; Miller, E. (2017). Social media use and perceived social isolation among young adults in the US. American Journal of Preventive Medicine, 53(1), 1-8.</p></br>
                 <p>Turkle, S. (2011). Alone Together: Why We Expect More from Technology and Less from Each Other. New York: Basic Books.</p>
-                <p>総務省 (2024). 「令和6年版 情報通信白書」東京：総務省</p>
-                <p>Pew Research Center. (2023). Teens, Social Media and Technology 2023. Washington, DC: Pew Research Center.</p>
-                <p>Johns Hopkins University. (2019). Social media use and adolescent mental health: longitudinal findings. (ジョンズ・ホプキンス大学 2019年研究の概要資料)</p>
+                <br><p>総務省 (2024). 「令和6年版 情報通信白書」東京：総務省</p>
+                <br><p>クリフォード・ナス 「スタンフォード大学の研究成果」、2009年</p>
+                <br><p>グレン・ウィルソン　Mecha AG「マルチタスクによってIQが低下するか」、2010年</p>
+                <br><p>藤代裕之　「フェイクニュースの生態系」「ソーシャルメディア論・改訂版 つながりを再設計する」 </p>
+                <br><p>橋元良明「令和6年度情報通信メディアの利用時間と情報行動に関する調査報告書」、2025年</p>
+                <br><p>メリッサ・G・ハント　No More FOMO: Limiting Social Media Decreases Loneliness and Depression</p>
+                <br><p>Sherry Turkle　「RECLAIMING CONVERSATION」 Books</p>
+                
+            
+
             </div>
         </section>
-    </main>
+        </main>
+        <!-- Study Toolbox Markup -->
+        <div class="study-toolbox" aria-label="学習ツールボックス">
+            <div class="tool-buttons">
+                <button type="button" class="tool-highlight" aria-pressed="false" aria-label="ハイライト切替">ハイライト</button>
+                <button type="button" class="tool-memo" aria-expanded="false" aria-controls="studyMemoDrawer" aria-label="付箋メモを開く">メモ</button>
+                <button type="button" class="scroll-top hidden" aria-label="トップへ戻る">↑</button>
+                <div class="highlight-mode-indicator" aria-hidden="true">選択でハイライト</div>
+            </div>
+        </div>
+        <div id="studyMemoDrawer" class="study-memo-drawer" aria-hidden="true" role="dialog" aria-label="ページ付箋メモ">
+            <h3>付箋メモ</h3>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.6;">テキストを書いて「追加」→本文クリックで配置。ドラッグ/×で削除可能。</p>
+            <div class="memo-actions">
+                <button type="button" class="action memo-add" aria-label="付箋を追加">追加</button>
+                <button type="button" class="action memo-clear-all" aria-label="全付箋を削除">全削除</button>
+            </div>
+            <textarea placeholder="付箋に書く内容..." aria-label="付箋メモ入力欄"></textarea>
+            <div class="saved-at" aria-live="polite"></div>
+        </div>
+        <script src="assets/study-toolbox.js" defer></script>
 
     <script>
         // ナビゲーション制御
@@ -814,5 +873,6 @@
             resizeTimeout = setTimeout(handleScroll, 250);
         });
     </script>
+    <script src="assets/nav-center.js"></script>
 </body>
 </html>

@@ -21,6 +21,18 @@
         }
     </style>
 		<style>
+            
+        .image-placeholder img {
+            width:100%;
+            height:auto;
+            display:block;
+            object-fit:contain; /* cover にすると切り抜きで埋める */
+            border-radius:8px;
+            max-height:60vh; /* 高さの上限（必要なら調整） */
+        }
+
+
+        
         /* ページ固有: タイムラインの円形年表示 */
         .timeline::before {
             background: linear-gradient(180deg, var(--primary-color), var(--accent-color));
@@ -66,22 +78,46 @@
     </style>
 </head>
 <body>
+    <header>
     <!-- ナビゲーション -->
     <div class="nav-container">
         <nav class="navigation">
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">HOME</a></li>
-                <li><a data-theme="chaos" data-page="genealogy" href="page1_foundation.html" class="nav-link active">序論</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page2_evolution.html" class="nav-link">系譜</a></li>
-                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
-                <li><a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a></li>
-                <li><a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a></li>
-                <li><a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a></li>
-                <li><a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a></li>
-                <li><a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a></li>
+                <li><a data-theme="chaos" data-page="intro" href="page1_foundation.html" class="nav-link">序論</a></li>
+                
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="genealogy" href="page2_evolution.html" class="nav-link active">系譜</a>
+								    <a data-theme="normal" data-page="genealogy" href="page2_advance.html" class="nav-link">旧網</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a>
+								    <a data-theme="chaos" data-page="duality" href="page3_advance.html" class="nav-link">偽装</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a>
+								    <a data-theme="chaos" data-page="self" href="page4_advance.html" class="nav-link">依存</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a>
+								    <a data-theme="chaos" data-page="capital" href="page5_advance.html" class="nav-link">労働</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a>
+								    <a data-theme="chaos" data-page="memory" href="page6_advance.html" class="nav-link">監視</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a>
+								</li>
             </ul>
         </nav>
     </div>
+	</header>
 
     <!-- 目次サイドバー -->
     <nav class="table-of-contents">
@@ -96,7 +132,7 @@
     </nav>
 
     <!-- メインコンテンツ -->
-    <main class="main-content">
+    <main id="article-content" class="main-content">
         <!-- ページヘッダー -->
         <header class="page-header">
             <div class="page-subtitle">Page 2</div>
@@ -121,9 +157,11 @@
             </p>
 
             <div class="image-placeholder">
+                <img src="image\ARPANET.png"></img>
                 ARPANETの初期ネットワーク図を挿入推奨<br>
                 （4つの大学を結ぶネットワークマップ）
             </div>
+            <p>画像引用元 <a href="https://co-smart.net/?p=5625">10月29日は、1969年にインターネットの起源であるARPANETが稼働した日</a></p>
 
             <p class="content-paragraph">
                 これは、データを小さな「パケット」に分割して送り、目的地で再構築する仕組みで、一部の通信経路が破壊されても迂回できるという画期的なものでした。当初は軍事目的で開発されましたが、すぐに大学や研究機関が利用するようになり、研究者同士の情報交換や共同研究に不可欠なツールとなっていきます。
@@ -201,7 +239,8 @@
             </div>
 
             <div class="image-placeholder">
-                2000年代のSNSプラットフォームのスクリーンショット集を挿入推奨<br>
+                2000年代のSNSプラットフォームのスクリーンショット集を挿入推奨
+                これいらない<br>
                 （MySpace, mixi, Facebook, Twitterの初期画面）
             </div>
         </section>
@@ -318,15 +357,33 @@
         <section class="content-section">
             <h3 class="subsection-title">参考文献</h3>
             <div class="references">
-                <p>ジャネット・アベイト『インターネットの発明』NTT出版、2002年</p>
-                <p>ティム・バーナーズ＝リー『ウェブの創成』日本経済新聞社、2001年</p>
-                <p>高橋徹『インターネットの歴史』NTT出版、2000年</p>
-                <p>植田康孝『ネットコミュニティの文化史』岩波書店、2013年</p>
-                <p>ダナ・ボイド／ニコール・エリソン「ソーシャルネットワークサイト：定義・歴史・研究」</p>
-                <p>アンドレアス・カプラン／ミヒャエル・ハインライン「ソーシャルメディアの挑戦と機会」</p>
+                <br><p>ティム・バーナーズ＝リー『ウェブの創成』日本経済新聞社、2001年</p>
+                <br><p>Myspace　サービス開始　2003年</p>
+                <br><p>MIXI　サービス開始　2004年</p>
+                <br><p>マーク・ザッカーバーグ「生い立ちとフェイスブック創業までの道のり」　2004年</p>
             </div>
         </section>
-    </main>
+        </main>
+        <!-- Study Toolbox Markup -->
+        <div class="study-toolbox" aria-label="学習ツールボックス">
+            <div class="tool-buttons">
+                <button type="button" class="tool-highlight" aria-pressed="false" aria-label="ハイライト切替">ハイライト</button>
+                <button type="button" class="tool-memo" aria-expanded="false" aria-controls="studyMemoDrawer" aria-label="付箋メモを開く">メモ</button>
+                <button type="button" class="scroll-top hidden" aria-label="トップへ戻る">↑</button>
+                <div class="highlight-mode-indicator" aria-hidden="true">選択でハイライト</div>
+            </div>
+        </div>
+        <div id="studyMemoDrawer" class="study-memo-drawer" aria-hidden="true" role="dialog" aria-label="ページ付箋メモ">
+            <h3>付箋メモ</h3>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.6;">テキストを書いて「追加」→本文をクリックで配置。ドラッグ移動/×で削除。</p>
+            <div class="memo-actions">
+                <button type="button" class="action memo-add" aria-label="付箋を追加">追加</button>
+                <button type="button" class="action memo-clear-all" aria-label="全付箋を削除">全削除</button>
+            </div>
+            <textarea placeholder="付箋に書く内容..." aria-label="付箋メモ入力欄"></textarea>
+            <div class="saved-at" aria-live="polite"></div>
+        </div>
+        <script src="assets/study-toolbox.js" defer></script>
 
     <script>
         // ナビゲーション制御

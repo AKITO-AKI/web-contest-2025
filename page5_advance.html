@@ -138,26 +138,46 @@
     </style>
 </head>
 <body>
+    <header>
     <!-- ナビゲーション -->
     <div class="nav-container">
         <nav class="navigation">
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">HOME</a></li>
-                <li><a href="page2.html" class="nav-link">序論</a></li>
-                <li><a href="page3.html" class="nav-link">系譜</a></li>
-                <li><a href="page3_advance.html" class="nav-link">旧網</a></li>
-                <li><a href="page4.html" class="nav-link">両義</a></li>
-                <li><a href="page4_advance.html" class="nav-link">偽装</a></li>
-                <li><a href="page5.html" class="nav-link">自己</a></li>
-                <li><a href="page5_advance.html" class="nav-link">依存</a></li>
-                <li><a href="page6.html" class="nav-link">資本</a></li>
-                <!-- Page6の発展論（労働）へのリンクを追加し、activeにする -->
-                <li><a href="page6_advance.html" class="nav-link active">労働</a></li>
-                <li><a href="page7.html" class="nav-link">記憶</a></li>
-                <li><a href="page8.html" class="nav-link">未来</a></li>
+                <li><a data-theme="chaos" data-page="intro" href="page1_foundation.html" class="nav-link">序論</a></li>
+                
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="genealogy" href="page2_evolution.html" class="nav-link">系譜</a>
+								    <a data-theme="normal" data-page="genealogy" href="page2_advance.html" class="nav-link">旧網</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a>
+								    <a data-theme="chaos" data-page="duality" href="page3_advance.html" class="nav-link">偽装</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a>
+								    <a data-theme="chaos" data-page="self" href="page4_advance.html" class="nav-link">依存</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a>
+								    <a data-theme="chaos" data-page="capital" href="page5_advance.html" class="nav-link active">労働</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a>
+								    <a data-theme="chaos" data-page="memory" href="page6_advance.html" class="nav-link">監視</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a>
+								</li>
             </ul>
         </nav>
     </div>
+	</header>
 
     <!-- 目次サイドバー -->
     <nav class="table-of-contents">
@@ -176,7 +196,7 @@
     </nav>
 
     <!-- メインコンテンツ -->
-    <main class="main-content">
+    <main id="article-content" class="main-content">
         <!-- ページヘッダー (1. 導入) -->
         <header class="page-header">
             <div class="page-subtitle">Page 5 - 発展論</div>
@@ -568,26 +588,46 @@
         <section class="content-section">
             <h3 class="subsection-title">参考文献・出典（本文中で参照した主なもの）</h3>
             <div class="references">
-                <p>・Christian Fuchs, Digital Labour and Karl Marx, Routledge, 2014.(SpringerLink)</p>
-                <p>・Christian Fuchs, “Digital prosumption labour on social media in the context of the capitalist regime of time”, 2014.(MR Online)</p>
-                <p>・International Labour Organization, World Employment and Social Outlook 2021: The role of digital labour platforms in transforming the world of work, 2021.(International Labour Organization)</p>
-                <p>・International Labour Organization, A global analysis of worker protest in digital labour platforms, ILO Working Paper 70, 2022.(Bollettino ADAPT)</p>
-                <p>・International Journal of Research Publication and Reviews, “Risk Management in the Gig Economy: Protecting the Health and Safety of Gig Workers”, Vol. 6, Issue 3, 2025.(ResearchGate)</p>
-                <p>・“Can digital labour platforms create fair competition and decent jobs?”, ILO InfoStories, 2021.(International Labour Organization)</p>
-                <p>・“UK’s YouTube and TikTok content creators deserve more rights, say MPs”, The Guardian, 24 Sept 2025.(ガーディアン)</p>
-                <p>・Eurofound, “FairTube campaign – joint initiative of IG Metall and the Youtubers Union”, Platform Economy Repository.(Eurofound Apps)</p>
-                <p>・“Organizing YouTube – IG Metall negotiates better rights”, IndustriALL, 2020.(IndustriALL)</p>
-                <p>・“Amazon workers strike at seven US facilities ahead of Christmas rush”, Reuters, 19 Dec 2024.(Reuters)</p>
-                <p>・“Amazon Warehouse Workers Across US Strike Ahead of Holiday Rush”, WIRED, 2024.(WIRED)</p>
-                <p>・“Amazon Labor Union”, Wikipedia（最終閲覧日：2025年11月）(ウィキペディア)</p>
-                <p>・Imanol Arrieta-Ibarra et al., “Should We Treat Data as Labor?”, AEA Papers and Proceedings, 2018.(Future of Privacy Forum)</p>
-                <p>・Jaron Lanier & E. Glen Weyl, “A Blueprint for a Better Digital Society”, Harvard Business Review, 2018.(Future of Privacy Forum)</p>
-                <p>・Susan Ariel Aaronson, “Data Is Different: Why the World Needs a New Approach to Governing Cross-border Data Flows”, CIGI Papers No. 197, 2018.</p>
-                <p>・Trebor Scholz, “Platform Cooperativism: Challenging the Corporate Sharing Economy”, Rosa Luxemburg Stiftung, 2016.</p>
-                <p>・OECD, “Empowering communities with platform cooperatives”, 2023.(OECD)</p>
+                <br><p>・Christian Fuchs, Digital Labour and Karl Marx, Routledge, 2014.(SpringerLink)</p>
+                <br><p>・Christian Fuchs, “Digital prosumption labour on social media in the context of the capitalist regime of time”, 2014.(MR Online)</p>
+                <br><p>・International Labour Organization, World Employment and Social Outlook 2021: The role of digital labour platforms in transforming the world of work, 2021.(International Labour Organization)</p>
+                <br><p>・International Labour Organization, A global analysis of worker protest in digital labour platforms, ILO Working Paper 70, 2022.(Bollettino ADAPT)</p>
+                <br><p>・International Journal of Research Publication and Reviews, “Risk Management in the Gig Economy: Protecting the Health and Safety of Gig Workers”, Vol. 6, Issue 3, 2025.(ResearchGate)</p>
+                <br><p>・“Can digital labour platforms create fair competition and decent jobs?”, ILO InfoStories, 2021.(International Labour Organization)</p>
+                <br><p>・“UK’s YouTube and TikTok content creators deserve more rights, say MPs”, The Guardian, 24 Sept 2025.(ガーディアン)</p>
+                <br><p>・Eurofound, “FairTube campaign – joint initiative of IG Metall and the Youtubers Union”, Platform Economy Repository.(Eurofound Apps)</p>
+                <br><p>・“Organizing YouTube – IG Metall negotiates better rights”, IndustriALL, 2020.(IndustriALL)</p>
+                <br><p>・“Amazon workers strike at seven US facilities ahead of Christmas rush”, Reuters, 19 Dec 2024.(Reuters)</p>
+                <br><p>・“Amazon Warehouse Workers Across US Strike Ahead of Holiday Rush”, WIRED, 2024.(WIRED)</p>
+                <br><p>・“Amazon Labor Union”, Wikipedia（最終閲覧日：2025年11月）(ウィキペディア)</p>
+                <br><p>・Imanol Arrieta-Ibarra et al., “Should We Treat Data as Labor?”, AEA Papers and Proceedings, 2018.(Future of Privacy Forum)</p>
+                <br><p>・Jaron Lanier & E. Glen Weyl, “A Blueprint for a Better Digital Society”, Harvard Business Review, 2018.(Future of Privacy Forum)</p>
+                <br><p>・Susan Ariel Aaronson, “Data Is Different: Why the World Needs a New Approach to Governing Cross-border Data Flows”, CIGI Papers No. 197, 2018.</p>
+                <br><p>・Trebor Scholz, “Platform Cooperativism: Challenging the Corporate Sharing Economy”, Rosa Luxemburg Stiftung, 2016.</p>
+                <br><p>・OECD, “Empowering communities with platform cooperatives”, 2023.(OECD)</p>
             </div>
         </section>
-    </main>
+        </main>
+        <!-- Study Toolbox Markup -->
+        <div class="study-toolbox" aria-label="学習ツールボックス">
+            <div class="tool-buttons">
+                <button type="button" class="tool-highlight" aria-pressed="false" aria-label="ハイライト切替">ハイライト</button>
+                <button type="button" class="tool-memo" aria-expanded="false" aria-controls="studyMemoDrawer" aria-label="付箋メモを開く">メモ</button>
+                <button type="button" class="scroll-top hidden" aria-label="トップへ戻る">↑</button>
+                <div class="highlight-mode-indicator" aria-hidden="true">選択でハイライト</div>
+            </div>
+        </div>
+        <div id="studyMemoDrawer" class="study-memo-drawer" aria-hidden="true" role="dialog" aria-label="ページ付箋メモ">
+            <h3>付箋メモ</h3>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.6;">テキストを書いて「追加」→本文クリックで配置。ドラッグ/×で削除。</p>
+            <div class="memo-actions">
+                <button type="button" class="action memo-add" aria-label="付箋を追加">追加</button>
+                <button type="button" class="action memo-clear-all" aria-label="全付箋を削除">全削除</button>
+            </div>
+            <textarea placeholder="付箋に書く内容..." aria-label="付箋メモ入力欄"></textarea>
+            <div class="saved-at" aria-live="polite"></div>
+        </div>
+        <script src="assets/study-toolbox.js" defer></script>
 
     <script>
         // ナビゲーション制御 (Page4/5から流用)
@@ -771,5 +811,6 @@
             }, 250);
         });
     </script>
+    <script src="assets/nav-center.js"></script>
 </body>
 </html>
