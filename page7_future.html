@@ -7,13 +7,20 @@
     <link rel="stylesheet" href="css/common.css">
     <style>
         :root{
-            --color-page2: #059669;
-            --color-page3: #D4A574;
-            --color-page4: #8B7355;
-            --color-page5: #48cae4;
-            --color-page6: #F59E0B;
-            --color-page7: #10b981;
-            --text-primary: #1a202c;
+            --primary-color: #059669;
+            --primary-light: #F3F0F7;
+            --primary-dark: #0f6449;
+						--accent-color: #10b981;
+						
+            --text-light: #718096;
+            --background: #ffffff;
+            --surface: #f7fafc;
+            --border: #e2e8f0;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+
+
+
             --text-secondary: #4a5568;
             --text-light: #718096;
             --background: #ffffff;
@@ -35,14 +42,12 @@
         .navigation {
             border-color: rgba(139, 115, 85, 0.2);
         }
-
-        .nav-link:hover,
-        .nav-link.active {
-		background: var(--primary-color);
-		color: rgb(0, 0, 0);
-		transform: translateY(-2px);
-		box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4);
-}
+				.nav-link.active {
+					background: var(--primary-color);
+					color: rgb(0, 0, 0);
+					transform: translateY(-2px);
+					box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4);
+		}
 
         /* ページ固有: 二面性カード */
         .duality-cards {
@@ -169,7 +174,7 @@
         <nav class="navigation">
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">HOME</a></li>
-                <li><a data-theme="chaos" data-page="intro" href="page1_foundation.html" class="nav-link">序論</a></li>
+                <li><a data-theme="normal" data-page="intro" href="page1_foundation.html" class="nav-link">序論</a></li>
                 
 								<li class="nav-group">
 								    <a data-theme="normal" data-page="genealogy" href="page2_evolution.html" class="nav-link">系譜</a>
@@ -197,7 +202,7 @@
 								</li>
 
 								<li class="nav-group">
-								    <a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a>
+								    <a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link active">未来</a>
 								</li>
             </ul>
         </nav>
@@ -627,6 +632,11 @@
             <div class="highlight-box">
                 <div class="highlight-title">SNSの真の可能性</div>
                 <p>人々が真に繋がり、理解し合い、共に成長していける社会—それこそがSNSの真の可能性です。私たち一人ひとりができることから始めていくのです。</p>
+            </div>
+						<div style="text-align: center; margin: 60px 0;">
+                <a href="sitemap.html" class="next-page-button">
+                    サイトマップへ戻る
+                </a>
             </div>
         </section>
 
