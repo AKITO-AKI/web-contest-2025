@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>@IronY 制作ログ / Workshop</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="css/common.css" rel="stylesheet">
 
   <style>
     *,
@@ -29,6 +30,17 @@
       --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.12);
       --timing-snappy: cubic-bezier(0.19, 1, 0.22, 1);
     }
+
+		/* ページ固有: ナビゲーションのボーダー色 */
+		.navigation {
+				border-color: rgba(212, 165, 116, 0.2);
+		}
+
+		.nav-link:hover,
+		.nav-link.active {
+				box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4);
+		}
+
 
     body {
       margin: 0;
@@ -505,8 +517,49 @@
   </style>
 </head>
 <body>
+	<header>
+    <!-- ナビゲーション -->
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a data-theme="chaos" data-page="intro" href="page1_foundation.html" class="nav-link">序論</a></li>
+                
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="genealogy" href="page2_evolution.html" class="nav-link">系譜</a>
+								    <a data-theme="normal" data-page="genealogy" href="page2_advance.html" class="nav-link">旧網</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a>
+								    <a data-theme="chaos" data-page="duality" href="page3_advance.html" class="nav-link">偽装</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a>
+								    <a data-theme="chaos" data-page="self" href="page4_advance.html" class="nav-link">依存</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a>
+								    <a data-theme="chaos" data-page="capital" href="page5_advance.html" class="nav-link">労働</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a>
+								    <a data-theme="chaos" data-page="memory" href="page6_advance.html" class="nav-link">監視</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a>
+								</li>
+            </ul>
+        </nav>
+    </div>
+	</header>
   <section class="log-shell">
-    <div class="log-bg"></div>
+		<!-- <div class="log-bg"></div> -->
+    <div class="cara-box"></div>
 
     <div class="log-layer">
       <header class="log-header">

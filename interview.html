@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>インタビューセッション | @IronY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/common.css">
 
   <style>
     :root {
@@ -16,8 +17,27 @@
       --accent: #111827;
       --border-soft: #c7cedd;
     }
+		/* ページ固有: ナビゲーションのボーダー色 */
+		.navigation {
+				border-color: rgba(212, 165, 116, 0.2);
+		}
 
-    * {
+		.nav-link:hover,
+		.nav-link.active {
+				box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4);
+		}
+	
+		.cara-box {
+    max-width: 900px;
+    margin: 0 auto;
+    margin-top: 0px;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+    padding: 10px 40px 100px;
+	}
+	
+	  * {
       box-sizing: border-box;
     }
 
@@ -671,15 +691,53 @@
   </style>
 </head>
 <body>
-  <main id="article-content" class="interview-page">
-    <div class="ip-inner">
+	<header>
+    <!-- ナビゲーション -->
+    <div class="nav-container">
+        <nav class="navigation">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a data-theme="chaos" data-page="intro" href="page1_foundation.html" class="nav-link">序論</a></li>
+                
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="genealogy" href="page2_evolution.html" class="nav-link">系譜</a>
+								    <a data-theme="normal" data-page="genealogy" href="page2_advance.html" class="nav-link">旧網</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="duality" href="page3_duality.html" class="nav-link">両義</a>
+								    <a data-theme="chaos" data-page="duality" href="page3_advance.html" class="nav-link">偽装</a>
+								</li>
+								
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="self" href="page4_identity.html" class="nav-link">自己</a>
+								    <a data-theme="chaos" data-page="self" href="page4_advance.html" class="nav-link">依存</a>
+								</li>
 
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="capital" href="page5_capitalism.html" class="nav-link">資本</a>
+								    <a data-theme="chaos" data-page="capital" href="page5_advance.html" class="nav-link">労働</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="chaos" data-page="memory" href="page6_memory.html" class="nav-link">記憶</a>
+								    <a data-theme="chaos" data-page="memory" href="page6_advance.html" class="nav-link">監視</a>
+								</li>
+
+								<li class="nav-group">
+								    <a data-theme="normal" data-page="future" href="page7_future.html" class="nav-link">未来</a>
+								</li>
+            </ul>
+        </nav>
+    </div>
+	</header>
+	<main id="article-content" class="interview-page">
+		<div class="ip-inner">
+		<div class="cara-box"></div>
       <!-- ① 導入セクション -->
       <section id="intro">
-        <div class="intro-label">INTERVIEW SESSION</div>
-        <h1 class="intro-title">
-          アルゴリズムの内側と、私たちのこれから
-        </h1>
+				<div class="intro-label">INTERVIEW SESSION</div>
+				<h1 class="intro-title">アルゴリズムの内側と、私たちのこれから</h1>
         <p class="intro-sub">
           私たちは毎日、アルゴリズムが選んだタイムラインの中で生きています。<br>
           そのしくみを「つくる側」と「見続けてきた側」に話を聞き、@IronYとしてインタビューセッションを行いました。<br>

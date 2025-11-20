@@ -70,6 +70,15 @@ body {
 		transform: translateY(-2px);
 		box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4);
 }
+.cara-box {
+	max-width: 900px;
+	margin: 0 auto;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	padding: 10px 40px 100px;
+}
 /* サイドバー目次 */
 .table-of-contents{
   position: fixed; 
