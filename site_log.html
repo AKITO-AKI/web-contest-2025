@@ -502,6 +502,64 @@
         padding: 18px 18px 20px;
       }
     }
+    .site-footer {
+      margin-top: 80px;
+      border-top: 1px solid var(--border);
+      background: #050816;
+      color: #e5e7eb;
+      padding: 32px 24px 24px;
+      font-size: 0.9rem;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      justify-content: space-between;
+    }
+    .footer-brand, .footer-meta { flex: 1 1 260px; min-width: 220px; }
+    .footer-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+    .footer-tagline { color: #9ca3af; line-height: 1.7; }
+    .footer-links { flex: 1 1 260px; display: flex; gap: 32px; min-width: 220px; }
+    .footer-column h4, .footer-meta h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #d1d5db;
+    }
+    .footer-column a {
+      display: block;
+      color: #9ca3af;
+      text-decoration: none;
+      margin-bottom: 4px;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .footer-column a:hover { color: #f9fafb; transform: translateX(2px); }
+    .footer-meta { color: #9ca3af; line-height: 1.7; }
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 24px auto 0;
+      border-top: 1px solid rgba(148,163,184,0.2);
+      padding-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: space-between;
+      color: #6b7280;
+    }
+    @media (max-width: 768px) {
+      .site-footer { padding: 24px 16px 20px; }
+      .footer-inner { flex-direction: column; }
+      .footer-links { flex-direction: row; }
+    }
   </style>
 </head>
 <body>
@@ -538,6 +596,48 @@
       </main>
     </div>
   </section>
+  <!-- フッター -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-title">@IronY</div>
+        <p class="footer-tagline">
+          SNSが現代社会にもたらした光と影を、
+          多層的に読み解く高校生制作のウェブ論考。
+        </p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>本論</h4>
+          <a href="page1_foundation.html">序論</a>
+          <a href="page2_evolution.html">系譜</a>
+          <a href="page3_duality.html">両義</a>
+          <a href="page4_identity.html">自己</a>
+          <a href="page5_capitalism.html">資本</a>
+          <a href="page6_memory.html">記憶</a>
+          <a href="page7_future.html">未来</a>
+        </div>
+        <div class="footer-column">
+          <h4>発展論</h4>
+          <a href="page3_advance.html">旧網</a>
+          <a href="page4_advance.html">偽装</a>
+          <a href="page5_advance.html">依存</a>
+          <a href="page6_advance.html">労働</a>
+          <a href="page7_advance.html">監視</a>
+        </div>
+      </div>
+      <div class="footer-meta">
+        <h4>About this project</h4>
+        <p>全国中高生Webコンテスト2025 応募作品。</p>
+        <p>制作：茨城県立IT未来高等学校 2年M組 Webサイト制作チーム</p>
+        <!-- <a href="references.html" class="footer-link">参考文献一覧</a> -->
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <small>© 2025 @IronY Project. All rights reserved.</small>
+      <small class="footer-note">Reading the irony between I and Y.</small>
+    </div>
+  </footer>
 
   <script>
     // ここに記事データを書き足していけば更新できるゾーン♡

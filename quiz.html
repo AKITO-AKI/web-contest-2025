@@ -5,6 +5,8 @@
   <title>@IronY 知識クイズ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link rel="stylesheet" href="common.css">
+
   <style>
     *,
     *::before,
@@ -705,88 +707,127 @@
   </style>
 </head>
 <body>
-  <section class="quiz-shell">
-    <div class="quiz-bg"></div>
-    <!-- ホワイトフェードレイヤー -->
-    <div class="white-fade" id="white-fade" aria-hidden="true"></div>
+  <main>
+    <section class="quiz-shell">
+      <div class="quiz-bg"></div>
+      <!-- ホワイトフェードレイヤー -->
+      <div class="white-fade" id="white-fade" aria-hidden="true"></div>
 
-    <div class="quiz-layer">
-      <header class="quiz-header">
-        <p class="quiz-eyebrow">QUIZ / SELF CHECK</p>
-        <h1 class="quiz-title">@IronY 知識クイズ</h1>
-        <p class="quiz-lead">
-          本編で扱ったトピックから、いくつかの問いをランダムに出題します。<br>
-          10問解き終えたあと、あなたのスコアと「復習したい章」が表示されます。
-        </p>
-      </header>
-
-      <!-- クイズ説明カード -->
-      <div class="intro-overlay" id="intro-overlay">
-        <div class="intro-card">
-          <p class="intro-eyebrow">ABOUT THIS PAGE</p>
-          <h2 class="intro-title">このページについて</h2>
-          <p class="intro-text">
-            このクイズは、@IronY 本編の内容を「どれくらい自分のものにできているか」を確かめるためのセルフチェックです。
+      <div class="quiz-layer">
+        <header class="quiz-header">
+          <p class="quiz-eyebrow">QUIZ / SELF CHECK</p>
+          <h1 class="quiz-title">@IronY 知識クイズ</h1>
+          <p class="quiz-lead">
+            本編で扱ったトピックから、いくつかの問いをランダムに出題します。<br>
+            10問解き終えたあと、あなたのスコアと「復習したい章」が表示されます。
           </p>
-          <ul class="intro-list">
-            <li>序論〜記憶までの6章から、ランダムに10問を出題します。</li>
-            <li>各問題のあとで、関連する章へのリンクと短い解説が表示されます。</li>
-            <li>最後に、あなたのスコアと「復習におすすめのページ」がまとめて表示されます。</li>
-          </ul>
-          <button class="intro-start-btn" id="intro-start">
-            クイズを開始する
-          </button>
-          <p class="intro-note">所要時間の目安：3〜5分</p>
+        </header>
+
+        <!-- クイズ説明カード -->
+        <div class="intro-overlay" id="intro-overlay">
+          <div class="intro-card">
+            <p class="intro-eyebrow">ABOUT THIS PAGE</p>
+            <h2 class="intro-title">このページについて</h2>
+            <p class="intro-text">
+              このクイズは、@IronY 本編の内容を「どれくらい自分のものにできているか」を確かめるためのセルフチェックです。
+            </p>
+            <ul class="intro-list">
+              <li>序論〜記憶までの6章から、ランダムに10問を出題します。</li>
+              <li>各問題のあとで、関連する章へのリンクと短い解説が表示されます。</li>
+              <li>最後に、あなたのスコアと「復習におすすめのページ」がまとめて表示されます。</li>
+            </ul>
+            <button class="intro-start-btn" id="intro-start">
+              クイズを開始する
+            </button>
+            <p class="intro-note">所要時間の目安：3〜5分</p>
+          </div>
+        </div>
+
+        <main class="quiz-main">
+          <div class="quiz-center">
+            <div class="quiz-progress">
+              <div class="quiz-progress-bar">
+                <div class="quiz-progress-fill"></div>
+              </div>
+              <span class="quiz-progress-label">
+                <span id="quiz-current">1</span> / <span id="quiz-total">10</span>
+              </span>
+            </div>
+
+            <!-- 問題カード -->
+            <article class="question-card" id="question-card">
+              <div class="question-meta">
+                <span class="question-tag" id="question-tag">序論</span>
+                <span class="question-id" id="question-id">Q1</span>
+              </div>
+              <h2 class="question-text" id="question-text">
+                クイズを開始すると、ここに第1問が表示されます。
+              </h2>
+
+              <ul class="question-options" id="question-options">
+                <!-- JSで選択肢を埋め込み -->
+              </ul>
+            </article>
+
+            <!-- 結果カード（最初は非表示） -->
+            <article class="question-card result-card hidden" id="result-card">
+              <!-- JSで結果内容を埋め込み -->
+            </article>
+          </div>
+
+          <aside class="answer-panel" id="answer-panel" aria-hidden="true">
+            <div class="answer-status" id="answer-status"></div>
+            <div class="answer-body">
+              <p class="answer-text" id="answer-text"></p>
+              <a href="#" class="answer-link" id="answer-link">
+                関連ページで詳しく読む
+              </a>
+            </div>
+            <button class="answer-next-btn" id="answer-next">
+              次の問題へ
+            </button>
+          </aside>
+        </main>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-title">@IronY</div>
+        <p class="footer-tagline">SNSが現代社会にもたらした光と影を、多層的に読み解く高校生制作のウェブ論考。</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>本論</h4>
+          <a href="page1_foundation.html">序論</a>
+          <a href="page2_evolution.html">系譜</a>
+          <a href="page3_duality.html">両義</a>
+          <a href="page4_identity.html">自己</a>
+          <a href="page5_capitalism.html">資本</a>
+          <a href="page6_memory.html">記憶</a>
+          <a href="page7_future.html">未来</a>
+        </div>
+        <div class="footer-column">
+          <h4>発展論</h4>
+          <a href="page3_advance.html">旧網</a>
+          <a href="page4_advance.html">偽装</a>
+          <a href="page5_advance.html">依存</a>
+          <a href="page6_advance.html">労働</a>
+          <a href="page7_advance.html">監視</a>
         </div>
       </div>
-
-      <main class="quiz-main">
-        <div class="quiz-center">
-          <div class="quiz-progress">
-            <div class="quiz-progress-bar">
-              <div class="quiz-progress-fill"></div>
-            </div>
-            <span class="quiz-progress-label">
-              <span id="quiz-current">1</span> / <span id="quiz-total">10</span>
-            </span>
-          </div>
-
-          <!-- 問題カード -->
-          <article class="question-card" id="question-card">
-            <div class="question-meta">
-              <span class="question-tag" id="question-tag">序論</span>
-              <span class="question-id" id="question-id">Q1</span>
-            </div>
-            <h2 class="question-text" id="question-text">
-              クイズを開始すると、ここに第1問が表示されます。
-            </h2>
-
-            <ul class="question-options" id="question-options">
-              <!-- JSで選択肢を埋め込み -->
-            </ul>
-          </article>
-
-          <!-- 結果カード（最初は非表示） -->
-          <article class="question-card result-card hidden" id="result-card">
-            <!-- JSで結果内容を埋め込み -->
-          </article>
-        </div>
-
-        <aside class="answer-panel" id="answer-panel" aria-hidden="true">
-          <div class="answer-status" id="answer-status"></div>
-          <div class="answer-body">
-            <p class="answer-text" id="answer-text"></p>
-            <a href="#" class="answer-link" id="answer-link">
-              関連ページで詳しく読む
-            </a>
-          </div>
-          <button class="answer-next-btn" id="answer-next">
-            次の問題へ
-          </button>
-        </aside>
-      </main>
+      <div class="footer-meta">
+        <h4>About this project</h4>
+        <p>全国中高生Webコンテスト2025 応募作品。</p>
+        <p>制作：茨城県立IT未来高等学校 2年M組 Webサイト制作チーム</p>
+      </div>
     </div>
-  </section>
+    <div class="footer-bottom">
+      <small>© 2025 @IronY Project. All rights reserved.</small>
+      <small class="footer-note">Reading the irony between I and Y.</small>
+    </div>
+  </footer>
 
   <script>
     // 章情報（復習リンク用）
