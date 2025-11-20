@@ -23,6 +23,107 @@
         }
     </style>
 		<style>
+
+
+/* タイムライン（中央縦線・円形年バッジ・左右交互カード） */
+        .timeline {
+            position: relative;
+            margin: 60px 0;
+            padding: 40px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0; bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+            transform: translateX(-50%);
+            border-radius: 2px;
+            z-index: 0;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(.4,0,.2,1);
+            z-index: 1;
+        }
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        .timeline-year {
+            flex: 0 0 auto;
+            position: relative;
+            left: 0;
+            top: 0;
+            width: 100px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 6px solid #fff;
+            box-shadow: 0 4px 16px rgba(107,91,149,0.25);
+            margin: 0 0;
+            z-index: 2;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .timeline-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px;
+            width: 420px;
+            max-width: 90vw;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            border: 1px solid var(--border);
+            transition: all .3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .timeline-content:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.16);
+        }
+        @media (max-width: 900px) {
+            .timeline-content {
+                width: 90vw;
+                padding: 24px;
+            }
+            .timeline-year {
+                width: 60px;
+                height: 60px;
+                font-size: 0.95rem;
+                margin: 0 16px;
+            }
+        }
+        @media (max-width: 600px) {
+            .timeline-item {
+                flex-direction: column !important;
+                align-items: flex-start;
+            }
+            .timeline-year {
+                margin: 0 0 16px 0;
+            }
+            .timeline-content {
+                width: 100%;
+                padding: 16px;
+            }
+        }
+
         /* ページ固有: ナビゲーションのボーダー色 */
         .navigation {
             border-color: rgba(139, 115, 85, 0.2);
@@ -148,6 +249,48 @@
                 gap: 24px;
             }
         }
+        /* タイムライン表示の調整（page2_evolution を参照） */
+        .timeline::before {
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .timeline-year {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--primary-color);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            border: 6px solid white;
+            box-shadow: 0 4px 16px rgba(102,126,234,0.3);
+        }
+
+        .timeline-content {
+            width: 45%;
+        }
+
+        /* レスポンシブ調整 */
+        @media (max-width: 1200px) {
+            .timeline-content {
+                width: calc(100% - 60px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .timeline-year {
+                width: 60px;
+                height: 60px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -262,37 +405,34 @@
             <h2 class="section-title">3. 削除されたはずの投稿が蘇る現実</h2>
             
             <p class="content-paragraph">
-                投稿を消せば「なかったこと」になると思いがちですが、実際には完全に消えない場合があります。保存されていると、あとから見つかってしまうことがあります。
+            投稿を消せば「なかったこと」になると思いがちですが、実際には完全に消えない場合があります。保存されていると、あとから見つかってしまうことがあります。
             </p>
-
-            <div class="timeline-item">
-                <div class="timeline-year">ステップ1：投稿</div>
-                <div class="timeline-content">
-                    あるユーザーがTwitterで不適切な発言をする
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">ステップ1<br>投稿</div>
+                    <div class="timeline-content">
+                        あるユーザーがTwitterで不適切な発言をする
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">ステップ2<br>削除</div>
+                    <div class="timeline-content">
+                        後日、その投稿を削除（Twitter上からは消える）
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">ステップ3<br>保存</div>
+                    <div class="timeline-content">
+                        しかしWayback Machineがスナップショットとして保存していた場合、その内容は永続的に残り続ける
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">ステップ4<br>発掘</div>
+                    <div class="timeline-content">
+                        数年後にその発言が「発掘」され、批判にさらされる
+                    </div>
                 </div>
             </div>
-
-            <div class="timeline-item">
-                <div class="timeline-year">ステップ2：削除</div>
-                <div class="timeline-content">
-                    後日、その投稿を削除（Twitter上からは消える）
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-year">ステップ3：保存</div>
-                <div class="timeline-content">
-                    しかしWayback Machineがスナップショットとして保存していた場合、その内容は永続的に残り続ける
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-year">ステップ4：発掘</div>
-                <div class="timeline-content">
-                    数年後にその発言が「発掘」され、批判にさらされる
-                </div>
-            </div>
-
             <div class="info-box">
                 <div class="highlight-title">デジタル考古学という現象</div>
                 <p>この現象は「デジタル考古学」と呼ばれることもあります。過去の発言や行動を意図的に探し出し、現在の文脈で判断する行為です。政治家、芸能人、企業経営者など、公的な立場にある人々が特にその標的となりやすく、学生時代のSNS投稿が就職活動や社会人生活に影響を与えるケースも増えています。</p>
@@ -567,14 +707,24 @@
         // スクロールアニメーション
         function handleScroll() {
             const sections = document.querySelectorAll('.content-section');
+            const timelineItems = document.querySelectorAll('.timeline-item');
             const windowHeight = window.innerHeight;
-            
+
             sections.forEach((section, index) => {
                 const sectionTop = section.getBoundingClientRect().top;
                 if (sectionTop < windowHeight * 0.8 && !section.classList.contains('visible')) {
                     setTimeout(() => {
                         section.classList.add('visible');
                     }, index * 100);
+                }
+            });
+
+            timelineItems.forEach((item, index) => {
+                const itemTop = item.getBoundingClientRect().top;
+                if (itemTop < windowHeight * 0.8 && !item.classList.contains('visible')) {
+                    setTimeout(() => {
+                        item.classList.add('visible');
+                    }, index * 200);
                 }
             });
 
