@@ -21,6 +21,15 @@
         }
     </style>
 		<style>
+            
+        .image-placeholder img {
+            width:100%;
+            height:auto;
+            display:block;
+            object-fit:contain; /* cover にすると切り抜きで埋める */
+            border-radius:8px;
+            max-height:60vh; /* 高さの上限（必要なら調整） */
+        }
         /* ページ固有: セクションタイトルのアフター要素 */
         .subsection-title::after {
             content: '';
