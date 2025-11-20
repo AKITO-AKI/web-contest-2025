@@ -31,7 +31,16 @@ body {
   box-shadow: 0 8px 32px rgba(0,0,0,0.08); max-width: 1000px; margin: 0 auto; border: 1px solid rgba(0,0,0,0.06);
   overflow-x: auto; 
   overflow-y: hidden;
-	scrollbar:var(--background);
+	
+	overflow-y: scroll;
+  /*スクロールバー非表示（IE・Edge）*/
+  -ms-overflow-style: none;
+  /*スクロールバー非表示（Firefox）*/
+  scrollbar-width: none;
+}
+/*スクロールバー非表示（Chrome・Safari）*/
+.navigation::-webkit-scrollbar{
+  display:none;
 }
 .navigation::-webkit-scrollbar { height: 4px; }
 .navigation::-webkit-scrollbar-track {background: rgba(0,0,0,0.05); border-radius: 3px; }
