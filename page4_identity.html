@@ -23,6 +23,14 @@
         }
     </style>
 		<style>
+        .image-placeholder img {
+            width:100%;
+            height:auto;
+            display:block;
+            object-fit:contain; /* cover にすると切り抜きで埋める */
+            border-radius:8px;
+            max-height:60vh; /* 高さの上限（必要なら調整） */
+        }
         /* ページ固有: ナビゲーションのボーダー色 */
         .navigation {
             border-color: rgba(72, 202, 228, 0.2);
@@ -219,6 +227,7 @@
             </div>
 
             <div class="image-placeholder">
+                <img src="image\saikuru.png"></img>
                 脳内ドーパミン報酬システムの概念図を挿入推奨<br>
                 （SNS通知→ドーパミン分泌→依存形成のサイクル図）
             </div>
@@ -337,6 +346,7 @@
             </p>
 
             <div class="image-placeholder">
+                <img src="image\sutoresu.png"></img>
                 日本のSNS文化の特徴を示す図を挿入推奨<br>
                 （炎上恐怖→自己検閲→内的ストレス蓄積のサイクル図）
             </div>

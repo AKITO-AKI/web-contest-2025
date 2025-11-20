@@ -22,6 +22,15 @@
         }
     </style>
 		<style>
+
+        .image-placeholder img {
+            width:100%;
+            height:auto;
+            display:block;
+            object-fit:contain; /* cover にすると切り抜きで埋める */
+            border-radius:8px;
+            max-height:60vh; /* 高さの上限（必要なら調整） */
+        }
         /* ページ固有: ナビゲーションのボーダー色 */
         .navigation {
             border-color: rgba(139, 115, 85, 0.2);
@@ -280,6 +289,7 @@
             </div>
 
             <div class="image-placeholder">
+                <img src="image/bunsan.png"></img>
                 🔄 分散型SNSの概念図を挿入推奨<br>
                 （中央集権型 vs 分散型のネットワーク構造比較図）
             </div>
@@ -439,6 +449,7 @@
             </div>
 
             <div class="image-placeholder">
+                <img src="image\user.png"></img>
                 🎯 理想的なSNSエコシステムの概念図を挿入推奨<br>
                 （ユーザー中心の設計、透明性、プライバシー保護、多様性の尊重を視覚化）
             </div>
@@ -552,6 +563,7 @@
             </p>
 
             <div class="image-placeholder">
+                <img src="image\saigo.png"></img>
                 💻 オープンソースコミュニティのイラストを挿入推奨<br>
                 （協働で開発する人々、GitHubなどのプラットフォーム、コントリビューションの流れ）
             </div>

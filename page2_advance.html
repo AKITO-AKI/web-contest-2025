@@ -21,6 +21,16 @@
         }
     </style>
 		<style>
+
+          .image-placeholder img {
+            width:100%;
+            height:auto;
+            display:block;
+            object-fit:contain; /* cover にすると切り抜きで埋める */
+            border-radius:8px;
+            max-height:60vh; /* 高さの上限（必要なら調整） */
+        }
+        
         /* ページ固有: ナビゲーションのボーダー色 */
         .navigation {
             border-color: rgba(212, 165, 116, 0.2);
