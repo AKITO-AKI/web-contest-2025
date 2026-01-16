@@ -1451,66 +1451,53 @@
 
     
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const video = document.querySelector('.iv-video');
-          if (!video) return;
-      
-          function enterFullscreen() {
-            // すでにフルスクリーンなら何もしない
-            if (document.fullscreenElement) return;
-      
-            // 通常のフルスクリーンAPI
-            if (video.requestFullscreen) {
-              video.requestFullscreen().catch(() => {});
-            }
-            // iOS Safari 用のフルスクリーン
-            else if (video.webkitEnterFullscreen) {
-              video.webkitEnterFullscreen();
-            }
-            // 古い IE/Edge 用（念のため）
-            else if (video.msRequestFullscreen) {
-              video.msRequestFullscreen();
-            }
-          }
-      
-          // 再生ボタンが押されたタイミングで呼ぶ
-          video.addEventListener('play', enterFullscreen);
-      
-          // クリックでもフルスクリーン要求しておくと成功しやすい
-          video.addEventListener('click', function () {
-            // まだ再生していない & ユーザー操作なら、そのままフルスクリーン＋再生
-            if (video.paused) {
-              enterFullscreen();
-              video.play().catch(() => {});
-            }
-          });
-        });
-        document.addEventListener('DOMContentLoaded', function () {
-      const video = document.querySelector('.iv-video');
-      if (!video) return;
+  // 探求ページ：動画の読み込みトラブル対策
+  // ※この作品は制作時に Git LFS を使っていた場合、ZIP内の mp4 が「LFSポインタ文字列」になり再生できません。
+  //    そのときは、動画の代わりに案内文（videoタグ内の既存フォールバック）を表示するようにします。
+  document.addEventListener('DOMContentLoaded', async () => {
+    const video = document.querySelector('.iv-video');
+    if (!video) return;
 
-      function enterFullscreen() {
-        if (document.fullscreenElement) return;
+    const sourceEl = video.querySelector('source');
+    const src = (sourceEl && sourceEl.getAttribute('src')) || video.getAttribute('src');
+    if (!src) return;
 
-        if (video.requestFullscreen) {
-          video.requestFullscreen().catch(() => {});
-        } else if (video.webkitEnterFullscreen) {
-          video.webkitEnterFullscreen();
-        } else if (video.msRequestFullscreen) {
-          video.msRequestFullscreen();
-        }
+    const showMissing = () => {
+      // videoタグ内にフォールバック文面があるので、controls を外して案内を見せる
+      video.removeAttribute('controls');
+      video.classList.add('is-missing');
+      video.addEventListener('click', (e) => e.preventDefault());
+    };
+
+    try {
+      // 先頭だけ読んで、LFSポインタかどうか判定（Rangeが効かない環境でも、200B程度なら軽い）
+      const res = await fetch(src, { headers: { 'Range': 'bytes=0-200' } });
+      if (!res.ok) {
+        showMissing();
+        return;
       }
+      const text = await res.text();
+      if (text.startsWith('version https://git-lfs.github.com/spec/v1')) {
+        showMissing();
+        return;
+      }
+    } catch (e) {
+      // file:// 等で fetch 制限がある場合は error イベントで拾う
+    }
 
-      video.addEventListener('play', enterFullscreen);
+    // 読み込みエラー（壊れたファイル/存在しない等）
+    video.addEventListener('error', showMissing, { once: true });
 
-      video.addEventListener('click', function () {
-        if (video.paused) {
-          enterFullscreen();
-          video.play().catch(() => {});
-        }
-      });
+    // ユーザー操作で再生/停止（フルスクリーン強制は、環境によって再生失敗の原因になるのでやめる）
+    video.addEventListener('click', () => {
+      if (video.paused) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
     });
-      </script>
+  });
+</script>
       <script>
         // セクション＆会話行のアニメーション制御（このページにのみ適用）
         document.addEventListener('DOMContentLoaded', () => {
