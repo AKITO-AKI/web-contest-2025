@@ -262,6 +262,7 @@
 
     .iv-video-frame {
       position: relative;
+      aspect-ratio: 16 / 9;
       border-radius: 18px;
       overflow: hidden;
       background: radial-gradient(circle at top left, #020617, #020617 45%, #020617);
@@ -277,6 +278,15 @@
       vertical-align: middle;
       background: #020617;
     }
+
+    .iv-yt {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
 
     .iv-caption {
       font-size: 0.78rem;
@@ -828,21 +838,18 @@
 
           <div class="iv-player">
             <div class="iv-video-frame">
-              <video
-                class="iv-video"
-                controls
-                preload="metadata"
-                playsinline
-                poster="img/interview-thumb.jpg"
-              >
-                <!-- 実際のパスに合わせて変更してね -->
-                <source src="video/web-douga.mp4" type="video/mp4">
-                お使いのブラウザは video タグに対応していません。
-                <a href="video/web-douga.mp4">こちらから動画ファイルをダウンロード</a>して再生してください。
-              </video>
+              <iframe
+                class="iv-yt"
+                src="https://www.youtube-nocookie.com/embed/FVKxJJL5C8Y?rel=0&modestbranding=1"
+                title="インタビューセッション動画"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="encrypted-media; picture-in-picture"
+                allowfullscreen
+              ></iframe>
             </div>
             <p class="iv-caption">
-              ※ 通信量が大きくなる場合があります。Wi-Fi環境での視聴をおすすめします。
+              ※ 動画はYouTube（限定公開）で再生します。通信量にご注意ください。Wi-Fi環境での視聴をおすすめします。
             </p>
 
             <details class="iv-summary">
@@ -1448,56 +1455,6 @@
           </div>
         </footer>
       </section>
-
-    
-    <script>
-  // 探求ページ：動画の読み込みトラブル対策
-  // ※この作品は制作時に Git LFS を使っていた場合、ZIP内の mp4 が「LFSポインタ文字列」になり再生できません。
-  //    そのときは、動画の代わりに案内文（videoタグ内の既存フォールバック）を表示するようにします。
-  document.addEventListener('DOMContentLoaded', async () => {
-    const video = document.querySelector('.iv-video');
-    if (!video) return;
-
-    const sourceEl = video.querySelector('source');
-    const src = (sourceEl && sourceEl.getAttribute('src')) || video.getAttribute('src');
-    if (!src) return;
-
-    const showMissing = () => {
-      // videoタグ内にフォールバック文面があるので、controls を外して案内を見せる
-      video.removeAttribute('controls');
-      video.classList.add('is-missing');
-      video.addEventListener('click', (e) => e.preventDefault());
-    };
-
-    try {
-      // 先頭だけ読んで、LFSポインタかどうか判定（Rangeが効かない環境でも、200B程度なら軽い）
-      const res = await fetch(src, { headers: { 'Range': 'bytes=0-200' } });
-      if (!res.ok) {
-        showMissing();
-        return;
-      }
-      const text = await res.text();
-      if (text.startsWith('version https://git-lfs.github.com/spec/v1')) {
-        showMissing();
-        return;
-      }
-    } catch (e) {
-      // file:// 等で fetch 制限がある場合は error イベントで拾う
-    }
-
-    // 読み込みエラー（壊れたファイル/存在しない等）
-    video.addEventListener('error', showMissing, { once: true });
-
-    // ユーザー操作で再生/停止（フルスクリーン強制は、環境によって再生失敗の原因になるのでやめる）
-    video.addEventListener('click', () => {
-      if (video.paused) {
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
-    });
-  });
-</script>
       <script>
         // セクション＆会話行のアニメーション制御（このページにのみ適用）
         document.addEventListener('DOMContentLoaded', () => {
