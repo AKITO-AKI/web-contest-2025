@@ -262,6 +262,7 @@
 
     .iv-video-frame {
       position: relative;
+      aspect-ratio: 16 / 9;
       border-radius: 18px;
       overflow: hidden;
       background: radial-gradient(circle at top left, #020617, #020617 45%, #020617);
@@ -828,21 +829,18 @@
 
           <div class="iv-player">
             <div class="iv-video-frame">
-              <video
-                class="iv-video"
-                controls
-                preload="metadata"
-                playsinline
-                poster="img/interview-thumb.jpg"
-              >
-                <!-- 実際のパスに合わせて変更してね -->
-                <source src="video/web-douga-before.mp4" type="video/mp4">
-                お使いのブラウザは video タグに対応していません。
-                <a href="video/web-douga-before.mp4">こちらから動画ファイルをダウンロード</a>して再生してください。
-              </video>
+              <iframe
+                class="iv-yt"
+                src="https://www.youtube-nocookie.com/embed/FVKxJJL5C8Y?rel=0&modestbranding=1"
+                title="インタビューセッション動画"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="encrypted-media; picture-in-picture"
+                allowfullscreen
+              ></iframe>
             </div>
             <p class="iv-caption">
-              ※ 通信量が大きくなる場合があります。Wi-Fi環境での視聴をおすすめします。
+              ※ 動画はYouTube（限定公開）で再生します。通信量にご注意ください。Wi-Fi環境での視聴をおすすめします。
             </p>
 
             <details class="iv-summary">
@@ -1421,7 +1419,7 @@
                 <a href="page4_advance.html">偽装</a>
                 <a href="page5_advance.html">依存</a>
                 <a href="page6_advance.html">労働</a>
-                <a href="page7_advance.html">監視</a>
+                <a href="page7_future.html">監視</a>
               </div>
                 
               <div class="footer-column">
@@ -1450,68 +1448,7 @@
       </section>
 
     
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const video = document.querySelector('.iv-video');
-          if (!video) return;
-      
-          function enterFullscreen() {
-            // すでにフルスクリーンなら何もしない
-            if (document.fullscreenElement) return;
-      
-            // 通常のフルスクリーンAPI
-            if (video.requestFullscreen) {
-              video.requestFullscreen().catch(() => {});
-            }
-            // iOS Safari 用のフルスクリーン
-            else if (video.webkitEnterFullscreen) {
-              video.webkitEnterFullscreen();
-            }
-            // 古い IE/Edge 用（念のため）
-            else if (video.msRequestFullscreen) {
-              video.msRequestFullscreen();
-            }
-          }
-      
-          // 再生ボタンが押されたタイミングで呼ぶ
-          video.addEventListener('play', enterFullscreen);
-      
-          // クリックでもフルスクリーン要求しておくと成功しやすい
-          video.addEventListener('click', function () {
-            // まだ再生していない & ユーザー操作なら、そのままフルスクリーン＋再生
-            if (video.paused) {
-              enterFullscreen();
-              video.play().catch(() => {});
-            }
-          });
-        });
-        document.addEventListener('DOMContentLoaded', function () {
-      const video = document.querySelector('.iv-video');
-      if (!video) return;
-
-      function enterFullscreen() {
-        if (document.fullscreenElement) return;
-
-        if (video.requestFullscreen) {
-          video.requestFullscreen().catch(() => {});
-        } else if (video.webkitEnterFullscreen) {
-          video.webkitEnterFullscreen();
-        } else if (video.msRequestFullscreen) {
-          video.msRequestFullscreen();
-        }
-      }
-
-      video.addEventListener('play', enterFullscreen);
-
-      video.addEventListener('click', function () {
-        if (video.paused) {
-          enterFullscreen();
-          video.play().catch(() => {});
-        }
-      });
-    });
-      </script>
-      <script>
+        <script>
         // セクション＆会話行のアニメーション制御（このページにのみ適用）
         document.addEventListener('DOMContentLoaded', () => {
           const io = new IntersectionObserver((entries) => {
